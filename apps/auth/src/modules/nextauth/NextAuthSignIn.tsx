@@ -7,7 +7,7 @@ import { useOauthProvidersQuery } from "../../hooks/useProvidersApi";
 
 type NextAuthSignInProps = {
   session: AuthSession | null;
-  onFetchSession: () => Promise<any>;
+  onFetchSession: () => Promise<unknown>;
 };
 
 export function NextAuthSignIn({
