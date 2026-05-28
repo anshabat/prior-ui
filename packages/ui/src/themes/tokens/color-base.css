@@ -1,0 +1,64 @@
+:root {
+  --color-utils-grey-0: #ffffff;
+  --color-utils-grey-100: #f1f1f2;
+  --color-utils-grey-200: #d0d2d5;
+  --color-utils-grey-300: #b3b6bb;
+  --color-utils-grey-400: #9699a0;
+  --color-utils-grey-500: #7a7e87;
+  --color-utils-grey-600: #484a4f;
+  --color-utils-grey-700: #2e2f32;
+  --color-utils-grey-800: #1c1d1f;
+  --color-utils-grey-900: #000000;
+
+  --color-utils-blue-100: #eceefc;
+  --color-utils-blue-200: #ccd1f6;
+  --color-utils-blue-300: #abb3f0;
+  --color-utils-blue-400: #8792ea;
+  --color-utils-blue-500: #6775e4;
+  --color-utils-blue-600: #4555d3;
+  --color-utils-blue-700: #34409e;
+  --color-utils-blue-800: #242c6e;
+  --color-utils-blue-900: #15193f;
+
+  --color-utils-green-100: #dcf3ee;
+  --color-utils-green-200: #9fdfcf;
+  --color-utils-green-300: #5dc9af;
+  --color-utils-green-400: #11ad86;
+  --color-utils-green-500: #0e9070;
+  --color-utils-green-600: #0b7058;
+  --color-utils-green-700: #085442;
+  --color-utils-green-800: #063a2e;
+  --color-utils-green-900: #03211a;
+
+  --color-utils-yellow-100: #f9efbb;
+  --color-utils-yellow-200: #efd242;
+  --color-utils-yellow-300: #dbb305;
+  --color-utils-yellow-400: #be9304;
+  --color-utils-yellow-500: #a57702;
+  --color-utils-yellow-600: #8a5801;
+  --color-utils-yellow-700: #6d3f00;
+  --color-utils-yellow-800: #4b2c00;
+  --color-utils-yellow-900: #2c1900;
+
+  --color-utils-red-100: #fceaef;
+  --color-utils-red-200: #f8c5d1;
+  --color-utils-red-300: #efa2b2;
+  --color-utils-red-400: #dd7c88;
+  --color-utils-red-500: #cd5a61;
+  --color-utils-red-600: #b82f30;
+  --color-utils-red-700: #8d2121;
+  --color-utils-red-800: #631717;
+  --color-utils-red-900: #390e0e;
+
+  --color-brand-50: var(--color-utils-blue-100);
+  --color-brand-100: var(--color-utils-blue-100);
+  --color-brand-200: var(--color-utils-blue-200);
+  --color-brand-300: var(--color-utils-blue-300);
+  --color-brand-400: var(--color-utils-blue-400);
+  --color-brand-500: var(--color-utils-blue-500);
+  --color-brand-600: var(--color-utils-blue-600);
+  --color-brand-700: var(--color-utils-blue-700);
+  --color-brand-800: var(--color-utils-blue-800);
+  --color-brand-900: var(--color-utils-blue-900);
+  --color-brand-950: var(--color-utils-blue-900);
+}

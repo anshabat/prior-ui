@@ -1,0 +1,14 @@
+{
+  "workspaces": {
+    "apps/demo": {
+      "project": ["src/**/*.{ts,tsx}"]
+    },
+    "apps/demo-next": {
+      "project": ["app/**/*.{ts,tsx}"]
+    },
+    "packages/ui": {
+      "project": ["src/**/*.{ts,tsx}"]
+    }
+  },
+  "ignoreDependencies": ["syncpack", "@manypkg/cli"]
+}

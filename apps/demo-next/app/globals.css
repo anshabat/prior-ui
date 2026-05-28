@@ -1,0 +1,5 @@
+@import "@workspace/ui/src/themes/tokens/index.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

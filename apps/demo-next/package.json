@@ -1,0 +1,41 @@
+{
+  "name": "@workspace/demo-next",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "@convex-dev/agent": "^0.1.16",
+    "convex": "^1.28.2",
+    "next": "^15.5.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "@workspace/chat-api": "workspace:*",
+    "@workspace/api-auth": "workspace:*",
+    "@workspace/icons": "workspace:*",
+    "@workspace/ui": "workspace:*",
+    "@workspace/config": "workspace:*",
+    "@workspace/apps-lib": "workspace:*"
+  },
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "cache": true,
+        "outputs": [
+          "{projectRoot}/.next",
+          "{projectRoot}/.next/!(cache)"
+        ]
+      }
+    }
+  }
+}

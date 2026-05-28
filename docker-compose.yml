@@ -1,0 +1,11 @@
+services:
+  auth-db:
+    image: postgres:11.2-alpine
+    volumes:
+      - ./docker/auth-db/postgresql:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: auth
+    ports:
+      - "54321:5432"

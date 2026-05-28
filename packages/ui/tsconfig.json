@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "outDir": "dist",
+    "rootDir": "src",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true, // speed up compilation by skipping type checking of d.ts files
+    "isolatedModules": true, // each file is treated as a separate module, limit some features
+    "declaration": true,
+    "declarationMap": true, // useful for navigating types in IDEs
+    "composite": true, // enable project references
+    "incremental": true, // enable incremental compilation
+    "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo" // clean tsbuildinfo when on dist deletion, otherwise it will be not synced
+  },
+  "include": ["src"] // prevent tsc from compiling files outside src
+}

@@ -1,0 +1,44 @@
+{
+  "name": "@workspace/api-auth",
+  "version": "0.0.0",
+  "type": "commonjs",
+  "types": "./global.d.ts",
+  "scripts": {
+    "dev": "node --inspect --env-file=.env --watch src/server.js",
+    "lint": "eslint .",
+    "ts": "tsc",
+    "db:reset": "prisma migrate reset --force && prisma db push",
+    "db:update": "prisma db push && prisma generate"
+  },
+  "dependencies": {
+    "@auth/core": "0.41.1",
+    "@auth/express": "0.12.1",
+    "@auth/prisma-adapter": "2.11.1",
+    "@prisma/client": "^5.7.1",
+    "@workspace/config": "workspace:*",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.3",
+    "passport": "^0.7.0",
+    "passport-github2": "^0.1.12",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "resend": "^6.9.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.5.0",
+    "@types/passport": "^1.0.17",
+    "@types/passport-github2": "^1.2.9",
+    "@types/passport-google-oauth20": "^2.0.17",
+    "@types/passport-local": "^1.0.38",
+    "eslint": "^8.57.1",
+    "prisma": "^5.7.1"
+  }
+}

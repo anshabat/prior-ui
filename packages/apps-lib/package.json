@@ -1,0 +1,22 @@
+{
+  "name": "@workspace/apps-lib",
+  "description": "Shared libs between packages",
+  "version": "0.0.0",
+  "exports": {
+    "./auth/react": {
+      "default": "./src/auth/react/index.ts"
+    }
+  },
+  "peerDependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "dependencies": {
+    "@workspace/config": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.1",
+    "@types/react-dom": "^19.1.1",
+    "typescript": "~5.8.3"
+  }
+}

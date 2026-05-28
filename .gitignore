@@ -1,0 +1,24 @@
+node_modules
+materials
+tsconfig.tsbuildinfo
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# NX
+.nx/cache
+.nx/workspace-data
+
+# Docker
+docker/auth-db/postgresql
+
+# Envs
+.env

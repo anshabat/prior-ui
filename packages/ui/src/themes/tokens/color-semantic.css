@@ -1,0 +1,58 @@
+:root {
+  /* Background */
+  --color-bg-neutral: var(--color-utils-grey-100);
+  --color-bg-neutral-hover: var(--color-utils-grey-200);
+  --color-bg-primary: var(--color-brand-500);
+  --color-bg-primary-hover: var(--color-brand-600);
+  --color-bg-primary-disabled: var(--color-brand-400);
+  --color-bg-subtle: var(--color-utils-grey-500);
+  --color-bg-subtle-hover: var(--color-utils-grey-600);
+  --color-bg-error: var(--color-utils-red-400);
+  --color-bg-success: var(--color-utils-green-400);
+  --color-bg-warning: var(--color-utils-yellow-400);
+  --color-bg-info: var(--color-utils-grey-400);
+
+  /* Text */
+  --color-text-default: var(--color-utils-grey-900);
+  --color-text-inverted: var(--color-utils-grey-0);
+  --color-text-primary: var(--color-brand-500);
+  --color-text-on-primary: var(--color-utils-grey-0);
+  --color-text-muted: var(--color-utils-grey-200);
+  --color-text-subtle: var(--color-utils-grey-600);
+  --color-text-on-subtle: var(--color-utils-grey-0);
+  --color-text-error: var(--color-utils-red-500);
+  --color-text-success: var(--color-utils-green-500);
+  --color-text-warning: var(--color-utils-yellow-500);
+  --color-text-info: var(--color-utils-grey-500);
+
+  /* Border */
+  --color-border-dark: var(--color-utils-grey-900);
+  --color-border-medium: var(--color-utils-grey-300);
+  --color-border-light: var(--color-utils-grey-200);
+  --color-border-error: var(--color-utils-red-600);
+  --color-border-success: var(--color-utils-green-600);
+  --color-border-warning: var(--color-utils-yellow-600);
+  --color-border-info: var(--color-utils-grey-600);
+}
+
+/* Dark mode */
+:root:has([data-theme="dark"]) {
+  /* Background */
+  --color-bg-neutral: var(--color-utils-grey-900);
+  --color-bg-neutral-hover: var(--color-utils-grey-200);
+  --color-bg-primary: var(--color-brand-500);
+  --color-bg-primary-hover: var(--color-brand-600);
+  --color-bg-primary-disabled: var(--color-brand-400);
+
+  /* Text */
+  --color-text-default: var(--color-utils-grey-0);
+  --color-text-inverted: var(--color-utils-grey-900);
+  --color-text-primary: var(--color-brand-500);
+  --color-text-on-primary: var(--color-utils-grey-0);
+  --color-text-muted: var(--color-utils-grey-600);
+
+  /* Border */
+  --color-border-dark: var(--color-utils-grey-900);
+  --color-border-medium: var(--color-utils-grey-300);
+  --color-border-light: var(--color-utils-grey-200);
+}

@@ -1,0 +1,40 @@
+{
+  "name": "@workspace/icons",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rimraf dist/* generated/*",
+    "process-svg": "node scripts/process-svg.js",
+    "svgr": "svgr --config-file svgr.config.js dist/svg",
+    "generate": "pnpm run clean && pnpm run process-svg && pnpm run svgr",
+    "build": "pnpm run generate && tsc"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "cache": true,
+        "inputs": [
+          "{projectRoot}/svg/**/*",
+          "{projectRoot}/scripts/**/*",
+          "{projectRoot}/tsconfig.json",
+          "{projectRoot}/svgr.config.js",
+          "{projectRoot}/index.ts"
+        ],
+        "outputs": [
+          "{projectRoot}/dist"
+        ]
+      }
+    }
+  },
+  "devDependencies": {
+    "@svgr/cli": "8.1.0",
+    "@types/react": "18.3.3",
+    "rimraf": "5.0.5",
+    "svgo": "^3.0.0",
+    "typescript": "5.4.5"
+  },
+  "peerDependencies": {
+    "react": "*"
+  }
+}

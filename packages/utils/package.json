@@ -1,0 +1,14 @@
+{
+  "name": "@workspace/utils",
+  "description": "Shared utils between packages",
+  "version": "0.0.0",
+  "peerDependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.1",
+    "@types/react-dom": "^19.1.1",
+    "typescript": "~5.8.3"
+  }
+}
