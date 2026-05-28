@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "nx run-many -t dev --parallel=6 --output-style=stream",
-    "build": "nx run-many -t build",
+    "dev": "bash scripts/dev.sh",
+    "build": "pnpm -r run build",
     "format": "prettier --write .",
-    "lint": "nx run-many -t lint"
+    "lint": "pnpm -r run lint"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +16,6 @@
     "@manypkg/cli": "^0.25.1",
     "concurrently": "^9.2.1",
     "knip": "^5.65.0",
-    "nx": "22.0.1",
     "prettier": "3.6.2",
     "syncpack": "14.0.0-alpha.23"
   }

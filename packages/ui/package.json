@@ -11,20 +11,6 @@
     "dev": "tsc --watch --preserveWatchOutput",
     "lint": "eslint ."
   },
-  "nx": {
-    "targets": {
-      "build": {
-        "cache": true,
-        "inputs": [
-          "{projectRoot}/src/**/*",
-          "{projectRoot}/tsconfig.json"
-        ],
-        "outputs": [
-          "{projectRoot}/dist"
-        ]
-      }
-    }
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
