@@ -1,13 +1,43 @@
 {
   "workspaces": {
     "apps/demo": {
+      "entry": ["src/main.tsx"],
       "project": ["src/**/*.{ts,tsx}"]
     },
     "apps/demo-next": {
+      "entry": ["app/layout.tsx"],
       "project": ["app/**/*.{ts,tsx}"]
     },
-    "packages/ui": {
+    "apps/auth": {
+      "entry": ["src/main.tsx"],
       "project": ["src/**/*.{ts,tsx}"]
+    },
+    "apis/auth": {
+      "entry": ["src/server.js"],
+      "project": ["src/**/*.{js,ts}"]
+    },
+    "packages/ui": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.{ts,tsx}"]
+    },
+    "packages/icons": {
+      "entry": ["index.ts"],
+      "project": ["index.ts", "generated/**/*.{ts,tsx}"]
+    },
+    "packages/config": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.{ts,tsx}", "index.ts"]
+    },
+    "packages/utils": {
+      "entry": ["src/**/*.{ts,tsx}"],
+      "project": ["src/**/*.{ts,tsx}"]
+    },
+    "packages/apps-lib": {
+      "entry": ["src/auth/react/index.ts"],
+      "project": ["src/**/*.{ts,tsx}"]
+    },
+    "packages/chat-api": {
+      "project": ["convex/**/*.{ts,tsx}"]
     }
   },
   "ignoreDependencies": ["syncpack", "@manypkg/cli"]
