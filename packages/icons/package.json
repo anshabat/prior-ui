@@ -10,23 +10,6 @@
     "generate": "pnpm run clean && pnpm run process-svg && pnpm run svgr",
     "build": "pnpm run generate && tsc"
   },
-  "nx": {
-    "targets": {
-      "build": {
-        "cache": true,
-        "inputs": [
-          "{projectRoot}/svg/**/*",
-          "{projectRoot}/scripts/**/*",
-          "{projectRoot}/tsconfig.json",
-          "{projectRoot}/svgr.config.js",
-          "{projectRoot}/index.ts"
-        ],
-        "outputs": [
-          "{projectRoot}/dist"
-        ]
-      }
-    }
-  },
   "devDependencies": {
     "@svgr/cli": "8.1.0",
     "@types/react": "18.3.3",
