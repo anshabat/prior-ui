@@ -23,6 +23,7 @@
     "@tanstack/react-query-devtools": "^5.94.5",
     "@workspace/api-auth": "workspace:*",
     "@workspace/config": "workspace:*",
+    "@workspace/utils": "workspace:*",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
