@@ -1,7 +1,7 @@
 import type { AuthSession, SignInResponse } from "@workspace/api-auth";
-
 import { config } from "@workspace/config";
-import { ERROR_MESSAGES } from "../../utils/errors";
+import { tryCatchAsync } from "@workspace/utils";
+import { ERROR_MESSAGES, getErrorMessage } from "../../utils/errors";
 
 const { API_BASE_URL } = config.auth;
 
@@ -23,11 +23,23 @@ export async function signIn(
     body: JSON.stringify(credentials),
   });
 
+  const [data, jsonError] = await tryCatchAsync<SignInResponse>(
+    response.json(),
+  );
+
+  if (jsonError) {
+    throw new Error(ERROR_MESSAGES.SignInError);
+  }
+
+  if (data.error) {
+    throw new Error(getErrorMessage(data.error, ERROR_MESSAGES.SignInError));
+  }
+
   if (!response.ok) {
     throw new Error(ERROR_MESSAGES.SignInError);
   }
 
-  return response.json();
+  return data;
 }
 
 export async function getSession(): Promise<AuthSession | null> {

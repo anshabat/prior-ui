@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { signIn, logout, signInWithOAuth } from "./api";
 import { SignInForm } from "../../components/SignInForm";
+import { useLoginMutation } from "../../hooks/useAuthApi";
 
 interface PassportSignInProps {
   refreshSession: () => Promise<unknown>;
@@ -10,25 +11,22 @@ export function PassportSignIn({ refreshSession }: PassportSignInProps) {
   const [isTwoFactorStep, setIsTwoFactorStep] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const { mutate: signWithCredentials } = useLoginMutation(
+    async ({ email, password, twoFactorCode }) =>
+      signIn({ email, password, code: twoFactorCode }),
+    {
+      onSuccess: (data) => {
+        setIsTwoFactorStep(data.twoFactor);
+      },
+      onError: (error) => {
+        setError(error.message);
+      },
+    },
+  );
+
   const handleSignIn = async (email: string, password: string) => {
     setError(null);
-
-    const result = await signIn({ email, password });
-
-    if (result.twoFactor) {
-      setIsTwoFactorStep(true);
-      return;
-    }
-
-    if (result.error) {
-      setError(result.error);
-      return;
-    }
-
-    if (result.session) {
-      setIsTwoFactorStep(false);
-      await refreshSession();
-    }
+    signWithCredentials({ email, password });
   };
 
   const handleVerifyTwoFactor = async (
@@ -37,19 +35,7 @@ export function PassportSignIn({ refreshSession }: PassportSignInProps) {
     code: string,
   ) => {
     setError(null);
-
-    const result = await signIn({ email, password, code });
-    console.log("Verify 2FA result", result);
-
-    if (result.error) {
-      setError(result.error);
-      return;
-    }
-
-    if (result.session) {
-      setIsTwoFactorStep(false);
-      await refreshSession();
-    }
+    signWithCredentials({ email, password, twoFactorCode: code });
   };
 
   const handleGetSession = async () => {
