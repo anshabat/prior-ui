@@ -55,12 +55,28 @@ export async function getSession(): Promise<AuthSession | null> {
   return data;
 }
 
-export async function logout() {
+export async function logout(): Promise<SignOutResponse> {
   const response = await fetch(`${API_BASE_URL}/api/logout`, {
     method: "POST",
     credentials: "include",
   });
-  return response.json();
+  const [data, jsonError] = await tryCatchAsync<SignOutResponse>(
+    response.json(),
+  );
+
+  if (jsonError) {
+    throw new Error(ERROR_MESSAGES.SignOutError);
+  }
+
+  if (data.error) {
+    throw new Error(getErrorMessage(data.error, ERROR_MESSAGES.SignOutError));
+  }
+
+  if (!response.ok) {
+    throw new Error(ERROR_MESSAGES.SignInError);
+  }
+
+  return data;
 }
 
 export async function register(credentials: SignInCredentials) {

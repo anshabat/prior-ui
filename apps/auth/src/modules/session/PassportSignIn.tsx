@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { signIn, logout, signInWithOAuth } from "./api";
 import { SignInForm } from "../../components/SignInForm";
-import { useLoginMutation } from "../../hooks/useAuthApi";
+import { useLoginMutation, useSignOutMutation } from "../../hooks/useAuthApi";
 
 interface PassportSignInProps {
   refreshSession: () => Promise<unknown>;
@@ -24,6 +24,15 @@ export function PassportSignIn({ refreshSession }: PassportSignInProps) {
     },
   );
 
+  const { mutate: signOut } = useSignOutMutation(logout, {
+    onSuccess: () => {
+      setError(null);
+    },
+    onError: (error) => {
+      setError(error.message);
+    },
+  });
+
   const handleSignIn = async (email: string, password: string) => {
     setError(null);
     signWithCredentials({ email, password });
@@ -42,11 +51,6 @@ export function PassportSignIn({ refreshSession }: PassportSignInProps) {
     await refreshSession();
   };
 
-  const handleLogout = async () => {
-    const result = await logout();
-    console.log("Logout result", result);
-  };
-
   const handleOAuthSignIn = (providerId: string) => {
     signInWithOAuth(providerId);
   };
@@ -63,7 +67,7 @@ export function PassportSignIn({ refreshSession }: PassportSignInProps) {
         setError(null);
       }}
       onGetSession={handleGetSession}
-      onSignOut={handleLogout}
+      onSignOut={signOut}
       providers={[
         { id: "google", name: "Google" },
         { id: "github", name: "GitHub" },

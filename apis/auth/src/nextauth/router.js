@@ -235,15 +235,15 @@ router.get(
 
     const error = qsParams.get("error");
     if (error) {
-      return res.status(401).json({ error });
+      return res.status(401).json({ data: false, error });
     }
 
     const session = await getSession(req, authConfig);
     if (session) {
-      return res.status(401).json({ error: "SignOutError" });
+      return res.status(401).json({ data: false, error: "SignOutError" });
     }
 
-    res.status(200).json({ data: true });
+    res.status(200).json({ data: true, error: null });
   },
 );
 

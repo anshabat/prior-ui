@@ -335,12 +335,11 @@ router.post(
   "/api/logout",
   /**
    * @param {Request} _req
-   * @param {Response} res
-   * @returns {Response}
+   * @param {import('express').Response<SignOutResponse>} res
    */
   (_req, res) => {
     res.clearCookie("authToken", { path: "/" });
-    return res.status(200).json({ ok: true });
+    return res.status(200).json({ data: true, error: null });
   },
 );
 

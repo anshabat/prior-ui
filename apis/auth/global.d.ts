@@ -96,8 +96,8 @@ declare global {
   };
 
   type SignOutResponse = {
-    data?: boolean;
-    error?: string | null;
+    data: boolean;
+    error: string | null;
   };
 }
 
