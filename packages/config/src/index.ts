@@ -1,3 +1,3 @@
-import { default as auth } from "./auth/auth";
+import { authConfig } from "./auth/auth";
 
-export const config = { auth } as const;
+export const config = { auth: authConfig };

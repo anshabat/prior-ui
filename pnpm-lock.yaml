@@ -16,7 +16,7 @@ importers:
         version: 9.2.1
       knip:
         specifier: ^5.65.0
-        version: 5.65.0(@types/node@25.5.0)(typescript@5.9.3)
+        version: 5.65.0(@types/node@25.5.0)(typescript@6.0.3)
       prettier:
         specifier: 3.6.2
         version: 3.6.2
@@ -108,6 +108,9 @@ importers:
       prisma:
         specifier: ^5.7.1
         version: 5.22.0
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
 
   apps/auth:
     dependencies:
@@ -4023,6 +4026,11 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   uc.micro@2.1.0:
     resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
 
@@ -6947,7 +6955,7 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  knip@5.65.0(@types/node@25.5.0)(typescript@5.9.3):
+  knip@5.65.0(@types/node@25.5.0)(typescript@6.0.3):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       '@types/node': 25.5.0
@@ -6961,7 +6969,7 @@ snapshots:
       picomatch: 4.0.3
       smol-toml: 1.4.2
       strip-json-comments: 5.0.2
-      typescript: 5.9.3
+      typescript: 6.0.3
       zod: 4.1.12
 
   ky@1.11.0: {}
@@ -7933,6 +7941,8 @@ snapshots:
   typescript@5.8.3: {}
 
   typescript@5.9.3: {}
+
+  typescript@6.0.3: {}
 
   uc.micro@2.1.0: {}
 
