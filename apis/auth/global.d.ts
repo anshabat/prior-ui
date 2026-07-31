@@ -72,8 +72,13 @@ declare global {
 
   type ProvidersResponse = Record<string, Provider>;
 
+  type RegisterPayload = {
+    email: string;
+    password: string;
+  };
+
   type RegisterResponse = {
-    success: boolean;
+    data: boolean;
     error: string | null;
   };
 
@@ -107,6 +112,7 @@ export {
   SignOutResponse,
   Provider,
   ProvidersResponse,
+  RegisterPayload,
   RegisterResponse,
   ResetPasswordBody,
   ResetPasswordResponse,

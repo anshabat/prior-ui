@@ -121,7 +121,7 @@ export interface RegisterParams {
 export async function register({
   email,
   password,
-}: RegisterParams): Promise<void> {
+}: RegisterParams): Promise<RegisterResponse> {
   const response = await fetch(`${API_BASE_URL}/api/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -130,9 +130,11 @@ export async function register({
 
   const data = (await response.json()) as RegisterResponse;
 
-  if (!response.ok || !data.success || data.error) {
+  if (!response.ok || !data.data || data.error) {
     throw new Error(getErrorMessage(data.error, ERROR_MESSAGES.RegisterError));
   }
+
+  return data;
 }
 
 interface ResetPasswordParams {

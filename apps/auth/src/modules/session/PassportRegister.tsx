@@ -1,25 +1,19 @@
-import { useState } from "react";
 import { register } from "./api";
 import { RegisterForm } from "../../components/RegisterForm";
+import { useRegister } from "../../hooks/useRegister";
 
 export function PassportRegister() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { mutate: registerMutation, isPending, error } = useRegister(register);
 
   const handleRegister = async (email: string, password: string) => {
-    setIsLoading(true);
-    try {
-      const result = await register({ email, password });
-      console.log("Register result", result);
-    } finally {
-      setIsLoading(false);
-    }
+    registerMutation({ email, password });
   };
 
   return (
     <RegisterForm
       onSubmit={handleRegister}
-      isLoading={isLoading}
-      error={null}
+      isLoading={isPending}
+      error={error?.message}
     />
   );
 }

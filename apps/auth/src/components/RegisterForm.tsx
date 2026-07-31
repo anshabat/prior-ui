@@ -3,7 +3,7 @@ import { type FormEvent, useState } from "react";
 interface RegisterFormProps {
   onSubmit: (email: string, password: string) => void;
   isLoading?: boolean;
-  error: string | null;
+  error?: string | null;
 }
 
 export function RegisterForm({

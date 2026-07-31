@@ -7,7 +7,6 @@ export interface AuthConfig {
   CLIENT_APPS_URLS: string[];
 }
 
-
 export const authConfig: AuthConfig = {
   AUTH_STRATEGY: "passport",
   API_PORT: 4001,

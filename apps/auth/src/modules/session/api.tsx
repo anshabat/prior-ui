@@ -1,4 +1,8 @@
-import type { AuthSession, SignInResponse } from "@workspace/api-auth";
+import type {
+  AuthSession,
+  RegisterPayload,
+  SignInResponse,
+} from "@workspace/api-auth";
 import { config } from "@workspace/config";
 import { tryCatchAsync } from "@workspace/utils";
 import { ERROR_MESSAGES, getErrorMessage } from "../../utils/errors";
@@ -73,13 +77,13 @@ export async function logout(): Promise<SignOutResponse> {
   }
 
   if (!response.ok) {
-    throw new Error(ERROR_MESSAGES.SignInError);
+    throw new Error(ERROR_MESSAGES.SignOutError);
   }
 
   return data;
 }
 
-export async function register(credentials: SignInCredentials) {
+export async function register(credentials: RegisterPayload) {
   const response = await fetch(`${API_BASE_URL}/api/register`, {
     method: "POST",
     headers: {
@@ -87,7 +91,24 @@ export async function register(credentials: SignInCredentials) {
     },
     body: JSON.stringify(credentials),
   });
-  return response.json();
+
+  const [data, jsonError] = await tryCatchAsync<RegisterResponse>(
+    response.json(),
+  );
+
+  if (jsonError) {
+    throw new Error(ERROR_MESSAGES.RegisterError);
+  }
+
+  if (data.error) {
+    throw new Error(getErrorMessage(data.error, ERROR_MESSAGES.RegisterError));
+  }
+
+  if (!response.ok) {
+    throw new Error(ERROR_MESSAGES.RegisterError);
+  }
+
+  return data;
 }
 
 export function signInWithOAuth(provider: string) {

@@ -1,39 +1,13 @@
-import {
-  useMutation,
-  type MutationFunction,
-  type UseMutationResult,
-} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import type { RegisterResponse, RegisterPayload } from "@workspace/api-auth";
+import type { MutationHook } from "./types";
 
-type UseRegisterPayload = {
-  email: string;
-  password: string;
-};
-type UseRegisterOptions = {
-  onSuccess?: () => void;
-  onError?: (error: Error) => void;
-};
-
-type UseRegisterReturn = UseMutationResult<
-  void,
-  Error,
-  UseRegisterPayload,
-  unknown
-> & {
-  errorMessage: string | null;
-};
-
-export function useRegister(
-  fetcher: MutationFunction<void, UseRegisterPayload>,
-  { onSuccess, onError }: UseRegisterOptions = {},
-): UseRegisterReturn {
-  const mutationResult = useMutation({
+export const useRegister: MutationHook<RegisterResponse, RegisterPayload> = (
+  fetcher,
+  options = {},
+) => {
+  return useMutation({
+    ...options,
     mutationFn: fetcher,
-    onSuccess,
-    onError,
   });
-
-  return {
-    ...mutationResult,
-    errorMessage: mutationResult.error ? mutationResult.error.message : null,
-  };
-}
+};
