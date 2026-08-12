@@ -265,7 +265,7 @@ router.get("/page/verify-email", async (req, res) => {
 router.post(
   "/api/reset-password",
   /**
-   * @param {import('express').Request<{}, {}, ResetPasswordBody>} req
+   * @param {import('express').Request<{}, {}, ResetPasswordPayload>} req
    * @param {import('express').Response<ResetPasswordResponse>} res
    */
   async (req, res) => {
@@ -275,7 +275,9 @@ router.post(
       const existingUser = await getUserByEmail(email);
 
       if (!existingUser) {
-        return res.status(400).json({ data: false, error: "User not found" });
+        return res
+          .status(400)
+          .json({ success: false, error: "User not found" });
       }
 
       const passwordResetToken = await generatePasswordResetToken(email);
@@ -289,14 +291,11 @@ router.post(
         callbackUrl,
       );
 
-      return res.json({
-        data: true,
-        error: null,
-      });
+      return res.json({ success: true, data: true });
     } catch (error) {
       const msg =
         error instanceof Error ? error.message : "PasswordResetFailed";
-      return res.status(500).json({ data: false, error: msg });
+      return res.status(500).json({ success: false, error: msg });
     }
   },
 );
@@ -304,7 +303,7 @@ router.post(
 router.post(
   "/api/update-password",
   /**
-   * @param {import('express').Request<{}, {}, UpdatePasswordBody>} req
+   * @param {import('express').Request<{}, {}, UpdatePasswordPayload>} req
    * @param {import('express').Response<UpdatePasswordResponse>} res
    */
   async (req, res) => {
@@ -313,16 +312,18 @@ router.post(
 
       const passwordResetToken = await getPasswordResetTokenByToken(token);
       if (!passwordResetToken) {
-        return res.status(400).json({ error: "InvalidOrExpiredToken" });
+        return res
+          .status(400)
+          .json({ success: false, error: "InvalidOrExpiredToken" });
       }
 
       if (passwordResetToken.expires < new Date()) {
-        return res.status(400).json({ error: "TokenExpired" });
+        return res.status(400).json({ success: false, error: "TokenExpired" });
       }
 
       const user = await getUserByEmail(passwordResetToken.email);
       if (!user) {
-        return res.status(400).json({ error: "UserNotFound" });
+        return res.status(400).json({ success: false, error: "UserNotFound" });
       }
 
       try {
@@ -334,14 +335,14 @@ router.post(
       } catch (error) {
         const msg =
           error instanceof Error ? error.message : "UpdatePasswordFailed";
-        return res.status(500).json({ error: msg });
+        return res.status(500).json({ success: false, error: msg });
       }
 
-      return res.json({ data: true });
+      return res.json({ success: true, data: true });
     } catch (error) {
       const msg =
         error instanceof Error ? error.message : "UpdatePasswordFailed";
-      return res.status(500).json({ error: msg });
+      return res.status(500).json({ success: false, error: msg });
     }
   },
 );

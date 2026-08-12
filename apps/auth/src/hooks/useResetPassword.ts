@@ -1,74 +1,45 @@
-import {
-  useMutation,
-  type MutationFunction,
-  type UseMutationResult,
-} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import type {
+  ResetPasswordPayload,
+  ResetPasswordResponse,
+  UpdatePasswordPayload,
+  UpdatePasswordResponse,
+} from "@workspace/api-auth";
+import type { MutationHook } from "./types";
+import { ERROR_MESSAGES } from "../utils/errors";
 
-type UseResetPasswordPayload = {
-  email: string;
-  callbackUrl: string;
-};
-type UseResetPasswordOptions = {
-  onSuccess?: () => void;
-  onError?: (error: Error) => void;
-};
-
-type UseResetPasswordReturn = UseMutationResult<
-  void,
-  Error,
-  UseResetPasswordPayload,
-  unknown
-> & {
-  errorMessage: string | null;
-};
-
-export function useResetPassword(
-  fetcher: MutationFunction<void, UseResetPasswordPayload>,
-  { onSuccess, onError }: UseResetPasswordOptions = {},
-): UseResetPasswordReturn {
-  const mutationResult = useMutation({
-    mutationFn: fetcher,
-    onSuccess,
-    onError,
+export const useResetPassword: MutationHook<
+  ResetPasswordResponse,
+  string,
+  ResetPasswordPayload
+> = (fetcher, options = {}) => {
+  return useMutation({
+    ...options,
+    mutationFn: (email) => {
+      const callbackUrl = `${window.location.origin}${window.location.pathname}`;
+      return fetcher({ email, callbackUrl });
+    },
   });
+};
 
-  return {
-    ...mutationResult,
-    errorMessage: mutationResult.error ? mutationResult.error.message : null,
-  };
-}
-
-type UseUpdatePasswordPayload = {
+type UpdatePasswordParams = {
   token: string;
   password: string;
   confirmPassword: string;
 };
-type UseUpdatePasswordOptions = {
-  onSuccess?: () => void;
-  onError?: (error: Error) => void;
-};
 
-type UseUpdatePasswordReturn = UseMutationResult<
-  void,
-  Error,
-  UseUpdatePasswordPayload,
-  unknown
-> & {
-  errorMessage: string | null;
-};
-
-export function useUpdatePassword(
-  fetcher: MutationFunction<void, UseUpdatePasswordPayload>,
-  { onSuccess, onError }: UseUpdatePasswordOptions = {},
-): UseUpdatePasswordReturn {
-  const mutationResult = useMutation({
-    mutationFn: fetcher,
-    onSuccess,
-    onError,
+export const useUpdatePassword: MutationHook<
+  UpdatePasswordResponse,
+  UpdatePasswordParams,
+  UpdatePasswordPayload
+> = (fetcher, options = {}) => {
+  return useMutation({
+    ...options,
+    mutationFn: ({ token, password, confirmPassword }) => {
+      if (password !== confirmPassword) {
+        return Promise.reject(new Error(ERROR_MESSAGES.UpdataPasswordMatch));
+      }
+      return fetcher({ token, password });
+    },
   });
-
-  return {
-    ...mutationResult,
-    errorMessage: mutationResult.error ? mutationResult.error.message : null,
-  };
-}
+};

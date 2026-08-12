@@ -1,5 +1,9 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
+type ResponseData<T, E> =
+  | { success: true; data: T }
+  | { success: false; error: E };
+
 declare module "passport-local" {
   interface IVerifyOptions {
     status?: number;
@@ -82,23 +86,17 @@ declare global {
     error: string | null;
   };
 
-  type ResetPasswordBody = {
+  type ResetPasswordPayload = {
     email: string;
     callbackUrl: string;
   };
-  type ResetPasswordResponse = {
-    data: boolean;
-    error: string | null;
-  };
+  type ResetPasswordResponse = ResponseData<boolean, string>;
 
-  type UpdatePasswordBody = {
+  type UpdatePasswordPayload = {
     token: string;
     password: string;
   };
-  type UpdatePasswordResponse = {
-    data?: boolean;
-    error?: string;
-  };
+  type UpdatePasswordResponse = ResponseData<boolean, string>;
 
   type SignOutResponse = {
     data: boolean;
@@ -114,7 +112,8 @@ export {
   ProvidersResponse,
   RegisterPayload,
   RegisterResponse,
-  ResetPasswordBody,
+  ResetPasswordPayload,
   ResetPasswordResponse,
+  UpdatePasswordPayload,
   UpdatePasswordResponse,
 };

@@ -6,6 +6,7 @@ import type {
   SignOutResponse,
   RegisterResponse,
   ResetPasswordResponse,
+  UpdatePasswordPayload,
 } from "@workspace/api-auth";
 import { config } from "@workspace/config";
 import { ERROR_MESSAGES, getErrorMessage } from "../../utils/errors";
@@ -144,7 +145,7 @@ interface ResetPasswordParams {
 export async function resetPassword({
   email,
   callbackUrl,
-}: ResetPasswordParams): Promise<void> {
+}: ResetPasswordParams): Promise<ResetPasswordResponse> {
   const response = await fetch(`${API_BASE_URL}/api/reset-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -153,21 +154,21 @@ export async function resetPassword({
 
   const data = (await response.json()) as ResetPasswordResponse;
 
-  if (!response.ok || !data.data || data.error) {
-    throw new Error(
-      getErrorMessage(data.error, ERROR_MESSAGES.PasswordResetFailed),
-    );
+  if (!response.ok) {
+    throw new Error(ERROR_MESSAGES.PasswordResetFailed);
   }
+
+  if (!data.success) {
+    throw new Error(data.error);
+  }
+
+  return data;
 }
 
-interface UpdatePasswordParams {
-  token: string;
-  password: string;
-}
 export async function updatePassword({
   token,
   password,
-}: UpdatePasswordParams): Promise<void> {
+}: UpdatePasswordPayload): Promise<UpdatePasswordResponse> {
   const response = await fetch(`${API_BASE_URL}/api/update-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -179,9 +180,13 @@ export async function updatePassword({
 
   const result = (await response.json()) as UpdatePasswordResponse;
 
-  if (!response.ok || result.error) {
-    throw new Error(
-      getErrorMessage(result.error, ERROR_MESSAGES.UpdatePasswordFailed),
-    );
+  if (!response.ok) {
+    throw new Error(ERROR_MESSAGES.UpdatePasswordFailed);
   }
+
+  if (!result.success) {
+    throw new Error(result.error);
+  }
+
+  return result;
 }

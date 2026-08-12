@@ -4,7 +4,6 @@ import {
   useUpdatePassword,
 } from "../../hooks/useResetPassword";
 import * as api from "./api";
-import { ERROR_MESSAGES } from "../../utils/errors";
 
 export function NextAuthResetPassword() {
   const searchParams = new URLSearchParams(window.location.search);
@@ -13,26 +12,18 @@ export function NextAuthResetPassword() {
   const {
     mutate: resetPassword,
     isPending: isResetPasswordLoading,
-    errorMessage: resetPasswordError,
+    error: resetPasswordError,
     reset: resetResetPassword,
-  } = useResetPassword(api.resetPassword);
+  } = useResetPassword(({email, callbackUrl}) => {
+    return api.resetPassword({email, callbackUrl})
+  });
 
   const {
     mutate: updatePassword,
     isPending: isUpdatePasswordLoading,
-    errorMessage: updatePasswordError,
+    error: updatePasswordError,
     reset: resetUpdatePassword,
-  } = useUpdatePassword(({ token, password, confirmPassword }) => {
-    if (password !== confirmPassword) {
-      return Promise.reject(new Error(ERROR_MESSAGES.UpdataPasswordMatch));
-    }
-    return api.updatePassword({ token, password });
-  });
-
-  const handleResetPassword = (email: string) => {
-    const callbackUrl = `${window.location.origin}${window.location.pathname}`;
-    resetPassword({ email, callbackUrl });
-  };
+  } = useUpdatePassword(api.updatePassword);
 
   const handleUpdatePassword = (password: string, newPassword: string) => {
     if (!resetPasswordToken) return;
@@ -49,12 +40,12 @@ export function NextAuthResetPassword() {
   };
 
   const isLoading = isResetPasswordLoading || isUpdatePasswordLoading;
-  const error = resetPasswordError || updatePasswordError;
+  const error = resetPasswordError?.message || updatePasswordError?.message;
 
   return (
     <ResetPasswordForm
       resetPasswordToken={resetPasswordToken}
-      onResetPassword={handleResetPassword}
+      onResetPassword={resetPassword}
       onUpdatePassword={handleUpdatePassword}
       isLoading={isLoading}
       error={error}

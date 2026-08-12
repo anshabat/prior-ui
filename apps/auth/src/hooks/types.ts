@@ -1,18 +1,18 @@
 import type {
-  MutationFunction,
   UseMutationOptions,
   UseMutationResult,
 } from "@tanstack/react-query";
 
 export type MutationHook<
-  TData,
+  TResponse,
   TPayload,
+  TParams = TPayload,
   TError = Error,
   TContext = unknown,
 > = (
-  fetcher: MutationFunction<TData, TPayload>,
+  fetcher: (params: TParams) => Promise<TResponse>,
   options?: Omit<
-    UseMutationOptions<TData, TError, TPayload, TContext>,
+    UseMutationOptions<TResponse, TError, TPayload, TContext>,
     "mutationFn"
   >,
-) => UseMutationResult<TData, TError, TPayload, TContext>;
+) => UseMutationResult<TResponse, TError, TPayload, TContext>;

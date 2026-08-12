@@ -119,7 +119,10 @@ export function signInWithOAuth(provider: string) {
   window.location.href = url;
 }
 
-export async function resetPassword(email: string, callbackUrl: string) {
+export async function resetPassword({
+  email,
+  callbackUrl,
+}: ResetPasswordPayload) {
   const response = await fetch(`${API_BASE_URL}/api/reset-password`, {
     method: "POST",
     headers: {
@@ -128,10 +131,29 @@ export async function resetPassword(email: string, callbackUrl: string) {
     body: JSON.stringify({ email, callbackUrl }),
   });
 
-  return response.json();
+  const [data, jsonError] = await tryCatchAsync<ResetPasswordResponse>(
+    response.json(),
+  );
+
+  if (jsonError) {
+    throw new Error(ERROR_MESSAGES.PasswordResetFailed);
+  }
+
+  if (!data.success) {
+    throw new Error(data.error);
+  }
+
+  if (!response.ok) {
+    throw new Error(ERROR_MESSAGES.PasswordResetFailed);
+  }
+
+  return data;
 }
 
-export async function updatePassword(token: string, password: string) {
+export async function updatePassword({
+  token,
+  password,
+}: UpdatePasswordPayload) {
   const response = await fetch(`${API_BASE_URL}/api/update-password`, {
     method: "POST",
     headers: {
@@ -140,5 +162,21 @@ export async function updatePassword(token: string, password: string) {
     body: JSON.stringify({ token, password }),
   });
 
-  return response.json();
+  const [data, jsonError] = await tryCatchAsync<UpdatePasswordResponse>(
+    response.json(),
+  );
+
+  if (jsonError) {
+    throw new Error(ERROR_MESSAGES.PasswordResetTokenGenerationFailed);
+  }
+
+  if (!data.success) {
+    throw new Error(data.error);
+  }
+
+  if (!response.ok) {
+    throw new Error(ERROR_MESSAGES.PasswordResetTokenGenerationFailed);
+  }
+
+  return data;
 }

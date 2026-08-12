@@ -346,9 +346,8 @@ router.post(
 router.post(
   "/api/reset-password",
   /**
-   * @param {Request} req
-   * @param {Response} res
-   * @returns {Promise<Response>}
+   * @param {import('express').Request<{}, {}, ResetPasswordPayload>} req
+   * @param {import('express').Response<ResetPasswordResponse>} res
    */
   async (req, res) => {
     try {
@@ -356,7 +355,9 @@ router.post(
       const existingUser = await getUserByEmail(email);
 
       if (!existingUser) {
-        return res.status(400).json({ error: "User not found" });
+        return res
+          .status(400)
+          .json({ success: false, error: "User not found" });
       }
 
       const passwordResetToken = await generatePasswordResetToken(email);
@@ -370,18 +371,15 @@ router.post(
         callbackUrl,
       );
 
-      return res.json({
-        success: true,
-        message: "If the email exists, a reset link has been sent.",
-      });
+      return res.json({ success: true, data: true });
     } catch (error) {
       console.error("Failed to request password reset", error);
       if (error instanceof Error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(500).json({ success: false, error: error.message });
       }
       return res
         .status(500)
-        .json({ error: "Failed to request password reset" });
+        .json({ success: false, error: "Failed to request password reset" });
     }
   },
 );
@@ -389,9 +387,8 @@ router.post(
 router.post(
   "/api/update-password",
   /**
-   * @param {Request} req
-   * @param {Response} res
-   * @returns {Promise<Response>}
+   * @param {import('express').Request<{}, {}, UpdatePasswordPayload>} req
+   * @param {import('express').Response<UpdatePasswordResponse>} res
    */
   async (req, res) => {
     try {
@@ -399,26 +396,32 @@ router.post(
       const passwordResetToken = await getPasswordResetTokenByToken(token);
 
       if (!passwordResetToken) {
-        return res.status(400).json({ error: "Invalid or expired token" });
+        return res
+          .status(400)
+          .json({ success: false, error: "Invalid or expired token" });
       }
 
       if (passwordResetToken.expires < new Date()) {
-        return res.status(400).json({ error: "Token expired" });
+        return res.status(400).json({ success: false, error: "Token expired" });
       }
 
       const user = await getUserByEmail(passwordResetToken.email);
       if (!user) {
-        return res.status(400).json({ error: "User not found" });
+        return res
+          .status(400)
+          .json({ success: false, error: "User not found" });
       }
 
       await updateUserPasswordByToken(user.id, passwordResetToken.id, password);
-      return res.json({ success: true });
+      return res.json({ success: true, data: true });
     } catch (error) {
       console.error("Failed to update password", error);
       if (error instanceof Error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(500).json({ success: false, error: error.message });
       }
-      return res.status(500).json({ error: "Failed to update password" });
+      return res
+        .status(500)
+        .json({ success: false, error: "Failed to update password" });
     }
   },
 );

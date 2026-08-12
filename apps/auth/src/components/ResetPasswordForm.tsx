@@ -5,7 +5,7 @@ interface ResetPasswordFormProps {
   onResetPassword: (email: string) => void;
   onUpdatePassword: (password: string, newPassword: string) => void;
   isLoading?: boolean;
-  error: string | null;
+  error?: string | null;
   onChange?: () => void;
 }
 
