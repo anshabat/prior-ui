@@ -23,7 +23,7 @@ export const useResetPassword: MutationHook<
 };
 
 type UpdatePasswordParams = {
-  token: string;
+  token: string | null;
   password: string;
   confirmPassword: string;
 };
@@ -36,6 +36,9 @@ export const useUpdatePassword: MutationHook<
   return useMutation({
     ...options,
     mutationFn: ({ token, password, confirmPassword }) => {
+      if (!token) {
+        return Promise.reject(new Error(ERROR_MESSAGES.UpdatePasswordMissingToken));
+      }
       if (password !== confirmPassword) {
         return Promise.reject(new Error(ERROR_MESSAGES.UpdataPasswordMatch));
       }

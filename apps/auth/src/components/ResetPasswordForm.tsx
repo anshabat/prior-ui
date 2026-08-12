@@ -1,7 +1,7 @@
 import { type FormEvent, useState } from "react";
+import { getSearchParams } from "../utils";
 
 interface ResetPasswordFormProps {
-  resetPasswordToken: string | null;
   onResetPassword: (email: string) => void;
   onUpdatePassword: (password: string, newPassword: string) => void;
   isLoading?: boolean;
@@ -10,13 +10,14 @@ interface ResetPasswordFormProps {
 }
 
 export function ResetPasswordForm({
-  resetPasswordToken,
   onResetPassword,
   onUpdatePassword,
   isLoading,
   error,
   onChange,
 }: ResetPasswordFormProps) {
+  const { resetPasswordToken } = getSearchParams();
+
   const [email, setEmail] = useState("andriyshabat@gmail.com");
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");

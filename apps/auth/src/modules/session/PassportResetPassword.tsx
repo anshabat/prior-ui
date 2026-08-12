@@ -4,10 +4,9 @@ import {
   useResetPassword,
   useUpdatePassword,
 } from "../../hooks/useResetPassword";
+import { getSearchParams } from "../../utils";
 
 export function PassportResetPassword() {
-  const searchParams = new URLSearchParams(window.location.search);
-  const resetPasswordToken = searchParams.get("resetPasswordToken");
 
   const {
     mutate: handleResetPassword,
@@ -22,7 +21,7 @@ export function PassportResetPassword() {
   } = useUpdatePassword(updatePassword);
 
   const handleUpdatePassword = (password: string, newPassword: string) => {
-    if (!resetPasswordToken) return;
+    const { resetPasswordToken } = getSearchParams();
     updatePasswordMutation({
       token: resetPasswordToken,
       password,
@@ -35,7 +34,6 @@ export function PassportResetPassword() {
 
   return (
     <ResetPasswordForm
-      resetPasswordToken={resetPasswordToken}
       onResetPassword={handleResetPassword}
       onUpdatePassword={handleUpdatePassword}
       isLoading={isLoading}

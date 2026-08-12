@@ -86,6 +86,7 @@ export const ERROR_MESSAGES = {
   PasswordResetTokenGenerationFailed: "Failed to generate password reset token",
   UpdataPasswordMatch: "Passwords do not match",
   UpdatePasswordFailed: "Failed to update password",
+  UpdatePasswordMissingToken: "Missing token",
   UserNotFound: "User not found",
   TokenExpired: "Token expired",
   InvalidOrExpiredToken: "Invalid or expired token",
