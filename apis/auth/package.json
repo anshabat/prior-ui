@@ -2,7 +2,7 @@
   "name": "@workspace/api-auth",
   "version": "0.0.0",
   "type": "commonjs",
-  "types": "./global.d.ts",
+  "types": "./types/api.ts",
   "scripts": {
     "dev": "node --inspect --env-file=.env --watch src/server.js",
     "lint": "eslint .",

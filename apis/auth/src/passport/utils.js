@@ -1,5 +1,9 @@
 const jwt = require("jsonwebtoken");
-
+/**
+ * @typedef {import('../../types').AuthSession} AuthSession
+ * @typedef {import('../../types').User} User
+ * @typedef {import('../../types').SessionUser} SessionUser
+ */
 /**
  * @param {User} user
  * @param {string} provider

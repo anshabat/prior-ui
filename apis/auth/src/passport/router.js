@@ -3,6 +3,13 @@
  * @typedef {import('express').Response} Response
  * @typedef {import('express').NextFunction} NextFunction
  * @typedef {import('express').RequestHandler} RequestHandler
+ * @typedef {import('../../types').UpdatePasswordPayload} UpdatePasswordPayload
+ * @typedef {import('../../types').UpdatePasswordResponse} UpdatePasswordResponse
+ * @typedef {import('../../types').SignInResponse} SignInResponse
+ * @typedef {import('../../types').SignOutResponse} SignOutResponse
+ * @typedef {import('../../types').ResetPasswordPayload} ResetPasswordPayload
+ * @typedef {import('../../types').ResetPasswordResponse} ResetPasswordResponse
+ * @typedef {import('../../types').User} User
  */
 
 const express = require("express");

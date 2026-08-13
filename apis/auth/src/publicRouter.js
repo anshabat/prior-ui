@@ -1,6 +1,5 @@
 /**
- * @typedef {import('express').Request} Request
- * @typedef {import('express').Response<AuthSession>} Response
+ * @typedef {import('../types').AuthSession} AuthSession
  */
 
 const express = require("express");
@@ -16,8 +15,8 @@ router.use(cors({ origin: CLIENT_APPS_URLS, credentials: true }));
 router.get(
   "/api/session",
   /**
-   * @param {Request} req
-   * @param {Response} res
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
    */
   async (req, res) => {
     const target =
@@ -29,7 +28,7 @@ router.get(
       },
     });
 
-    /** @type {AuthSession} */
+    /** @type {import('express').Response<AuthSession>} */
     const data = await response.json();
 
     return res.status(response.status).json(data);

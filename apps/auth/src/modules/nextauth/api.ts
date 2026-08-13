@@ -7,6 +7,7 @@ import type {
   RegisterResponse,
   ResetPasswordResponse,
   UpdatePasswordPayload,
+  UpdatePasswordResponse,
 } from "@workspace/api-auth";
 import { config } from "@workspace/config";
 import { ERROR_MESSAGES, getErrorMessage } from "../../utils/errors";

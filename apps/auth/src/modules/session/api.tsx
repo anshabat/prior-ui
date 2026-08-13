@@ -2,6 +2,12 @@ import type {
   AuthSession,
   RegisterPayload,
   SignInResponse,
+  SignOutResponse,
+  RegisterResponse,
+  ResetPasswordPayload,
+  ResetPasswordResponse,
+  UpdatePasswordPayload,
+  UpdatePasswordResponse,
 } from "@workspace/api-auth";
 import { config } from "@workspace/config";
 import { tryCatchAsync } from "@workspace/utils";

@@ -10,6 +10,6 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["src/**/*", "global.d.ts"],
+  "include": ["src/**/*", "types/**/*.ts"],
   "exclude": ["node_modules"]
 }

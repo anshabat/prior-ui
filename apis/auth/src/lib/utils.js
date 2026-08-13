@@ -1,3 +1,10 @@
+/**
+ * @typedef {import('../../types').PasswordResetToken} PasswordResetToken
+ * @typedef {import('../../types').User} User
+ * @typedef {import('../../types').TwoFactorToken} TwoFactorToken
+ * @typedef {import('../../types').VerificationToken} VerificationToken
+ */
+
 const bcrypt = require("bcryptjs");
 const { randomUUID, randomInt } = require("node:crypto");
 const db = require("./db");

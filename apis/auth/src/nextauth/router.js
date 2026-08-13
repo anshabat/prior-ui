@@ -1,3 +1,13 @@
+/**
+ * @typedef {import('../../types').AuthSession} AuthSession
+ * @typedef {import('../../types').SignInResponse} SignInResponse
+ * @typedef {import('../../types').SignOutResponse} SignOutResponse
+ * @typedef {import('../../types').ResetPasswordPayload} ResetPasswordPayload
+ * @typedef {import('../../types').ResetPasswordResponse} ResetPasswordResponse
+ * @typedef {import('../../types').UpdatePasswordPayload} UpdatePasswordPayload
+ * @typedef {import('../../types').UpdatePasswordResponse} UpdatePasswordResponse
+ */
+
 const bcrypt = require("bcryptjs");
 const express = require("express");
 const cors = require("cors");

@@ -1,5 +1,5 @@
 /** @typedef {import("@auth/core/jwt").JWT} JWT */
-
+/** @typedef {import('../../types').SessionUser} SessionUser */
 /**
  *
  * @param {string | undefined} cookieHeader

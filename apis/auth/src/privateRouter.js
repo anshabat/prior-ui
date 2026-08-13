@@ -1,3 +1,8 @@
+/**
+ * @typedef {import('../types').RegisterPayload} RegisterPayload
+ * @typedef {import('../types').RegisterResponse} RegisterResponse
+ */
+
 const express = require("express");
 const cors = require("cors");
 const { createUser } = require("./lib/utils.js");
