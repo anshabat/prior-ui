@@ -22,31 +22,63 @@ model User {
   id                 String    @id @default(cuid())
   name               String?
   email              String    @unique
-  emailVerified      DateTime?
+  emailVerified      DateTime? // Auth.js / passport — do not change type
+  emailVerifiedBool  Boolean   @default(false) // Better Auth maps emailVerified -> this
   image              String?
-  password           String?
+  password           String? // passport / nextauth credentials
   role               UserRole  @default(USER)
-  accounts           Account[]
   isTwoFactorEnabled Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @default(now()) @updatedAt
+
+  accounts Account[]
+  sessions Session[]
 }
 
 model Account {
   id                String  @id @default(cuid())
   userId            String
-  type              String
+
+  // identity — shared; Better Auth maps providerId/accountId here
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
+
+  // Auth.js required `type`; Better Auth does not send it.
+  // Default stops Prisma from rejecting Better Auth inserts.
+  type String @default("oauth")
+
+  refresh_token String? @db.Text
+  access_token  String? @db.Text
+  expires_at    Int? // Auth.js unix seconds — do not map Better Auth DateTime here
+  token_type    String?
+  scope         String?
+  id_token      String? @db.Text
+  session_state String?
+
+  // Better Auth only
+  password              String? // credential hash (User.password stays for passport/nextauth)
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @default(now()) @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model VerificationToken {
