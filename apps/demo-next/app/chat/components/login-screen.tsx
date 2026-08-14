@@ -3,10 +3,11 @@
 import { Button } from "@workspace/ui";
 import { useMutation } from "convex/react";
 import { api } from "@workspace/chat-api/convex/_generated/api.js";
+import { Id } from "@workspace/chat-api/convex/_generated/dataModel.js";
 
 interface LoginScreenProps {
   onError: (error: string | null) => void;
-  onSuccess: (contactSessionId: string) => void;
+  onSuccess: (contactSessionId: Id<"contactSessions">) => void;
 }
 
 export function LoginScreen({ onError, onSuccess }: LoginScreenProps) {

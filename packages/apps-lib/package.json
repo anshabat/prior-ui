@@ -7,6 +7,9 @@
       "default": "./src/auth/react/index.ts"
     }
   },
+  "scripts": {
+    "ts": "tsc --noEmit"
+  },
   "peerDependencies": {
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

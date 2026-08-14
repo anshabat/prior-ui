@@ -387,13 +387,17 @@ importers:
         version: 1.3.24(zod@4.1.12)
       '@convex-dev/agent':
         specifier: ^0.1.16
-        version: 0.1.18(ai@4.3.19(react@19.2.0)(zod@4.1.12))(convex-helpers@0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0))(hono@4.10.6)(react@19.2.0)(typescript@5.9.3)(zod@4.1.12))(convex@1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0))(react@19.2.0)
+        version: 0.1.18(ai@4.3.19(react@19.2.0)(zod@4.1.12))(convex-helpers@0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0))(hono@4.10.6)(react@19.2.0)(typescript@5.8.3)(zod@4.1.12))(convex@1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0))(react@19.2.0)
       ai:
         specifier: ^4.3.19
         version: 4.3.19(react@19.2.0)(zod@4.1.12)
       convex:
         specifier: ^1.25.4
         version: 1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
+    devDependencies:
+      typescript:
+        specifier: ~5.8.3
+        version: 5.8.3
 
   packages/config:
     devDependencies:
@@ -4529,6 +4533,14 @@ snapshots:
       - react
       - react-dom
 
+  '@convex-dev/agent@0.1.18(ai@4.3.19(react@19.2.0)(zod@4.1.12))(convex-helpers@0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0))(hono@4.10.6)(react@19.2.0)(typescript@5.8.3)(zod@4.1.12))(convex@1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0))(react@19.2.0)':
+    dependencies:
+      ai: 4.3.19(react@19.2.0)(zod@4.1.12)
+      convex: 1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
+      convex-helpers: 0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0))(hono@4.10.6)(react@19.2.0)(typescript@5.8.3)(zod@4.1.12)
+    optionalDependencies:
+      react: 19.2.0
+
   '@convex-dev/agent@0.1.18(ai@4.3.19(react@19.2.0)(zod@4.1.12))(convex-helpers@0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0))(hono@4.10.6)(react@19.2.0)(typescript@5.9.3)(zod@4.1.12))(convex@1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0))(react@19.2.0)':
     dependencies:
       ai: 4.3.19(react@19.2.0)(zod@4.1.12)
@@ -6066,6 +6078,16 @@ snapshots:
   content-type@1.0.5: {}
 
   convert-source-map@2.0.0: {}
+
+  convex-helpers@0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0))(hono@4.10.6)(react@19.2.0)(typescript@5.8.3)(zod@4.1.12):
+    dependencies:
+      convex: 1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
+    optionalDependencies:
+      '@standard-schema/spec': 1.0.0
+      hono: 4.10.6
+      react: 19.2.0
+      typescript: 5.8.3
+      zod: 4.1.12
 
   convex-helpers@0.1.104(@standard-schema/spec@1.0.0)(convex@1.28.2(@clerk/clerk-react@5.56.2(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0))(hono@4.10.6)(react@19.2.0)(typescript@5.9.3)(zod@4.1.12):
     dependencies:

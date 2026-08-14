@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "setup": "convex dev --until-success",
-    "dev": "convex dev"
+    "dev": "convex dev",
+    "ts": "tsc -p convex"
   },
   "exports": {
     "./convex/*": "./convex/*"
@@ -13,5 +14,8 @@
     "@convex-dev/agent": "^0.1.16",
     "ai": "^4.3.19",
     "@ai-sdk/openai": "^1.3.23"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.3"
   }
 }

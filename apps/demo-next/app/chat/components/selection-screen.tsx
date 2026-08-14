@@ -8,7 +8,7 @@ import { InfiniteScrollTrigger } from "./infinite-scroll-trigger";
 
 interface SelectionScreenProps {
   sessionId: Id<"contactSessions">;
-  onSelectChat: (conversationId: string) => void;
+  onSelectChat: (conversationId: Id<"conversations">) => void;
   onLogout: () => void;
 }
 

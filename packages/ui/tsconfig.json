@@ -7,6 +7,7 @@
     "rootDir": "src",
     "jsx": "react-jsx",
     "strict": true,
+    "noUncheckedIndexedAccess": true,
     "skipLibCheck": true, // speed up compilation by skipping type checking of d.ts files
     "isolatedModules": true, // each file is treated as a separate module, limit some features
     "declaration": true,
