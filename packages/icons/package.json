@@ -8,7 +8,8 @@
     "process-svg": "node scripts/process-svg.js",
     "svgr": "svgr --config-file svgr.config.js dist/svg",
     "generate": "pnpm run clean && pnpm run process-svg && pnpm run svgr",
-    "build": "pnpm run generate && tsc"
+    "build": "pnpm run generate && tsc",
+    "ts": "tsc --noEmit"
   },
   "devDependencies": {
     "@svgr/cli": "8.1.0",

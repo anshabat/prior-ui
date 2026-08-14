@@ -80,13 +80,16 @@ export default function ChatPage() {
   const screens: Record<Screen, JSX.Element> = {
     loading: <Spinner />,
     login: <LoginScreen onError={setError} onSuccess={handleLoginSuccess} />,
-    conversation: (
-      <ConversationScreen
-        sessionId={sessionId}
-        conversationId={conversationId}
-        onBack={closeConversation}
-      />
-    ),
+    conversation:
+      sessionId && conversationId ? (
+        <ConversationScreen
+          sessionId={sessionId}
+          conversationId={conversationId}
+          onBack={closeConversation}
+        />
+      ) : (
+        <Spinner />
+      ),
     selection: sessionId ? (
       <SelectionScreen
         sessionId={sessionId}

@@ -8,7 +8,7 @@
     "dev:vite": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "tsc": "tsc --noEmit -p tsconfig.app.json",
+    "ts": "tsc -b",
     "preview": "vite preview",
     "db:reset": "prisma migrate reset --force && prisma db push",
     "db:update": "prisma db push && prisma generate"

@@ -3,7 +3,8 @@
   "description": "Shared config between packages. Config which depend on environment",
   "version": "0.0.0",
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "ts": "tsc --noEmit"
   },
   "types": "./dist/index.d.ts",
   "exports": {

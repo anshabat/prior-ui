@@ -9,7 +9,8 @@
     "build": "rm -rf dist && tsc",
     "build:legacy": "tsc",
     "dev": "tsc --watch --preserveWatchOutput",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "ts": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
