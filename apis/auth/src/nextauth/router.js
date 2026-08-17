@@ -168,6 +168,7 @@ const authConfig = {
 
 const router = express.Router();
 router.use(cors({ origin: APP_BASE_URL, credentials: true }));
+router.use(express.json());
 
 router.use("/api/auth/*", ExpressAuth(authConfig));
 

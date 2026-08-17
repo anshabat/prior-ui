@@ -5,7 +5,7 @@
   "types": "./types/api.ts",
   "scripts": {
     "dev": "node --inspect --env-file=.env --watch src/server.js",
-    "lint": "eslint .",
+    "lint": "eslint . --ext .js,.mjs",
     "ts": "tsc",
     "db:reset": "prisma migrate reset --force && prisma db push",
     "db:update": "prisma db push && prisma generate"

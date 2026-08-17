@@ -58,6 +58,7 @@ const router = express.Router();
 
 router.use(/** @type {RequestHandler} */ (cookieParser()));
 router.use(cors({ origin: APP_BASE_URL, credentials: true }));
+router.use(/** @type {RequestHandler} */ (express.json()));
 router.use(/** @type {RequestHandler} */ (passport.initialize()));
 
 passport.use(
