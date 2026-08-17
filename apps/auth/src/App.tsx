@@ -2,8 +2,10 @@ import { Routes, Route } from "react-router-dom";
 import { ReactQueryProvider } from "./context/ReactQueryContext";
 import { SessionModule } from "./modules/session/SessionModule";
 import { NextAuthModule } from "./modules/nextauth/NextAuthModule";
+import { BetterAuthModule } from "./modules/betterauth/BetterAuthModule";
 import SessionLogoutPage from "./modules/session/LogoutPage";
 import NextAuthLogoutPage from "./modules/nextauth/LogoutPage";
+import BetterAuthLogoutPage from "./modules/betterauth/LogoutPage";
 import { config } from "@workspace/config";
 
 const { AUTH_STRATEGY } = config.auth;
@@ -11,15 +13,17 @@ const { AUTH_STRATEGY } = config.auth;
 const moduleMap = {
   passport: SessionModule,
   nextauth: NextAuthModule,
+  betterauth: BetterAuthModule,
 };
 
 const logoutPageMap = {
   passport: SessionLogoutPage,
   nextauth: NextAuthLogoutPage,
+  betterauth: BetterAuthLogoutPage,
 };
 
-const ModuleComponent = moduleMap[AUTH_STRATEGY as keyof typeof moduleMap];
-const LogoutPage = logoutPageMap[AUTH_STRATEGY as keyof typeof logoutPageMap];
+const ModuleComponent = moduleMap[AUTH_STRATEGY];
+const LogoutPage = logoutPageMap[AUTH_STRATEGY];
 
 function App() {
   return (
