@@ -1,33 +1,23 @@
-import { useState } from "react";
-import { pingOk } from "./api";
+import { getSession } from "./api";
+import { useSessionQuery } from "../../hooks/useAuthApi";
 
 export function BetterAuthModule() {
-  const [result, setResult] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handlePing = async () => {
-    setIsLoading(true);
-    setError(null);
-    setResult(null);
-    try {
-      const body = await pingOk();
-      setResult(JSON.stringify(body, null, 2));
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Request failed");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { session, isLoading, error, refreshSession } = useSessionQuery(() =>
+    getSession(),
+  );
 
   return (
     <div>
-      <h2>Better Auth smoke</h2>
-      <button type="button" onClick={handlePing} disabled={isLoading}>
-        {isLoading ? "Calling /api/auth/ok…" : "Smoke ok"}
+      <h2>Better Auth</h2>
+      <button
+        type="button"
+        onClick={() => refreshSession()}
+        disabled={isLoading}
+      >
+        {isLoading ? "Loading session…" : "Get session"}
       </button>
-      {result && <pre>{result}</pre>}
-      {error && <p>{error}</p>}
+      {error && <p>{error.message}</p>}
+      <pre>{JSON.stringify(session, null, 2)}</pre>
     </div>
   );
 }

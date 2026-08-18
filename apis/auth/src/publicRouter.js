@@ -19,8 +19,12 @@ router.get(
    * @param {import('express').Response} res
    */
   async (req, res) => {
-    const target =
-      AUTH_STRATEGY === "nextauth" ? "/api/auth/session" : "/api/session";
+    const sessionPath = {
+      nextauth: "/api/auth/session",
+      passport: "/api/session",
+      betterauth: "/api/session",
+    };
+    const target = sessionPath[AUTH_STRATEGY];
 
     const response = await fetch(`${API_BASE_URL}${target}`, {
       headers: {
