@@ -8,12 +8,12 @@
  *     role?: string | null;
  *     provider?: string | null;
  *   };
- *   session: { expiresAt: Date | string };
+ *   session?: { expiresAt: Date | string };
  * } | null | undefined} ba
  * @returns {import('../../types').AuthSession | null}
  */
 export function toAuthSession(ba) {
-  if (!ba?.user) return null;
+  if (!ba?.user || !ba.session) return null;
 
   return {
     user: {

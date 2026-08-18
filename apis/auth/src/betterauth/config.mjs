@@ -14,6 +14,11 @@ export const auth = betterAuth({
   baseURL: API_BASE_URL,
   // Browser origins allowed to send credentials (auth app + demo apps).
   trustedOrigins: [APP_BASE_URL, ...CLIENT_APPS_URLS],
+  emailAndPassword: {
+    enabled: true,
+    // Demo RegisterForm uses short passwords like "123".
+    minPasswordLength: 3,
+  },
   advanced: {
     database: {
       // Let Prisma cuid() assign ids so they match existing User rows.
