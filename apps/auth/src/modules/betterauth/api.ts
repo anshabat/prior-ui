@@ -14,37 +14,6 @@ export interface SignInCredentials {
   password: string;
 }
 
-function toAuthSession(
-  data: {
-    user?: {
-      id: string;
-      name?: string | null;
-      email: string;
-      image?: string | null;
-      role?: string | null;
-      provider?: string | null;
-    };
-    session?: { expiresAt: Date | string };
-  } | null,
-): AuthSession | null {
-  if (!data?.user || !data.session) return null;
-
-  return {
-    user: {
-      id: data.user.id,
-      name: data.user.name ?? null,
-      email: data.user.email,
-      image: data.user.image ?? null,
-      role: data.user.role ?? null,
-      provider: data.user.provider ?? null,
-    },
-    expires:
-      data.session.expiresAt instanceof Date
-        ? data.session.expiresAt.toISOString()
-        : String(data.session.expiresAt),
-  };
-}
-
 export async function getSession(): Promise<AuthSession | null> {
   const [result, fetchError] = await tryCatchAsync(authClient.getSession());
 
@@ -52,7 +21,8 @@ export async function getSession(): Promise<AuthSession | null> {
     return null;
   }
 
-  return toAuthSession(result.data);
+  const data = result.data as AuthSession | null;
+  return data?.user ? data : null;
 }
 
 export async function signIn(
@@ -66,15 +36,13 @@ export async function signIn(
   );
 
   if (fetchError || result.error) {
-    throw new Error(
-      result?.error?.message || ERROR_MESSAGES.SignInError,
-    );
+    throw new Error(result?.error?.message || ERROR_MESSAGES.SignInError);
   }
 
   return {
     twoFactor: false,
     error: null,
-    session: toAuthSession(result.data),
+    session: await getSession(),
   };
 }
 

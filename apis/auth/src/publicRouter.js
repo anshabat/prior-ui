@@ -34,11 +34,6 @@ router.get(
 
     const data = await response.json();
 
-    if (AUTH_STRATEGY === "betterauth") {
-      const { toAuthSession } = await import("./betterauth/session.mjs");
-      return res.status(200).json(toAuthSession(data));
-    }
-
     return res.status(response.status).json(data);
   },
 );

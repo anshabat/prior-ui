@@ -1,7 +1,13 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { customSession } from "better-auth/plugins";
 import { config } from "@workspace/config";
 import db from "../lib/db.js";
+import { toAuthSession } from "./session.mjs";
+
+/**
+ * @typedef {import('../../types').AuthSession} AuthSession
+ */
 
 const { API_BASE_URL, APP_BASE_URL, CLIENT_APPS_URLS } = config.auth;
 
@@ -19,6 +25,23 @@ export const auth = betterAuth({
     // Demo RegisterForm uses short passwords like "123".
     minPasswordLength: 3,
   },
+  plugins: [
+    customSession(
+      /**
+       * Logged-in `GET /api/auth/get-session` body. Logged-out stays `null`
+       * (Better Auth skips this callback when there is no session).
+       *
+       * @returns {Promise<AuthSession>}
+       */
+      async ({ user, session }) => {
+        const mapped = toAuthSession({ user, session });
+        if (!mapped) {
+          throw new Error("Better Auth session is missing user or expiry");
+        }
+        return mapped;
+      },
+    ),
+  ],
   advanced: {
     database: {
       // Let Prisma cuid() assign ids so they match existing User rows.
