@@ -1,21 +1,21 @@
 /**
  * @typedef {import('../../types').AuthSession} AuthSession
+ * @typedef {import("better-auth").User} BetterAuthUser
+ * @typedef {import("better-auth").Session} BetterAuthSession
+ * @typedef {import("better-auth").Account} BetterAuthAccount
  * @typedef {import('@prisma/client').User} PrismaUser
+ * @typedef {BetterAuthUser & {
+ *   lastLoginMethod?: string | null;
+ *   role?: string | null;
+ *   isTwoFactorEnabled?: boolean | null;
+ * }} BetterAuthSessionUser
  */
 
 /**
  * @param {{
- *   user?: {
- *     id: string;
- *     name?: string | null;
- *     email: string;
- *     image?: string | null;
- *     role?: string | null;
- *     provider?: string | null;
- *     lastLoginMethod?: PrismaUser["lastLoginMethod"];
- *   };
- *   session?: { expiresAt: Date | string };
- *   accounts?: { providerId?: string, provider?: string }[];
+ *   user?: BetterAuthSessionUser;
+ *   session?: BetterAuthSession;
+ *   accounts?: BetterAuthAccount[];
  * } | null | undefined} ba
  * @returns {AuthSession | null}
  */
