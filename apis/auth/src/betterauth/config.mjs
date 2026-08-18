@@ -1,12 +1,13 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { customSession } from "better-auth/plugins";
+import { customSession, lastLoginMethod } from "better-auth/plugins";
 import { config } from "@workspace/config";
 import db from "../lib/db.js";
 import { toAuthSession } from "./session.mjs";
 
 /**
  * @typedef {import('../../types').AuthSession} AuthSession
+ * @typedef {import('@prisma/client').User} PrismaUser
  */
 
 const { API_BASE_URL, APP_BASE_URL, CLIENT_APPS_URLS } = config.auth;
@@ -26,15 +27,33 @@ export const auth = betterAuth({
     minPasswordLength: 3,
   },
   plugins: [
+    lastLoginMethod({ storeInDatabase: true }),
     customSession(
       /**
        * Logged-in `GET /api/auth/get-session` body. Logged-out stays `null`
        * (Better Auth skips this callback when there is no session).
        *
+       * Session `user` is Better Auth's User, not Prisma's. `lastLoginMethod`
+       * is the Prisma column the plugin writes; type it from PrismaUser.
+       *
+       * @param {{
+       *   user: {
+       *     id: PrismaUser["id"];
+       *     name?: PrismaUser["name"];
+       *     email: PrismaUser["email"];
+       *     image?: PrismaUser["image"];
+       *     role?: PrismaUser["role"] | null;
+       *     lastLoginMethod?: PrismaUser["lastLoginMethod"];
+       *   };
+       *   session: { expiresAt: Date | string };
+       * }} data
        * @returns {Promise<AuthSession>}
        */
-      async ({ user, session }) => {
-        const mapped = toAuthSession({ user, session });
+      async ({ user, session }, ctx) => {
+        const accounts = await ctx.context.internalAdapter.findAccounts(
+          user.id,
+        );
+        const mapped = toAuthSession({ user, session, accounts });
         if (!mapped) {
           throw new Error("Better Auth session is missing user or expiry");
         }

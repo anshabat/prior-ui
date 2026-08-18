@@ -28,6 +28,7 @@ model User {
   password           String? // passport / nextauth credentials
   role               UserRole  @default(USER)
   isTwoFactorEnabled Boolean   @default(false)
+  lastLoginMethod    String? // Better Auth lastLoginMethod plugin (storeInDatabase)
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @default(now()) @updatedAt
 
