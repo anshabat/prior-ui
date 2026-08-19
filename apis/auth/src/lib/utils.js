@@ -124,6 +124,16 @@ const createUser = async (email, password) => {
     },
   });
 
+  // Same shape Better Auth writes so this user can sign in under betterauth.
+  await db.account.create({
+    data: {
+      userId: user.id,
+      provider: "credential",
+      providerAccountId: user.id,
+      password: passwordHash,
+    },
+  });
+
   const verificationToken = await generateVerificationToken(email);
   await sendVerificationEmail(email, verificationToken.token);
 

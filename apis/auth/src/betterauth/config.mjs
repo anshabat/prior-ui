@@ -8,6 +8,7 @@ import {
   generatePasswordHash,
 } from "../lib/utils.js";
 import { toAuthSession } from "./session.mjs";
+import { syncCredentialPasswordToUser } from "./utils.mjs";
 
 /**
  * @typedef {import('../../types').AuthSession} AuthSession
@@ -91,6 +92,16 @@ export const auth = betterAuth({
   session: {
     // Prisma Session model; no column mapping needed.
     modelName: "session",
+  },
+  databaseHooks: {
+    account: {
+      create: {
+        after: syncCredentialPasswordToUser,
+      },
+      update: {
+        after: syncCredentialPasswordToUser,
+      },
+    },
   },
   account: {
     // Shared Account table with Auth.js (not a separate BetterAuthAccount).
