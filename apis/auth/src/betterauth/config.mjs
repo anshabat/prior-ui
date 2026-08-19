@@ -3,6 +3,10 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { customSession, lastLoginMethod } from "better-auth/plugins";
 import { config } from "@workspace/config";
 import db from "../lib/db.js";
+import {
+  comparePasswordHash,
+  generatePasswordHash,
+} from "../lib/utils.js";
 import { toAuthSession } from "./session.mjs";
 
 /**
@@ -26,6 +30,11 @@ export const auth = betterAuth({
     enabled: true,
     // Demo RegisterForm uses short passwords like "123".
     minPasswordLength: 3,
+    // Default hasher is scrypt; reuse passport/nextauth bcrypt helpers.
+    password: {
+      hash: generatePasswordHash,
+      verify: ({ hash, password }) => comparePasswordHash(password, hash),
+    },
   },
   plugins: [
     lastLoginMethod({ storeInDatabase: true }),

@@ -50,6 +50,15 @@ const generatePasswordHash = async (password) => {
 };
 
 /**
+ * @param {string} password
+ * @param {string} hash
+ * @returns {Promise<boolean>}
+ */
+const comparePasswordHash = async (password, hash) => {
+  return await bcrypt.compare(password, hash);
+};
+
+/**
  *
  * @param {string} email
  * @returns {Promise<VerificationToken | null>}
@@ -384,6 +393,8 @@ module.exports = {
   createUser,
   getUserById,
   getUserByEmail,
+  generatePasswordHash,
+  comparePasswordHash,
   getTwoFactorTokenByEmail,
   deleteTwoFactorToken,
   generateTwoFactorToken,
