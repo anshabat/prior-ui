@@ -16,3 +16,20 @@ export const syncCredentialPasswordToUser = async (account) => {
     data: { password: account.password },
   });
 };
+
+/**
+ * Better Auth maps `emailVerified` onto `emailVerifiedBool`. Also stamp
+ * `User.emailVerified` (DateTime) so passport/nextauth still see a verified user.
+ *
+ * @param {{ id?: string }} user
+ */
+export const syncEmailVerifiedAt = async (user) => {
+  if (!user?.id) {
+    return;
+  }
+
+  await db.user.updateMany({
+    where: { id: user.id, emailVerified: null },
+    data: { emailVerified: new Date() },
+  });
+};

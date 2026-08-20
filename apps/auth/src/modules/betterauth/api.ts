@@ -5,9 +5,12 @@ import type {
   SignInResponse,
   SignOutResponse,
 } from "@workspace/api-auth";
+import { config } from "@workspace/config";
 import { tryCatchAsync } from "@workspace/utils";
 import { ERROR_MESSAGES } from "../../utils/errors";
 import { authClient } from "./authClient";
+
+const { APP_BASE_URL } = config.auth;
 
 export interface SignInCredentials {
   email: string;
@@ -36,6 +39,7 @@ export async function signIn(
   );
 
   if (fetchError || result.error) {
+    // for translations in future,check error.code
     throw new Error(result?.error?.message || ERROR_MESSAGES.SignInError);
   }
 
@@ -55,6 +59,7 @@ export async function register(
       email: credentials.email,
       password: credentials.password,
       name,
+      callbackURL: APP_BASE_URL,
     }),
   );
 

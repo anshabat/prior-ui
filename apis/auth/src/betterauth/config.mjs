@@ -3,12 +3,16 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { customSession, lastLoginMethod } from "better-auth/plugins";
 import { config } from "@workspace/config";
 import db from "../lib/db.js";
+import { sendVerificationEmail } from "../lib/mail.js";
 import {
   comparePasswordHash,
   generatePasswordHash,
 } from "../lib/utils.js";
 import { toAuthSession } from "./session.mjs";
-import { syncCredentialPasswordToUser } from "./utils.mjs";
+import {
+  syncCredentialPasswordToUser,
+  syncEmailVerifiedAt,
+} from "./utils.mjs";
 
 /**
  * @typedef {import('../../types').AuthSession} AuthSession
@@ -29,6 +33,7 @@ export const auth = betterAuth({
   trustedOrigins: [APP_BASE_URL, ...CLIENT_APPS_URLS],
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
     // Demo RegisterForm uses short passwords like "123".
     minPasswordLength: 3,
     // Default hasher is scrypt; reuse passport/nextauth bcrypt helpers.
@@ -36,6 +41,14 @@ export const auth = betterAuth({
       hash: generatePasswordHash,
       verify: ({ hash, password }) => comparePasswordHash(password, hash),
     },
+  },
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendVerificationEmail(user.email, url);
+    },
+    sendOnSignIn: false,
+    autoSignInAfterVerification: false,
+    afterEmailVerification: syncEmailVerifiedAt,
   },
   plugins: [
     lastLoginMethod({ storeInDatabase: true }),
@@ -92,6 +105,10 @@ export const auth = betterAuth({
   session: {
     // Prisma Session model; no column mapping needed.
     modelName: "session",
+  },
+  verification: {
+    // New Verification table; nextauth still uses VerificationToken.
+    modelName: "verification",
   },
   databaseHooks: {
     account: {

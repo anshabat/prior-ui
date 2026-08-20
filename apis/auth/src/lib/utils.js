@@ -7,10 +7,23 @@
 
 const bcrypt = require("bcryptjs");
 const { randomUUID, randomInt } = require("node:crypto");
+const { config } = require("@workspace/config");
 const db = require("./db");
 const { sendVerificationEmail } = require("./mail");
 
+const { API_BASE_URL } = config.auth;
+
 const SALT_ROUNDS = 10;
+
+/**
+ * Passport / nextauth confirm URL. Better Auth builds its own
+ * `/api/auth/verify-email` link and passes that to `sendVerificationEmail`.
+ *
+ * @param {string} token
+ * @returns {string}
+ */
+const buildVerificationLink = (token) =>
+  `${API_BASE_URL}/page/verify-email?token=${token}`;
 
 /**
  * @param {string} id
@@ -135,7 +148,7 @@ const createUser = async (email, password) => {
   });
 
   const verificationToken = await generateVerificationToken(email);
-  await sendVerificationEmail(email, verificationToken.token);
+  await sendVerificationEmail(email, buildVerificationLink(verificationToken.token));
 
   return { user, verificationToken };
 };
@@ -237,6 +250,7 @@ const findOrCreateOAuthUser = async ({
         name,
         image,
         emailVerified: new Date(),
+        emailVerifiedBool: true,
       },
     });
   }
@@ -294,7 +308,10 @@ const verifyEmail = async (token) => {
   await db.$transaction([
     db.user.update({
       where: { email: verificationToken.email },
-      data: { emailVerified: new Date() },
+      data: {
+        emailVerified: new Date(),
+        emailVerifiedBool: true,
+      },
     }),
     db.verificationToken.delete({
       where: { id: verificationToken.id },
@@ -315,7 +332,7 @@ const resendVerificationEmail = async (email) => {
 
   if (!existingToken || isExpired) {
     const newToken = await generateVerificationToken(email);
-    await sendVerificationEmail(email, newToken.token);
+    await sendVerificationEmail(email, buildVerificationLink(newToken.token));
     return true;
   }
 
