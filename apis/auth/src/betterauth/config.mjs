@@ -3,7 +3,11 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { customSession, lastLoginMethod } from "better-auth/plugins";
 import { config } from "@workspace/config";
 import db from "../lib/db.js";
-import { sendVerificationEmail } from "../lib/mail.js";
+import {
+  buildResetLink,
+  sendPasswordResetEmail,
+  sendVerificationEmail,
+} from "../lib/mail.js";
 import {
   comparePasswordHash,
   generatePasswordHash,
@@ -12,6 +16,7 @@ import { toAuthSession } from "./session.mjs";
 import {
   syncCredentialPasswordToUser,
   syncEmailVerifiedAt,
+  syncUserPasswordFromCredentialAccount,
 } from "./utils.mjs";
 
 /**
@@ -40,6 +45,15 @@ export const auth = betterAuth({
     password: {
       hash: generatePasswordHash,
       verify: ({ hash, password }) => comparePasswordHash(password, hash),
+    },
+    sendResetPassword: async ({ user, token }) => {
+      await sendPasswordResetEmail(
+        user.email,
+        buildResetLink(token, APP_BASE_URL),
+      );
+    },
+    onPasswordReset: async ({ user }) => {
+      await syncUserPasswordFromCredentialAccount(user);
     },
   },
   emailVerification: {

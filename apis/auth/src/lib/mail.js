@@ -18,18 +18,15 @@ const sendVerificationEmail = async (email, url) => {
 
 /**
  * @param {string} email
- * @param {string} token
- * @param {string} callbackUrl
+ * @param {string} url fully-built reset URL
  * @returns {Promise<void>}
  */
-const sendPasswordResetEmail = async (email, token, callbackUrl) => {
-  const resetLink = buildResetLink(token, callbackUrl);
-
+const sendPasswordResetEmail = async (email, url) => {
   await resend.emails.send({
     from: "onboarding@resend.dev",
     to: email,
     subject: "Reset your password",
-    html: `<p>Click <a href="${resetLink}">here</a> to reset your password<br />${token}</p>`,
+    html: `<p>Click <a href="${url}">here</a> to reset your password<br />${url}</p>`,
   });
 };
 
@@ -62,4 +59,5 @@ module.exports = {
   sendVerificationEmail,
   sendPasswordResetEmail,
   sendTwoFactorTokenEmail,
+  buildResetLink,
 };

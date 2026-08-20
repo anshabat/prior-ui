@@ -82,6 +82,19 @@ model Session {
   @@index([userId])
 }
 
+// Better Auth email verification / password-reset tokens.
+// Do not reuse VerificationToken — different PK/columns; nextauth still uses that table.
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@index([identifier])
+}
+
 model VerificationToken {
   id      String   @id @default(cuid())
   email   String

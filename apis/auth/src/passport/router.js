@@ -31,6 +31,7 @@ const {
 const {
   sendPasswordResetEmail,
   sendTwoFactorTokenEmail,
+  buildResetLink,
 } = require("../lib/mail.js");
 const passport = require("passport");
 const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
@@ -375,8 +376,7 @@ router.post(
 
       await sendPasswordResetEmail(
         email,
-        passwordResetToken.token,
-        callbackUrl,
+        buildResetLink(passwordResetToken.token, callbackUrl),
       );
 
       return res.json({ success: true, data: true });

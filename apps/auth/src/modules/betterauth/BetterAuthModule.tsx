@@ -1,5 +1,6 @@
 import { Layout } from "../../components/Layout";
 import { BetterAuthRegister } from "./BetterAuthRegister";
+import { BetterAuthResetPassword } from "./BetterAuthResetPassword";
 import { BetterAuthSignIn } from "./BetterAuthSignIn";
 import { getSession } from "./api";
 import { useRedirectToOpener } from "../../hooks/useRedirectToOpener";
@@ -15,7 +16,7 @@ export function BetterAuthModule() {
       <Layout
         SignInForm={<BetterAuthSignIn refreshSession={refreshSession} />}
         RegisterForm={<BetterAuthRegister />}
-        ResetPasswordForm={null}
+        ResetPasswordForm={<BetterAuthResetPassword />}
       />
     </div>
   );

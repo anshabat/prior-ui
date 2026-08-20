@@ -405,6 +405,12 @@ const updateUserPasswordByToken = async (userId, tokenId, password) => {
         where: { id: userId },
         data: { password: passwordHash },
       }),
+      // Keep Better Auth's credential hash in sync. updateMany is a no-op
+      // when the row does not exist — do not create it on reset.
+      db.account.updateMany({
+        where: { userId, provider: "credential" },
+        data: { password: passwordHash },
+      }),
       db.passwordResetToken.delete({
         where: { id: tokenId },
       }),

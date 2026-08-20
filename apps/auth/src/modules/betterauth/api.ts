@@ -2,8 +2,12 @@ import type {
   AuthSession,
   RegisterPayload,
   RegisterResponse,
+  ResetPasswordPayload,
+  ResetPasswordResponse,
   SignInResponse,
   SignOutResponse,
+  UpdatePasswordPayload,
+  UpdatePasswordResponse,
 } from "@workspace/api-auth";
 import { config } from "@workspace/config";
 import { tryCatchAsync } from "@workspace/utils";
@@ -75,6 +79,46 @@ export async function register(
   }
 
   return { data: true, error: null };
+}
+
+export async function resetPassword({
+  email,
+  callbackUrl,
+}: ResetPasswordPayload): Promise<ResetPasswordResponse> {
+  const [result, fetchError] = await tryCatchAsync(
+    authClient.requestPasswordReset({
+      email,
+      redirectTo: callbackUrl,
+    }),
+  );
+
+  if (fetchError || result.error) {
+    throw new Error(
+      result?.error?.message || ERROR_MESSAGES.PasswordResetFailed,
+    );
+  }
+
+  return { success: true, data: true };
+}
+
+export async function updatePassword({
+  token,
+  password,
+}: UpdatePasswordPayload): Promise<UpdatePasswordResponse> {
+  const [result, fetchError] = await tryCatchAsync(
+    authClient.resetPassword({
+      token,
+      newPassword: password,
+    }),
+  );
+
+  if (fetchError || result.error) {
+    throw new Error(
+      result?.error?.message || ERROR_MESSAGES.UpdatePasswordFailed,
+    );
+  }
+
+  return { success: true, data: true };
 }
 
 export async function logout(): Promise<SignOutResponse> {
