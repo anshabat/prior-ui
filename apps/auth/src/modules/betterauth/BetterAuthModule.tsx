@@ -12,7 +12,9 @@ export function BetterAuthModule() {
 
   return (
     <div>
-      <h2>{session?.user.name}</h2>
+      <h2>
+        {session?.user.name} - {session?.user.provider}
+      </h2>
       <Layout
         SignInForm={<BetterAuthSignIn refreshSession={refreshSession} />}
         RegisterForm={<BetterAuthRegister />}

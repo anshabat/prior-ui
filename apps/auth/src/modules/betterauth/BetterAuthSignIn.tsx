@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { logout, signIn } from "./api";
+import { logout, signIn, signInWithOAuth } from "./api";
 import { SignInForm } from "../../components/SignInForm";
 import { useLoginMutation, useSignOutMutation } from "../../hooks/useAuthApi";
+import { getServerErrorMessage } from "../../utils/errors";
 
 interface BetterAuthSignInProps {
   refreshSession: () => Promise<unknown>;
 }
 
 export function BetterAuthSignIn({ refreshSession }: BetterAuthSignInProps) {
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(() =>
+    getServerErrorMessage(),
+  );
 
   const { mutate: signWithCredentials } = useLoginMutation(
     ({ email, password }) => signIn({ email, password }),
@@ -28,6 +31,15 @@ export function BetterAuthSignIn({ refreshSession }: BetterAuthSignInProps) {
     },
   });
 
+  const handleOAuthSignIn = async (providerId: string) => {
+    if (providerId === "google" || providerId === "github") {
+      const result = await signInWithOAuth(providerId);
+      if (result.error) {
+        setError(result.error.statusText);
+      }
+    }
+  }
+
   return (
     <SignInForm
       title="Better Auth Login"
@@ -44,8 +56,11 @@ export function BetterAuthSignIn({ refreshSession }: BetterAuthSignInProps) {
         void refreshSession();
       }}
       onSignOut={() => signOut()}
-      providers={[]}
-      onOAuthSignIn={() => {}}
+      providers={[
+        { id: "google", name: "Google" },
+        { id: "github", name: "GitHub" },
+      ]}
+      onOAuthSignIn={handleOAuthSignIn}
     />
   );
 }

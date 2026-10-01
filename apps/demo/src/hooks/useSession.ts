@@ -23,7 +23,7 @@ export const useSession = (): AuthSession | null => {
       }
     };
 
-    fetchSession();
+    void fetchSession();
   }, []);
 
   return session;

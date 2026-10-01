@@ -121,6 +121,13 @@ export async function updatePassword({
   return { success: true, data: true };
 }
 
+export async function signInWithOAuth(provider: "google" | "github") {
+  return authClient.signIn.social({
+    provider,
+    callbackURL: window.location.href,
+  });
+}
+
 export async function logout(): Promise<SignOutResponse> {
   const [result, fetchError] = await tryCatchAsync(authClient.signOut());
 

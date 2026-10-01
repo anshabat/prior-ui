@@ -36,6 +36,11 @@ export const auth = betterAuth({
   baseURL: API_BASE_URL,
   // Browser origins allowed to send credentials (auth app + demo apps).
   trustedOrigins: [APP_BASE_URL, ...CLIENT_APPS_URLS],
+  // OAuth failures otherwise land on the API's /api/auth/error page.
+  // Send them to the auth app with ?error= like passport/nextauth.
+  onAPIError: {
+    errorURL: APP_BASE_URL,
+  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
@@ -63,6 +68,18 @@ export const auth = betterAuth({
     sendOnSignIn: false,
     autoSignInAfterVerification: false,
     afterEmailVerification: syncEmailVerifiedAt,
+  },
+  // Same AUTH_* env vars as passport/nextauth. Callback is
+  // /api/auth/callback/{provider} — already registered on the OAuth apps.
+  socialProviders: {
+    google: {
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    },
+    github: {
+      clientId: process.env.AUTH_GITHUB_ID,
+      clientSecret: process.env.AUTH_GITHUB_SECRET,
+    },
   },
   plugins: [
     lastLoginMethod({ storeInDatabase: true }),
@@ -125,6 +142,17 @@ export const auth = betterAuth({
     modelName: "verification",
   },
   databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          // Stamp DateTime emailVerified for OAuth users so passport/nextauth
+          // see them as verified. Credential sign-up stays unverified.
+          if (user.emailVerified) {
+            await syncEmailVerifiedAt(user);
+          }
+        },
+      },
+    },
     account: {
       create: {
         after: syncCredentialPasswordToUser,
@@ -145,6 +173,11 @@ export const auth = betterAuth({
       refreshToken: "refresh_token",
       idToken: "id_token",
       // Do not map accessTokenExpiresAt -> expires_at (DateTime vs Int).
+    },
+    // Same email + trusted Google/GitHub attaches to one User instead of duplicating.
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google", "github"],
     },
   },
 });
