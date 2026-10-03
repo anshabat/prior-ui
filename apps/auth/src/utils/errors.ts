@@ -13,6 +13,9 @@ export const ERROR_MESSAGES = {
   OAuthSignInError: "Could not start OAuth sign-in. Please try again.",
   OAuthCallbackError:
     "The OAuth provider returned an error during sign-in. Please try again.",
+  // Better Auth OAuth callback (e.g. bad client secret → token exchange)
+  invalid_code:
+    "The OAuth provider returned an error during sign-in. Please try again.",
   OAuthProfileParseError:
     "We couldn’t read your profile from the OAuth provider. Please try again.",
   CallbackRouteError: "Could not finish sign-in. Please try again.",
@@ -106,4 +109,9 @@ export const getErrorMessage = (
     return ERROR_MESSAGES[errorKey];
   }
   return fallbackMessage || ERROR_MESSAGES.Default;
+};
+
+export const getServerErrorMessage = () => {
+  const error = new URLSearchParams(window.location.search).get("error");
+  return error ? getErrorMessage(error, ERROR_MESSAGES.Default) : null;
 };

@@ -32,6 +32,7 @@ const {
 const {
   sendTwoFactorTokenEmail,
   sendPasswordResetEmail,
+  buildResetLink,
 } = require("../lib/mail.js");
 const { config } = require("@workspace/config");
 const { APP_BASE_URL } = config.auth;
@@ -168,6 +169,7 @@ const authConfig = {
 
 const router = express.Router();
 router.use(cors({ origin: APP_BASE_URL, credentials: true }));
+router.use(express.json());
 
 router.use("/api/auth/*", ExpressAuth(authConfig));
 
@@ -297,8 +299,7 @@ router.post(
 
       await sendPasswordResetEmail(
         email,
-        passwordResetToken.token,
-        callbackUrl,
+        buildResetLink(passwordResetToken.token, callbackUrl),
       );
 
       return res.json({ success: true, data: true });

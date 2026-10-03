@@ -7,10 +7,23 @@
 
 const bcrypt = require("bcryptjs");
 const { randomUUID, randomInt } = require("node:crypto");
+const { config } = require("@workspace/config");
 const db = require("./db");
 const { sendVerificationEmail } = require("./mail");
 
+const { API_BASE_URL } = config.auth;
+
 const SALT_ROUNDS = 10;
+
+/**
+ * Passport / nextauth confirm URL. Better Auth builds its own
+ * `/api/auth/verify-email` link and passes that to `sendVerificationEmail`.
+ *
+ * @param {string} token
+ * @returns {string}
+ */
+const buildVerificationLink = (token) =>
+  `${API_BASE_URL}/page/verify-email?token=${token}`;
 
 /**
  * @param {string} id
@@ -47,6 +60,15 @@ const getUserByEmail = async (email) => {
  */
 const generatePasswordHash = async (password) => {
   return await bcrypt.hash(password, SALT_ROUNDS);
+};
+
+/**
+ * @param {string} password
+ * @param {string} hash
+ * @returns {Promise<boolean>}
+ */
+const comparePasswordHash = async (password, hash) => {
+  return await bcrypt.compare(password, hash);
 };
 
 /**
@@ -115,8 +137,18 @@ const createUser = async (email, password) => {
     },
   });
 
+  // Same shape Better Auth writes so this user can sign in under betterauth.
+  await db.account.create({
+    data: {
+      userId: user.id,
+      provider: "credential",
+      providerAccountId: user.id,
+      password: passwordHash,
+    },
+  });
+
   const verificationToken = await generateVerificationToken(email);
-  await sendVerificationEmail(email, verificationToken.token);
+  await sendVerificationEmail(email, buildVerificationLink(verificationToken.token));
 
   return { user, verificationToken };
 };
@@ -218,6 +250,7 @@ const findOrCreateOAuthUser = async ({
         name,
         image,
         emailVerified: new Date(),
+        emailVerifiedBool: true,
       },
     });
   }
@@ -275,7 +308,10 @@ const verifyEmail = async (token) => {
   await db.$transaction([
     db.user.update({
       where: { email: verificationToken.email },
-      data: { emailVerified: new Date() },
+      data: {
+        emailVerified: new Date(),
+        emailVerifiedBool: true,
+      },
     }),
     db.verificationToken.delete({
       where: { id: verificationToken.id },
@@ -296,7 +332,7 @@ const resendVerificationEmail = async (email) => {
 
   if (!existingToken || isExpired) {
     const newToken = await generateVerificationToken(email);
-    await sendVerificationEmail(email, newToken.token);
+    await sendVerificationEmail(email, buildVerificationLink(newToken.token));
     return true;
   }
 
@@ -369,6 +405,12 @@ const updateUserPasswordByToken = async (userId, tokenId, password) => {
         where: { id: userId },
         data: { password: passwordHash },
       }),
+      // Keep Better Auth's credential hash in sync. updateMany is a no-op
+      // when the row does not exist — do not create it on reset.
+      db.account.updateMany({
+        where: { userId, provider: "credential" },
+        data: { password: passwordHash },
+      }),
       db.passwordResetToken.delete({
         where: { id: tokenId },
       }),
@@ -384,6 +426,8 @@ module.exports = {
   createUser,
   getUserById,
   getUserByEmail,
+  generatePasswordHash,
+  comparePasswordHash,
   getTwoFactorTokenByEmail,
   deleteTwoFactorToken,
   generateTwoFactorToken,

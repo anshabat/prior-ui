@@ -1,25 +1,27 @@
 const express = require("express");
 const { config } = require("@workspace/config");
-
-const { AUTH_STRATEGY, API_PORT, API_BASE_URL } = config.auth;
 const privateRouter = require("./privateRouter");
-const nextAuthRouter = require("./nextauth/router");
-const passportRouter = require("./passport/router");
 const publicRouter = require("./publicRouter");
 
-const app = express();
-app.use(express.json());
+const { AUTH_STRATEGY, API_PORT, API_BASE_URL } = config.auth;
 
 const strategyMap = {
-  nextauth: nextAuthRouter,
-  passport: passportRouter,
+  nextauth: () => require("./nextauth/router"),
+  passport: () => require("./passport/router"),
+  betterauth: async () => {
+    const { betterAuthRouter } = await import("./betterauth/router.mjs");
+    return betterAuthRouter;
+  },
 };
-const authRouter = strategyMap[AUTH_STRATEGY];
 
-app.use(authRouter);
-app.use(privateRouter);
-app.use("/public", publicRouter);
+async function main() {
+  const app = express();
+  app.use(await strategyMap[AUTH_STRATEGY]());
+  app.use(privateRouter);
+  app.use("/public", publicRouter);
+  app.listen(API_PORT, () => {
+    console.log(`Auth server listening on ${API_BASE_URL}`);
+  });
+}
 
-app.listen(API_PORT, () => {
-  console.log(`Auth server listening on ${API_BASE_URL}`);
-});
+main();

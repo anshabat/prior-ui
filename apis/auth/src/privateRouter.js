@@ -11,6 +11,7 @@ const { config } = require("@workspace/config");
 const router = express.Router();
 
 router.use(cors({ origin: config.auth.APP_BASE_URL, credentials: true }));
+router.use(express.json());
 
 router.post(
   "/api/register",

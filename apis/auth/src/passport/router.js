@@ -31,6 +31,7 @@ const {
 const {
   sendPasswordResetEmail,
   sendTwoFactorTokenEmail,
+  buildResetLink,
 } = require("../lib/mail.js");
 const passport = require("passport");
 const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
@@ -58,6 +59,7 @@ const router = express.Router();
 
 router.use(/** @type {RequestHandler} */ (cookieParser()));
 router.use(cors({ origin: APP_BASE_URL, credentials: true }));
+router.use(/** @type {RequestHandler} */ (express.json()));
 router.use(/** @type {RequestHandler} */ (passport.initialize()));
 
 passport.use(
@@ -374,8 +376,7 @@ router.post(
 
       await sendPasswordResetEmail(
         email,
-        passwordResetToken.token,
-        callbackUrl,
+        buildResetLink(passwordResetToken.token, callbackUrl),
       );
 
       return res.json({ success: true, data: true });

@@ -1,5 +1,5 @@
 export interface AuthConfig {
-  AUTH_STRATEGY: "passport" | "nextauth";
+  AUTH_STRATEGY: "passport" | "nextauth" | "betterauth";
   API_BASE_URL: string;
   API_PORT: number;
   APP_PORT: number;
@@ -8,7 +8,7 @@ export interface AuthConfig {
 }
 
 export const authConfig: AuthConfig = {
-  AUTH_STRATEGY: "passport",
+  AUTH_STRATEGY: "betterauth",
   API_PORT: 4001,
   APP_PORT: 3001,
   API_BASE_URL: "http://localhost:4001",

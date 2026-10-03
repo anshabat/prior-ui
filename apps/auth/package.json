@@ -25,6 +25,7 @@
     "@workspace/config": "workspace:*",
     "@workspace/utils": "workspace:*",
     "bcryptjs": "^2.4.3",
+    "better-auth": "1.6.29",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^4.21.2",

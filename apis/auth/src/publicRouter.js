@@ -19,8 +19,12 @@ router.get(
    * @param {import('express').Response} res
    */
   async (req, res) => {
-    const target =
-      AUTH_STRATEGY === "nextauth" ? "/api/auth/session" : "/api/session";
+    const sessionPath = {
+      nextauth: "/api/auth/session",
+      passport: "/api/session",
+      betterauth: "/api/auth/get-session",
+    };
+    const target = sessionPath[AUTH_STRATEGY];
 
     const response = await fetch(`${API_BASE_URL}${target}`, {
       headers: {
@@ -28,7 +32,6 @@ router.get(
       },
     });
 
-    /** @type {import('express').Response<AuthSession>} */
     const data = await response.json();
 
     return res.status(response.status).json(data);

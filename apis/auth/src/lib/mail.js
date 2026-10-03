@@ -1,40 +1,32 @@
 const { Resend } = require("resend");
-const { config } = require("@workspace/config");
-
-const { API_BASE_URL } = config.auth;
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 /**
  * @param {string} email
- * @param {string} token
+ * @param {string} url fully-built confirm URL
  * @returns {Promise<void>}
  */
-const sendVerificationEmail = async (email, token) => {
-  const confirmLink = `${API_BASE_URL}/page/verify-email?token=${token}`;
-
+const sendVerificationEmail = async (email, url) => {
   await resend.emails.send({
     from: "onboarding@resend.dev",
     to: email,
     subject: "Verify your email",
-    html: `<p>Click <a href="${confirmLink}">here</a> to verify your email</p>`,
+    html: `<p>Click <a href="${url}">here</a> to verify your email</p>`,
   });
 };
 
 /**
  * @param {string} email
- * @param {string} token
- * @param {string} callbackUrl
+ * @param {string} url fully-built reset URL
  * @returns {Promise<void>}
  */
-const sendPasswordResetEmail = async (email, token, callbackUrl) => {
-  const resetLink = buildResetLink(token, callbackUrl);
-
+const sendPasswordResetEmail = async (email, url) => {
   await resend.emails.send({
     from: "onboarding@resend.dev",
     to: email,
     subject: "Reset your password",
-    html: `<p>Click <a href="${resetLink}">here</a> to reset your password<br />${token}</p>`,
+    html: `<p>Click <a href="${url}">here</a> to reset your password<br />${url}</p>`,
   });
 };
 
@@ -67,4 +59,5 @@ module.exports = {
   sendVerificationEmail,
   sendPasswordResetEmail,
   sendTwoFactorTokenEmail,
+  buildResetLink,
 };

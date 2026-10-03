@@ -5,7 +5,7 @@ module.exports = {
     es2024: true,
   },
   parserOptions: {
-    sourceType: "script",
+    sourceType: "module",
   },
   extends: ["eslint:recommended"],
   ignorePatterns: ["dist"],
