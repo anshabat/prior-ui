@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from "react";
-import type { Provider } from "@workspace/api-auth";
+import type { Provider } from "apis/auth";
 
 export interface SignInFormProps {
   title?: string;

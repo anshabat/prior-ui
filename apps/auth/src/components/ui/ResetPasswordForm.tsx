@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from "react";
-import { getSearchParams } from "../utils";
+import { getSearchParams } from "../../utils";
 
 interface ResetPasswordFormProps {
   onResetPassword: (email: string) => void;

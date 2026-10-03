@@ -1,12 +1,11 @@
-import { ResetPasswordForm } from "../../components/ResetPasswordForm";
+import { ResetPasswordForm } from "../ui/ResetPasswordForm.tsx";
 import {
   useResetPassword,
   useUpdatePassword,
-} from "../../hooks/useResetPassword";
+} from "../../hooks/useResetPassword.ts";
 import { getSearchParams } from "../../utils";
 
-export function PassportResetPassword() {
-
+export function ResetPassword() {
   const {
     mutate: handleResetPassword,
     isPending: isResetPasswordPending,

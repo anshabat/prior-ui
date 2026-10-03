@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { signInWithOAuth } from "../../api";
-import { SignInForm } from "../../components/SignInForm";
-import { useLoginMutation, useSignOutMutation } from "../../hooks/useAuthApi";
+import { SignInForm } from "../ui/SignInForm.tsx";
+import { useLoginMutation, useSignOutMutation } from "../../hooks/useAuthApi.ts";
 
-interface PassportSignInProps {
+interface SignInProps {
   refreshSession: () => Promise<unknown>;
 }
 
-export function PassportSignIn({ refreshSession }: PassportSignInProps) {
+export function SignIn({ refreshSession }: SignInProps) {
   const [isTwoFactorStep, setIsTwoFactorStep] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

@@ -15,7 +15,7 @@ export function Layout({
     <div>
       {SignInForm}
 
-      <div style={{ display: "flex", gap: 60, marginTop: 60 }}>
+      <div style={{ display: "flex", gap: 60, marginTop: 60, minWidth: 600, width: "100%" }}>
         <div>
           <h2>Register</h2>
           {RegisterForm}

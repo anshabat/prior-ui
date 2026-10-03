@@ -1,7 +1,7 @@
-import { RegisterForm } from "../../components/RegisterForm";
-import { useRegister } from "../../hooks/useRegister";
+import { RegisterForm } from "../ui/RegisterForm.tsx";
+import { useRegister } from "../../hooks/useRegister.ts";
 
-export function PassportRegister() {
+export function SignUp() {
   const { mutate: registerMutation, isPending, error } = useRegister();
 
   const handleRegister = async (email: string, password: string) => {
