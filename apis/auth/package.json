@@ -7,8 +7,7 @@
     "dev": "node --inspect --env-file=.env --watch src/server.js",
     "lint": "eslint .",
     "ts": "tsc",
-    "db:reset": "prisma migrate reset --force && prisma db push",
-    "db:update": "prisma db push && prisma generate"
+    "prisma": "prisma"
   },
   "dependencies": {
     "@auth/core": "0.41.1",
