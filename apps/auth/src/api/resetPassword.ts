@@ -4,7 +4,7 @@ import type {
 } from "@workspace/api-auth";
 import { config } from "@workspace/config";
 import { tryCatchAsync } from "@workspace/utils";
-import { ERROR_MESSAGES } from "../utils/errors";
+import { ERROR_MESSAGES } from "../constants";
 
 const { API_BASE_URL } = config.auth;
 

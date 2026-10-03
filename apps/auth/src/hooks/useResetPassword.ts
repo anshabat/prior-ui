@@ -4,7 +4,7 @@ import type {
   UpdatePasswordResponse,
 } from "@workspace/api-auth";
 import { resetPassword, updatePassword } from "../api";
-import { ERROR_MESSAGES } from "../utils/errors";
+import { ERROR_MESSAGES } from "../constants";
 import type { MutationHook } from "./types";
 
 export const useResetPassword: MutationHook<ResetPasswordResponse, string> = (
