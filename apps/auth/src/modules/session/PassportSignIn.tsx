@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { signIn, logout, signInWithOAuth } from "../../api";
+import { signInWithOAuth } from "../../api";
 import { SignInForm } from "../../components/SignInForm";
 import { useLoginMutation, useSignOutMutation } from "../../hooks/useAuthApi";
 
@@ -11,20 +11,16 @@ export function PassportSignIn({ refreshSession }: PassportSignInProps) {
   const [isTwoFactorStep, setIsTwoFactorStep] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { mutate: signWithCredentials } = useLoginMutation(
-    async ({ email, password, twoFactorCode }) =>
-      signIn({ email, password, code: twoFactorCode }),
-    {
-      onSuccess: (data) => {
-        setIsTwoFactorStep(data.twoFactor);
-      },
-      onError: (error) => {
-        setError(error.message);
-      },
+  const { mutate: signWithCredentials } = useLoginMutation({
+    onSuccess: (data) => {
+      setIsTwoFactorStep(data.twoFactor);
     },
-  );
+    onError: (error) => {
+      setError(error.message);
+    },
+  });
 
-  const { mutate: signOut } = useSignOutMutation(logout, {
+  const { mutate: signOut } = useSignOutMutation({
     onSuccess: () => {
       setError(null);
     },

@@ -1,4 +1,3 @@
-import { getSession } from "../../api";
 import { PassportSignIn } from "./PassportSignIn";
 import { PassportRegister } from "./PassportRegister";
 import { PassportResetPassword } from "./PassportResetPassword";
@@ -7,7 +6,7 @@ import { useRedirectToOpener } from "../../hooks/useRedirectToOpener";
 import { useSessionQuery } from "../../hooks/useAuthApi";
 
 export function SessionModule() {
-  const { session, refreshSession } = useSessionQuery(() => getSession());
+  const { session, refreshSession } = useSessionQuery();
   useRedirectToOpener(session);
 
   return (

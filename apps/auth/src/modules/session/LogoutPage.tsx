@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LogoutButton } from "../../components/LogoutButton";
-import { getSession, logout } from "../../api";
+import { logout } from "../../api";
 import { redirectToOpener } from "../../utils/redirectToOpener";
 import { useSessionQuery } from "../../hooks/useAuthApi";
 
@@ -13,7 +13,7 @@ export default function LogoutPage() {
     session,
     isLoading: isSessionLoading,
     refreshSession,
-  } = useSessionQuery(() => getSession());
+  } = useSessionQuery();
 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 

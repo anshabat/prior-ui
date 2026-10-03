@@ -1,4 +1,3 @@
-import { resetPassword, updatePassword } from "../../api";
 import { ResetPasswordForm } from "../../components/ResetPasswordForm";
 import {
   useResetPassword,
@@ -12,13 +11,13 @@ export function PassportResetPassword() {
     mutate: handleResetPassword,
     isPending: isResetPasswordPending,
     error: resetPasswordError,
-  } = useResetPassword(resetPassword);
+  } = useResetPassword();
 
   const {
     mutate: updatePasswordMutation,
     error: updatePasswordError,
     isPending: isUpdatePasswordPending,
-  } = useUpdatePassword(updatePassword);
+  } = useUpdatePassword();
 
   const handleUpdatePassword = (password: string, newPassword: string) => {
     const { resetPasswordToken } = getSearchParams();
