@@ -1,4 +1,4 @@
-import { register } from "./api";
+import { register } from "../../api";
 import { RegisterForm } from "../../components/RegisterForm";
 import { useRegister } from "../../hooks/useRegister";
 

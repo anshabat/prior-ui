@@ -1,4 +1,4 @@
-import { resetPassword, updatePassword } from "./api";
+import { resetPassword, updatePassword } from "../../api";
 import { ResetPasswordForm } from "../../components/ResetPasswordForm";
 import {
   useResetPassword,

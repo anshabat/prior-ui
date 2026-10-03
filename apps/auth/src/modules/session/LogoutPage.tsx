@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LogoutButton } from "../../components/LogoutButton";
-import { getSession, logout } from "./api";
+import { getSession, logout } from "../../api";
 import { redirectToOpener } from "../../utils/redirectToOpener";
 import { useSessionQuery } from "../../hooks/useAuthApi";
 

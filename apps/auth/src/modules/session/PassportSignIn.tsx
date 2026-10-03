@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { signIn, logout, signInWithOAuth } from "./api";
+import { signIn, logout, signInWithOAuth } from "../../api";
 import { SignInForm } from "../../components/SignInForm";
 import { useLoginMutation, useSignOutMutation } from "../../hooks/useAuthApi";
 
