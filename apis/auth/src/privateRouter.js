@@ -5,7 +5,7 @@
 
 const express = require("express");
 const cors = require("cors");
-const { createUser } = require("./lib/utils.js");
+const { registerUser } = require("./lib/utils.js");
 const { config } = require("@workspace/config");
 
 const router = express.Router();
@@ -22,7 +22,7 @@ router.post(
   async (req, res) => {
     try {
       const { email, password } = req.body ?? {};
-      await createUser(email, password);
+      await registerUser(email, password);
       return res.json({ data: true, error: null });
     } catch (error) {
       if (error instanceof Error) {

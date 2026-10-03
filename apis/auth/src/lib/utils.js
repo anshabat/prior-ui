@@ -16,7 +16,6 @@ const SALT_ROUNDS = 10;
  * @param {string} id
  * @returns {Promise<User | null>}
  */
-
 const getUserById = async (id) => {
   try {
     const user = await db.user.findUnique({ where: { id } });
@@ -70,7 +69,6 @@ const getVerificationTokenByEmail = async (email) => {
  * @param {string} email
  * @returns {Promise<VerificationToken>}
  */
-
 const generateVerificationToken = async (email) => {
   const token = randomUUID();
   const expires = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
@@ -91,11 +89,30 @@ const generateVerificationToken = async (email) => {
 
 /**
  * @param {string} email
+ * @param {string} passwordHash
+ * @returns {Promise<User | null>}
+ */
+const createUser = async (email, passwordHash) => {
+  try {
+    return await db.user.create({
+      data: {
+        email,
+        name: "Session user",
+        password: passwordHash,
+      },
+    });
+  } catch (error) {
+    console.error("Error creating user:", error);
+    return null;
+  }
+};
+
+/**
+ * @param {string} email
  * @param {string} password
  * @returns {Promise<{ user: User, verificationToken: VerificationToken }>}
  */
-
-const createUser = async (email, password) => {
+const registerUser = async (email, password) => {
   if (!email || !password) {
     throw new Error("Missing email or password");
   }
@@ -106,14 +123,10 @@ const createUser = async (email, password) => {
   }
 
   const passwordHash = await generatePasswordHash(password);
-
-  const user = await db.user.create({
-    data: {
-      email,
-      name: "Session user",
-      password: passwordHash,
-    },
-  });
+  const user = await createUser(email, passwordHash);
+  if (!user) {
+    throw new Error("Failed to create user");
+  }
 
   const verificationToken = await generateVerificationToken(email);
   await sendVerificationEmail(email, verificationToken.token);
@@ -125,7 +138,6 @@ const createUser = async (email, password) => {
  * @param {string} email
  * @returns {Promise<TwoFactorToken | null>}
  */
-
 const getTwoFactorTokenByEmail = async (email) => {
   try {
     return await db.twoFactorToken.findFirst({ where: { email } });
@@ -381,7 +393,7 @@ const updateUserPasswordByToken = async (userId, tokenId, password) => {
 };
 
 module.exports = {
-  createUser,
+  registerUser,
   getUserById,
   getUserByEmail,
   getTwoFactorTokenByEmail,
