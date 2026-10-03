@@ -7,7 +7,6 @@ export function LogoutButton({
   onLogout: () => void;
   isLoading?: boolean;
 }) {
-  console.log("isLoading", isLoading);
 
   if (!isLoggedIn) {
     return <div>user is not logged in</div>;

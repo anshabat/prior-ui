@@ -14,7 +14,7 @@ export function SessionModule() {
 
   return (
     <div>
-      <h2>{session?.user.name}</h2>
+      <h2>{session?.user.name} - {session?.user.provider}</h2>
       <Layout
         SignInForm={<PassportSignIn refreshSession={refreshSession} />}
         RegisterForm={<PassportRegister />}
