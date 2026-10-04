@@ -6,7 +6,7 @@ const express = require("express");
 const cors = require("cors");
 const { config } = require("@workspace/config");
 
-const { AUTH_STRATEGY, CLIENT_APPS_URLS, API_BASE_URL } = config.auth;
+const { CLIENT_APPS_URLS, API_BASE_URL } = config.auth;
 
 const router = express.Router();
 
@@ -19,10 +19,7 @@ router.get(
    * @param {import('express').Response} res
    */
   async (req, res) => {
-    const target =
-      AUTH_STRATEGY === "nextauth" ? "/api/auth/session" : "/api/session";
-
-    const response = await fetch(`${API_BASE_URL}${target}`, {
+    const response = await fetch(`${API_BASE_URL}/api/sessio`, {
       headers: {
         ...(req.headers.cookie && { cookie: req.headers.cookie }),
       },
