@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LogoutButton } from "../components/ui/LogoutButton.tsx";
 import { logout } from "../api";
-import { redirectToOpener } from "../utils/redirectToOpener.ts";
+import { redirectToOpener } from "../utils";
 import { useSessionQuery } from "../hooks/useAuthApi.ts";
 
 export default function LogoutPage() {

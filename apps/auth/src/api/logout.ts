@@ -2,7 +2,7 @@ import type { SignOutResponse } from "@workspace/api-auth";
 import { config } from "@workspace/config";
 import { tryCatchAsync } from "@workspace/utils";
 import { ERROR_MESSAGES } from "../constants";
-import { getErrorMessage } from "../utils/errors";
+import { getErrorMessage } from "../utils";
 
 const { API_BASE_URL } = config.auth;
 
