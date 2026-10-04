@@ -233,22 +233,6 @@ router.get("/api/auth/callback/github", (req, res, next) => {
   )(req, res, next);
 });
 
-// OAuth error handler
-router.get(
-  "/api/auth/error",
-  /**
-   * @param {Request} req
-   * @param {Response} res
-   */
-  (req, res) => {
-    const serverRoot = `${req.protocol}://${req.get("host")}`;
-    const returnUrl = req.cookies.oauth_return_url || serverRoot;
-    res.clearCookie("oauth_return_url");
-
-    res.redirect(`${returnUrl}?error=auth_failed`);
-  },
-);
-
 router.post(
   "/api/signin",
   /**

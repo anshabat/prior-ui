@@ -8,6 +8,24 @@
 const { createOauthJWT } = require("./passport/utils.js");
 
 /**
+ * Replace or remove the error search param on an absolute return URL.
+ * @param {string} returnUrl
+ * @param {string} [error]
+ * @returns {string}
+ */
+const buildOauthRedirectUrl = (returnUrl, error) => {
+  const url = new URL(returnUrl);
+
+  if (error) {
+    url.searchParams.set("error", error);
+  } else {
+    url.searchParams.delete("error");
+  }
+
+  return url.href;
+};
+
+/**
  * Reusable middleware to save OAuth return URL
  * @param {Request} req
  * @param {Response} res
@@ -42,9 +60,7 @@ const createOAuthCallbackHandler =
 
     if (err || !user) {
       console.error(`OAuth ${provider} callback failed:`, err ?? "Unauthorized");
-      return res.redirect(
-        `${returnUrl}?error=${encodeURIComponent("OAuthSignInError")}`,
-      );
+      return res.redirect(buildOauthRedirectUrl(returnUrl, "OAuthSignInError"));
     }
 
     const token = createOauthJWT(user, provider);
@@ -53,7 +69,7 @@ const createOAuthCallbackHandler =
       httpOnly: true,
       sameSite: "lax",
     });
-    res.redirect(returnUrl);
+    res.redirect(buildOauthRedirectUrl(returnUrl));
   };
 
 module.exports = {
