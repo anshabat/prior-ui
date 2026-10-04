@@ -2,6 +2,7 @@ import { SEARCH_PARAMS } from "../constants/searchParams";
 
 export interface AppSearchParams {
   [SEARCH_PARAMS.RESET_PASSWORD_TOKEN]: string | null;
+  [SEARCH_PARAMS.ERROR]: string | null;
 }
 
 export const getSearchParams = (): AppSearchParams => {
@@ -11,6 +12,7 @@ export const getSearchParams = (): AppSearchParams => {
     [SEARCH_PARAMS.RESET_PASSWORD_TOKEN]: searchParams.get(
       SEARCH_PARAMS.RESET_PASSWORD_TOKEN,
     ),
+    [SEARCH_PARAMS.ERROR]: searchParams.get(SEARCH_PARAMS.ERROR),
   };
 };
 

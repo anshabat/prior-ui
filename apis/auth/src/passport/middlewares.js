@@ -41,8 +41,10 @@ const createOAuthCallbackHandler =
     res.clearCookie("oauth_return_url");
 
     if (err || !user) {
-      const msg = err?.message || "Unauthorized";
-      return res.redirect(`${returnUrl}?error=${msg}`);
+      console.error(`OAuth ${provider} callback failed:`, err ?? "Unauthorized");
+      return res.redirect(
+        `${returnUrl}?error=${encodeURIComponent("OAuthSignInError")}`,
+      );
     }
 
     const token = createOauthJWT(user, provider);

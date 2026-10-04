@@ -2,6 +2,7 @@ import { useState } from "react";
 import { signInWithOAuth } from "../../api";
 import { SignInForm } from "../ui/SignInForm.tsx";
 import { useLoginMutation, useSignOutMutation } from "../../hooks/useAuthApi.ts";
+import { getErrorMessage, getSearchParams } from "../../utils";
 
 interface SignInProps {
   refreshSession: () => Promise<unknown>;
@@ -9,7 +10,15 @@ interface SignInProps {
 
 export function SignIn({ refreshSession }: SignInProps) {
   const [isTwoFactorStep, setIsTwoFactorStep] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(() => {
+    const { error: searchParamsError } = getSearchParams();
+
+    if (!searchParamsError) {
+      return null;
+    }
+
+    return getErrorMessage(searchParamsError, searchParamsError);
+  });
 
   const { mutate: signWithCredentials } = useLoginMutation({
     onSuccess: (data) => {
