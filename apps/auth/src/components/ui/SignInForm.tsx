@@ -1,5 +1,4 @@
 import { type FormEvent, useState } from "react";
-import type { Provider } from "apis/auth";
 
 export interface SignInFormProps {
   title?: string;
@@ -10,7 +9,7 @@ export interface SignInFormProps {
   onCancelTwoFactor: () => void;
   onGetSession: () => void;
   onSignOut: () => void;
-  providers: Pick<Provider, "id" | "name">[];
+  providers: {id: string, name: string}[];
   onOAuthSignIn: (providerId: string) => void;
 }
 
