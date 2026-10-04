@@ -13,12 +13,17 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const sendVerificationEmail = async (email, token) => {
   const confirmLink = `${API_BASE_URL}/page/verify-email?token=${token}`;
 
-  await resend.emails.send({
-    from: "onboarding@resend.dev",
-    to: email,
-    subject: "Verify your email",
-    html: `<p>Click <a href="${confirmLink}">here</a> to verify your email</p>`,
-  });
+  try {
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: email,
+      subject: "Verify your email",
+      html: `<p>Click <a href="${confirmLink}">here</a> to verify your email</p>`,
+    });
+    console.log(confirmLink, "confirmLink");
+  } catch (error) {
+    console.error("Error sending verification email:", error);
+  }
 };
 
 /**

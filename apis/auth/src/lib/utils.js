@@ -128,7 +128,14 @@ const registerUser = async (email, password) => {
 
   const existingUser = await getUserByEmail(email);
   if (existingUser) {
-    throw new Error("UserAlreadyExists");
+    if (existingUser.emailVerified) {
+      throw new Error("UserAlreadyExists");
+    }
+
+    const verificationToken = await generateVerificationToken(email);
+    await sendVerificationEmail(email, verificationToken.token);
+
+    return { user: existingUser, verificationToken };
   }
 
   const passwordHash = await generatePasswordHash(password);
