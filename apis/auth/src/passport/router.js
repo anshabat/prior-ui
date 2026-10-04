@@ -41,7 +41,7 @@ const { Strategy: LocalStrategy } = require("passport-local");
 const {
   useOauthReturnUrl,
   createOAuthCallbackHandler,
-} = require("./middlewares.js");
+} = require("../middlewares.js");
 const { config } = require("@workspace/config");
 const { createCredentialsJWT, extractSessionFromJWT } = require("./utils.js");
 const { registerUser } = require("../lib/utils");

@@ -2,10 +2,10 @@
  * @typedef {import('express').Request} Request
  * @typedef {import('express').Response} Response
  * @typedef {import('express').NextFunction} NextFunction
- * @typedef {import('../../types').User} User
+ * @typedef {import('../types').User} User
  */
 
-const { createOauthJWT } = require("./utils.js");
+const { createOauthJWT } = require("./passport/utils.js");
 
 /**
  * Reusable middleware to save OAuth return URL
