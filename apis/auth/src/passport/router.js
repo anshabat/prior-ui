@@ -130,6 +130,9 @@ passport.use(
           email: email,
           image: profile.photos?.[0]?.value ?? null,
         });
+        if(!user) {
+          return done(new Error("No user found"), false);
+        }
         return done(null, user);
       } catch (error) {
         return done(error, false);
@@ -166,6 +169,9 @@ passport.use(
           email: email,
           image: profile.photos?.[0]?.value ?? null,
         });
+        if(!user) {
+          return done(new Error("No user found"), false);
+        }
         return done(null, user);
       } catch (error) {
         return done(error, false);

@@ -1,8 +1,11 @@
 /**
  * @typedef {import('../../types').PasswordResetToken} PasswordResetToken
  * @typedef {import('../../types').User} User
+ * @typedef {import('../../types').Account} Account
  * @typedef {import('../../types').TwoFactorToken} TwoFactorToken
  * @typedef {import('../../types').VerificationToken} VerificationToken
+ * @typedef {import('../../types').CreateUserData} CreateUserData
+ * @typedef {import('../../types').CreateAccountData} CreateAccountData
  */
 
 const bcrypt = require("bcryptjs");
@@ -88,19 +91,25 @@ const generateVerificationToken = async (email) => {
 };
 
 /**
- * @param {string} email
- * @param {string} passwordHash
+ * @param {CreateUserData} data
  * @returns {Promise<User | null>}
  */
-const createUser = async (email, passwordHash) => {
+const createUser = async (data) => {
   try {
-    return await db.user.create({
-      data: {
-        email,
-        name: "Session user",
-        password: passwordHash,
-      },
-    });
+    return await db.user.create({ data });
+  } catch (error) {
+    console.error("Error creating user:", error);
+    return null;
+  }
+};
+
+/**
+ * @param {CreateAccountData} data
+ * @returns {Promise<Account | null>}
+ */
+const createAccount = async (data) => {
+  try {
+    return await db.account.create({ data });
   } catch (error) {
     console.error("Error creating user:", error);
     return null;
@@ -123,7 +132,11 @@ const registerUser = async (email, password) => {
   }
 
   const passwordHash = await generatePasswordHash(password);
-  const user = await createUser(email, passwordHash);
+  const user = await createUser({
+    email,
+    password: passwordHash,
+    name: "Session user",
+  });
   if (!user) {
     throw new Error("Failed to create user");
   }
@@ -195,7 +208,7 @@ const generateTwoFactorToken = async (email) => {
  * @param {string} params.email
  * @param {string | null} params.name
  * @param {string | null} params.image
- * @returns {Promise<User>}
+ * @returns {Promise<User | null>}
  */
 const findOrCreateOAuthUser = async ({
   provider,
@@ -224,25 +237,25 @@ const findOrCreateOAuthUser = async ({
   // Check if user with this email exists and create new user if not
   let user = email ? await db.user.findUnique({ where: { email } }) : null;
   if (!user) {
-    user = await db.user.create({
-      data: {
-        email,
-        name,
-        image,
-        emailVerified: new Date(),
-      },
+    user = await createUser({
+      email,
+      name,
+      image,
+      emailVerified: new Date(),
     });
   }
 
   // Create new account
-  await db.account.create({
-    data: {
+  if(user) {
+    const account = await createAccount({
       userId: user.id,
-      type: "oauth",
       provider,
       providerAccountId,
-    },
-  });
+    });
+    if(!account) {
+      return null;
+    }
+  }
 
   return user;
 };
