@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { signInWithOAuth } from "../../api";
+import { SEARCH_PARAMS } from "../../constants";
 import { SignInForm } from "../ui/SignInForm.tsx";
 import { useLoginMutation, useSignOutMutation } from "../../hooks/useAuthApi.ts";
-import { getErrorMessage, getSearchParams } from "../../utils";
+import { getErrorMessage, getSearchParams, removeSearchParam } from "../../utils";
 
 interface SignInProps {
   refreshSession: () => Promise<unknown>;
@@ -11,14 +13,21 @@ interface SignInProps {
 export function SignIn({ refreshSession }: SignInProps) {
   const [isTwoFactorStep, setIsTwoFactorStep] = useState(false);
   const [error, setError] = useState<string | null>(() => {
-    const { error: searchParamsError } = getSearchParams();
+    const { error: errorSearchParam } = getSearchParams();
 
-    if (!searchParamsError) {
+    if (!errorSearchParam) {
       return null;
     }
 
-    return getErrorMessage(searchParamsError, searchParamsError);
+    return getErrorMessage(errorSearchParam, errorSearchParam);
   });
+
+  const clearError = () => {
+    setError(null);
+    navigate(removeSearchParam(SEARCH_PARAMS.ERROR), { replace: true });
+  }
+
+  const navigate = useNavigate()
 
   const { mutate: signWithCredentials } = useLoginMutation({
     onSuccess: (data) => {
@@ -31,7 +40,7 @@ export function SignIn({ refreshSession }: SignInProps) {
 
   const { mutate: signOut } = useSignOutMutation({
     onSuccess: () => {
-      setError(null);
+      clearError();
     },
     onError: (error) => {
       setError(error.message);
@@ -39,7 +48,7 @@ export function SignIn({ refreshSession }: SignInProps) {
   });
 
   const handleSignIn = async (email: string, password: string) => {
-    setError(null);
+    clearError();
     signWithCredentials({ email, password });
   };
 
@@ -48,7 +57,7 @@ export function SignIn({ refreshSession }: SignInProps) {
     password: string,
     code: string,
   ) => {
-    setError(null);
+    clearError();
     signWithCredentials({ email, password, twoFactorCode: code });
   };
 
@@ -69,7 +78,7 @@ export function SignIn({ refreshSession }: SignInProps) {
       onVerifyTwoFactor={handleVerifyTwoFactor}
       onCancelTwoFactor={() => {
         setIsTwoFactorStep(false);
-        setError(null);
+        clearError();
       }}
       onGetSession={handleGetSession}
       onSignOut={signOut}

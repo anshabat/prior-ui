@@ -16,6 +16,13 @@ export const getSearchParams = (): AppSearchParams => {
   };
 };
 
+export const removeSearchParam = (param: string): string => {
+  const url = new URL(window.location.href);
+  url.searchParams.delete(param);
+
+  return `${url.pathname}${url.search}${url.hash}`;
+};
+
 /**
  
 // utils/queryParams.ts
