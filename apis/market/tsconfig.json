@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "module": "commonjs", // typescript will compile the code to commonjs module system
-    "target": "es2017", // compiled code will be compatible with es2017
-    "experimentalDecorators": true, // allows the use of decorators
-    "emitDecoratorMetadata": true // allows the use of metadata reflection API
-  }
-}
