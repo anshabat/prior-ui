@@ -38,12 +38,13 @@ const passport = require("passport");
 const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
 const { Strategy: GitHubStrategy } = require("passport-github2");
 const { Strategy: LocalStrategy } = require("passport-local");
-const {
-  useOauthReturnUrl,
-  createOAuthCallbackHandler,
-} = require("../middlewares.js");
+const { storeOauthReturnUrl } = require("../middlewares");
 const { config } = require("@workspace/config");
-const { createCredentialsJWT, extractSessionFromJWT } = require("./utils.js");
+const {
+  createCredentialsJWT,
+  extractSessionFromJWT,
+  createOAuthCallbackHandler,
+} = require("./utils.js");
 const { registerUser } = require("../lib/utils");
 
 const { APP_BASE_URL, API_BASE_URL } = config.auth;
@@ -206,14 +207,14 @@ router.post(
 // Handle browser click, redirects to OAuth login page
 router.get(
   "/api/auth/signin/google",
-  useOauthReturnUrl,
+  storeOauthReturnUrl,
   passport.authenticate("google"),
 );
 
 // Handle browser click, redirects to GitHub OAuth login page
 router.get(
   "/api/auth/signin/github",
-  useOauthReturnUrl,
+  storeOauthReturnUrl,
   passport.authenticate("github"),
 );
 

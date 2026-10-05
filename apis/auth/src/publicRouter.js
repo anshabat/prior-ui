@@ -19,7 +19,7 @@ router.get(
    * @param {import('express').Response} res
    */
   async (req, res) => {
-    const response = await fetch(`${API_BASE_URL}/api/sessio`, {
+    const response = await fetch(`${API_BASE_URL}/api/session`, {
       headers: {
         ...(req.headers.cookie && { cookie: req.headers.cookie }),
       },
