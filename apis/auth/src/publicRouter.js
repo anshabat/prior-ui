@@ -5,31 +5,16 @@
 const express = require("express");
 const cors = require("cors");
 const { config } = require("@workspace/config");
+const { getSession } = require("./controllers/getSession");
 
-const { CLIENT_APPS_URLS, API_BASE_URL } = config.auth;
+const { CLIENT_APPS_URLS, APP_BASE_URL } = config.auth;
 
 const router = express.Router();
 
-router.use(cors({ origin: CLIENT_APPS_URLS, credentials: true }));
-
-router.get(
-  "/api/session",
-  /**
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   */
-  async (req, res) => {
-    const response = await fetch(`${API_BASE_URL}/api/session`, {
-      headers: {
-        ...(req.headers.cookie && { cookie: req.headers.cookie }),
-      },
-    });
-
-    /** @type {import('express').Response<AuthSession>} */
-    const data = await response.json();
-
-    return res.status(response.status).json(data);
-  },
+router.use(
+  cors({ origin: [...CLIENT_APPS_URLS, APP_BASE_URL], credentials: true }),
 );
+
+router.get("/api/session", getSession);
 
 module.exports = router;

@@ -1,12 +1,10 @@
 /**
- * @typedef {import('express').Request} Request
  * @typedef {import('express').Response} Response
  * @typedef {import('express').NextFunction} NextFunction
  * @typedef {import('express').RequestHandler} RequestHandler
  * @typedef {import('../../types').UpdatePasswordPayload} UpdatePasswordPayload
  * @typedef {import('../../types').UpdatePasswordResponse} UpdatePasswordResponse
  * @typedef {import('../../types').SignInResponse} SignInResponse
- * @typedef {import('../../types').SignOutResponse} SignOutResponse
  * @typedef {import('../../types').ResetPasswordPayload} ResetPasswordPayload
  * @typedef {import('../../types').ResetPasswordResponse} ResetPasswordResponse
  * @typedef {import('../../types').RegisterPayload} RegisterPayload
@@ -15,37 +13,26 @@
  */
 
 const express = require("express");
-const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const {
   getUserByEmail,
   findOrCreateOAuthUser,
-  verifyEmail,
   resendVerificationEmail,
-  generatePasswordResetToken,
-  getPasswordResetTokenByToken,
-  updateUserPasswordByToken,
-  generateTwoFactorToken,
-  deleteTwoFactorToken,
-  getTwoFactorTokenByEmail,
 } = require("../lib/utils.js");
-const {
-  sendPasswordResetEmail,
-  sendTwoFactorTokenEmail,
-} = require("../lib/mail.js");
 const passport = require("passport");
 const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
 const { Strategy: GitHubStrategy } = require("passport-github2");
 const { Strategy: LocalStrategy } = require("passport-local");
 const { storeOauthReturnUrl } = require("../middlewares");
 const { config } = require("@workspace/config");
-const {
-  createCredentialsJWT,
-  extractSessionFromJWT,
-  createOAuthCallbackHandler,
-} = require("./utils.js");
-const { registerUser } = require("../lib/utils");
+const { createOAuthCallbackHandler } = require("./utils.js");
+const { registerAction } = require("../controllers/registerAction");
+const { signInAction } = require("../controllers/signInAction");
+const { updatePasswordAction } = require("../controllers/updatePasswordAction");
+const { resetPasswordAction } = require("../controllers/resetPasswordAction");
+const { verifyEmailAction } = require("../controllers/verifyEmailAction");
+const { logoutAction } = require("../controllers/logoutAction");
 
 const { APP_BASE_URL, API_BASE_URL } = config.auth;
 
@@ -60,16 +47,15 @@ const GITHUB_CALLBACK_URL = `${API_BASE_URL}/api/auth/callback/github`;
 
 const router = express.Router();
 
-router.use(/** @type {RequestHandler} */ (cookieParser()));
 router.use(cors({ origin: APP_BASE_URL, credentials: true }));
 router.use(/** @type {RequestHandler} */ (passport.initialize()));
 
 passport.use(
   new LocalStrategy(
     {
-      usernameField: "email", // Use email instead of username
+      usernameField: "email",
       passwordField: "password",
-      session: false, // Keep consistent with your OAuth approach
+      session: false,
     },
     async (email, password, done) => {
       try {
@@ -131,7 +117,7 @@ passport.use(
           email: email,
           image: profile.photos?.[0]?.value ?? null,
         });
-        if(!user) {
+        if (!user) {
           return done(new Error("No user found"), false);
         }
         return done(null, user);
@@ -170,7 +156,7 @@ passport.use(
           email: email,
           image: profile.photos?.[0]?.value ?? null,
         });
-        if(!user) {
+        if (!user) {
           return done(new Error("No user found"), false);
         }
         return done(null, user);
@@ -181,28 +167,7 @@ passport.use(
   ),
 );
 
-router.post(
-  "/api/register",
-  /**
-   * Registers a new user with the provided email and password.
-   * @param {import('express').Request<{}, RegisterResponse, RegisterPayload>} req
-   * @param {import('express').Response<RegisterResponse>} res
-   */
-  async (req, res) => {
-    try {
-      const { email, password } = req.body ?? {};
-      await registerUser(email, password);
-      return res.json({ data: true, error: null });
-    } catch (error) {
-      if (error instanceof Error) {
-        return res.status(409).json({ data: false, error: error.message });
-      }
-      return res
-        .status(500)
-        .json({ data: false, error: "Internal server error" });
-    }
-  },
-);
+router.post("/api/register", registerAction);
 
 // Handle browser click, redirects to OAuth login page
 router.get(
@@ -234,237 +199,10 @@ router.get("/api/auth/callback/github", (req, res, next) => {
   )(req, res, next);
 });
 
-router.post(
-  "/api/signin",
-  /**
-   * @param {Request} req
-   * @param {import('express').Response<SignInResponse>} res
-   */
-  (req, res, next) => {
-    passport.authenticate(
-      "local",
-      { session: false },
-      /**
-       * @param {Error | null} err
-       * @param {User} user
-       * @param {import('passport-local').IVerifyOptions} info
-       * @returns {Promise<Response>}
-       */
-      async (err, user, info) => {
-        if (err) {
-          return res.status(500).json({
-            error: err?.message || "SignInError",
-            session: null,
-            twoFactor: false,
-          });
-        }
-
-        if (!user) {
-          const status = info.status || 401;
-          const message = info.message || "CredentialsSignin";
-          return res
-            .status(status)
-            .json({ error: message, session: null, twoFactor: false });
-        }
-
-        if (user?.isTwoFactorEnabled) {
-          const { code } = req.body;
-
-          if (code) {
-            const twoFactorToken = await getTwoFactorTokenByEmail(user.email);
-
-            if (!twoFactorToken || twoFactorToken.token !== code) {
-              return res.status(401).json({
-                error: "TwoFactorInvalidCode",
-                session: null,
-                twoFactor: true,
-              });
-            }
-
-            if (twoFactorToken.expires < new Date()) {
-              return res.status(401).json({
-                error: "TwoFactorExpiredCode",
-                session: null,
-                twoFactor: true,
-              });
-            }
-
-            const isTokenDeleted = await deleteTwoFactorToken(twoFactorToken);
-            if (!isTokenDeleted) {
-              return res.status(500).json({
-                error: "TwoFactorError",
-                session: null,
-                twoFactor: true,
-              });
-            }
-          } else {
-            const twoFactorToken = await generateTwoFactorToken(user.email);
-            await sendTwoFactorTokenEmail(
-              twoFactorToken.email,
-              twoFactorToken.token,
-            );
-
-            return res
-              .status(200)
-              .json({ twoFactor: true, session: null, error: null });
-          }
-        }
-
-        const token = createCredentialsJWT(user);
-        const session = extractSessionFromJWT(token);
-
-        res.cookie("authToken", token, {
-          path: "/",
-          httpOnly: true,
-          sameSite: "lax",
-          // secure: true, // enable in production (requires HTTPS)
-        });
-
-        return res.status(200).json({
-          error: null,
-          session,
-          twoFactor: false,
-        });
-      },
-    )(req, res, next);
-  },
-);
-
-router.get(
-  "/api/session",
-  /**
-   * @param {Request} req
-   * @param {Response} res
-   * @returns {Response}
-   */
-  (req, res) => {
-    const token = req.cookies.authToken;
-    if (!token) {
-      return res.status(401).json({ error: "No session found" });
-    }
-
-    try {
-      const session = extractSessionFromJWT(token);
-      return res.status(200).json(session);
-    } catch (error) {
-      if (error instanceof Error && error.name === "TokenExpiredError") {
-        return res.status(401).json({ error: "Token expired" });
-      }
-      return res.status(401).json({ error: "Invalid token" });
-    }
-  },
-);
-
-router.post(
-  "/api/logout",
-  /**
-   * @param {Request} _req
-   * @param {import('express').Response<SignOutResponse>} res
-   */
-  (_req, res) => {
-    res.clearCookie("authToken", { path: "/" });
-    return res.status(200).json({ data: true, error: null });
-  },
-);
-
-router.post(
-  "/api/reset-password",
-  /**
-   * @param {import('express').Request<{}, {}, ResetPasswordPayload>} req
-   * @param {import('express').Response<ResetPasswordResponse>} res
-   */
-  async (req, res) => {
-    try {
-      const { email, callbackUrl } = req.body ?? {};
-      const existingUser = await getUserByEmail(email);
-
-      if (!existingUser) {
-        return res
-          .status(400)
-          .json({ success: false, error: "User not found" });
-      }
-
-      const passwordResetToken = await generatePasswordResetToken(email);
-      if (!passwordResetToken) {
-        throw new Error("Failed to request password reset");
-      }
-
-      await sendPasswordResetEmail(
-        email,
-        passwordResetToken.token,
-        callbackUrl,
-      );
-
-      return res.json({ success: true, data: true });
-    } catch (error) {
-      console.error("Failed to request password reset", error);
-      if (error instanceof Error) {
-        return res.status(500).json({ success: false, error: error.message });
-      }
-      return res
-        .status(500)
-        .json({ success: false, error: "Failed to request password reset" });
-    }
-  },
-);
-
-router.post(
-  "/api/update-password",
-  /**
-   * @param {import('express').Request<{}, {}, UpdatePasswordPayload>} req
-   * @param {import('express').Response<UpdatePasswordResponse>} res
-   */
-  async (req, res) => {
-    try {
-      const { token, password } = req.body ?? {};
-      const passwordResetToken = await getPasswordResetTokenByToken(token);
-
-      if (!passwordResetToken) {
-        return res
-          .status(400)
-          .json({ success: false, error: "Invalid or expired token" });
-      }
-
-      if (passwordResetToken.expires < new Date()) {
-        return res.status(400).json({ success: false, error: "Token expired" });
-      }
-
-      const user = await getUserByEmail(passwordResetToken.email);
-      if (!user) {
-        return res
-          .status(400)
-          .json({ success: false, error: "User not found" });
-      }
-
-      await updateUserPasswordByToken(user.id, passwordResetToken.id, password);
-      return res.json({ success: true, data: true });
-    } catch (error) {
-      console.error("Failed to update password", error);
-      if (error instanceof Error) {
-        return res.status(500).json({ success: false, error: error.message });
-      }
-      return res
-        .status(500)
-        .json({ success: false, error: "Failed to update password" });
-    }
-  },
-);
-
-router.get("/page/verify-email", async (req, res) => {
-  const { token } = req.query;
-
-  try {
-    if (typeof token !== "string" || token.length === 0) {
-      throw new Error("Invalid token");
-    }
-    await verifyEmail(token);
-    return res.status(200).json({ success: true });
-  } catch (error) {
-    if (error instanceof Error) {
-      return res.status(400).json({ error: error.message });
-    }
-    return res.status(400).json({ error: "Failed to verify email" });
-  }
-});
+router.post("/api/signin", signInAction);
+router.post("/api/logout", logoutAction);
+router.post("/api/reset-password", resetPasswordAction);
+router.post("/api/update-password", updatePasswordAction);
+router.get("/page/verify-email", verifyEmailAction);
 
 module.exports = router;
