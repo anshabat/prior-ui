@@ -34,7 +34,11 @@ const googleStrategy = new GoogleStrategy(
       image: profile.photos?.[0]?.value ?? null,
     });
 
-    return error || !user ? done(error, false) : done(null, user);
+    if(error) {
+      return done(error.message, false);
+    }
+
+    return done(null, user || false);
   },
 );
 

@@ -23,7 +23,7 @@ const githubStrategy = new GitHubStrategy(
    * @param {string} _accessToken
    * @param {string} _refreshToken
    * @param {import('passport-github2').Profile} profile
-   * @param {(err: unknown, user: User | false) => Promise<void>} done
+   * @param {(err: unknown, user: User | false, info?: { message: string, status: number }) => void} done
    */
   async (_accessToken, _refreshToken, profile, done) => {
     const { data: user, error } = await verifyOauthUser({
@@ -34,7 +34,11 @@ const githubStrategy = new GitHubStrategy(
       image: profile.photos?.[0]?.value ?? null,
     });
 
-    return error || !user ? done(error, false) : done(null, user);
+    if (error) {
+      return done(error.message, false);
+    }
+
+    return done(null, user || false);
   },
 );
 
