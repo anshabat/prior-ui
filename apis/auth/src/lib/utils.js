@@ -224,47 +224,52 @@ const findOrCreateOAuthUser = async ({
   name = null,
   image = null,
 }) => {
-  // Check if account already exists
-  const existingAccount = await db.account.findUnique({
-    where: {
-      provider_providerAccountId: {
+  try {
+    // Check if account already exists
+    const existingAccount = await db.account.findUnique({
+      where: {
+        provider_providerAccountId: {
+          provider,
+          providerAccountId,
+        },
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    if (existingAccount) {
+      return existingAccount.user;
+    }
+
+    // Check if user with this email exists and create new user if not
+    let user = email ? await db.user.findUnique({ where: { email } }) : null;
+    if (!user) {
+      user = await createUser({
+        email,
+        name,
+        image,
+        emailVerified: new Date(),
+      });
+    }
+
+    // Create new account
+    if (user) {
+      const account = await createAccount({
+        userId: user.id,
         provider,
         providerAccountId,
-      },
-    },
-    include: {
-      user: true,
-    },
-  });
-
-  if (existingAccount) {
-    return existingAccount.user;
-  }
-
-  // Check if user with this email exists and create new user if not
-  let user = email ? await db.user.findUnique({ where: { email } }) : null;
-  if (!user) {
-    user = await createUser({
-      email,
-      name,
-      image,
-      emailVerified: new Date(),
-    });
-  }
-
-  // Create new account
-  if(user) {
-    const account = await createAccount({
-      userId: user.id,
-      provider,
-      providerAccountId,
-    });
-    if(!account) {
-      return null;
+      });
+      if (!account) {
+        return null;
+      }
     }
-  }
 
-  return user;
+    return user;
+  } catch (error) {
+    console.error("Error creating user", error);
+    return null;
+  }
 };
 
 /**

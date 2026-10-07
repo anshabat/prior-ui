@@ -1,6 +1,10 @@
+/**
+ * @typedef {import('../../types').User} User
+ */
+
 const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
-const { findOrCreateOAuthUser } = require("../lib/utils");
 const { config } = require("@workspace/config");
+const { verifyOauthUser } = require("../services/verifyOauthUser");
 
 const { API_BASE_URL } = config.auth;
 
@@ -15,26 +19,22 @@ const googleStrategy = new GoogleStrategy(
     callbackURL: GOOGLE_CALLBACK_URL,
     scope: ["profile", "email"],
   },
+  /**
+   * @param {string} _accessToken
+   * @param {string} _refreshToken
+   * @param {import('passport-google-oauth20').Profile} profile
+   * @param {import('passport-google-oauth20').VerifyCallback} done
+   */
   async (_accessToken, _refreshToken, profile, done) => {
-    try {
-      const email = profile.emails?.[0]?.value;
-      if (!email) {
-        return done(new Error("No email found in Google profile"), false);
-      }
-      const user = await findOrCreateOAuthUser({
-        provider: "google",
-        providerAccountId: profile.id,
-        name: profile.displayName,
-        email: email,
-        image: profile.photos?.[0]?.value ?? null,
-      });
-      if (!user) {
-        return done(new Error("No user found"), false);
-      }
-      return done(null, user);
-    } catch (error) {
-      return done(error, false);
-    }
+    const { data: user, error } = await verifyOauthUser({
+      email: profile.emails?.[0]?.value,
+      provider: "google",
+      providerAccountId: profile.id,
+      name: profile.displayName || "",
+      image: profile.photos?.[0]?.value ?? null,
+    });
+
+    return error || !user ? done(error, false) : done(null, user);
   },
 );
 

@@ -3,8 +3,8 @@
  */
 
 const { Strategy: GitHubStrategy } = require("passport-github2");
-const { findOrCreateOAuthUser } = require("../lib/utils");
 const { config } = require("@workspace/config");
+const { verifyOauthUser } = require("../services/verifyOauthUser");
 
 const { API_BASE_URL } = config.auth;
 
@@ -26,26 +26,15 @@ const githubStrategy = new GitHubStrategy(
    * @param {(err: unknown, user: User | false) => Promise<void>} done
    */
   async (_accessToken, _refreshToken, profile, done) => {
-    try {
-      const email = profile.emails?.[0]?.value;
-      if (!email) {
-        return done(new Error("No email found in GitHub profile"), false);
-      }
+    const { data: user, error } = await verifyOauthUser({
+      email: profile.emails?.[0]?.value,
+      provider: "github",
+      providerAccountId: profile.id,
+      name: profile.displayName || profile.username || "",
+      image: profile.photos?.[0]?.value ?? null,
+    });
 
-      const user = await findOrCreateOAuthUser({
-        provider: "github",
-        providerAccountId: profile.id,
-        name: profile.displayName || profile.username || "",
-        email: email,
-        image: profile.photos?.[0]?.value ?? null,
-      });
-      if (!user) {
-        return done(new Error("No user found"), false);
-      }
-      return done(null, user);
-    } catch (error) {
-      return done(error, false);
-    }
+    return error || !user ? done(error, false) : done(null, user);
   },
 );
 
