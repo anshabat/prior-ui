@@ -50,7 +50,7 @@ const jwtTimestampToISO = (timestamp) => {
  * @returns {AuthSession}
  */
 const extractSessionFromJWT = (token) => {
-  // TODO: create service for jwt which receive SessionUser type, so we could remove @type in utils.js
+  // TODO: create service for jwt which receive SessionUser type, so we could remove @type in jwt.js
   // also include exp and iat in SessionUser type
   const user = /** @type {SessionUser & { exp: number; iat: number }} */ (
     jwt.verify(token, process.env.AUTH_SECRET)

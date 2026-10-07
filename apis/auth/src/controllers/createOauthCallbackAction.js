@@ -4,7 +4,7 @@
  */
 
 const passport = require("passport");
-const { createOauthJWT } = require("../passport/utils");
+const { createOauthJWT } = require("../lib/jwt");
 
 /**
  * Replace or remove the error search param on an absolute return URL.

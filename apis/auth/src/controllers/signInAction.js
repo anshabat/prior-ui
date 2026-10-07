@@ -12,7 +12,7 @@ const {
 const {
   createCredentialsJWT,
   extractSessionFromJWT,
-} = require("../passport/utils");
+} = require("../lib/jwt");
 const { sendTwoFactorTokenEmail } = require("../lib/mail.js");
 
 /**

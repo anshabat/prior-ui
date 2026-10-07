@@ -14,7 +14,7 @@
 const express = require("express");
 const cors = require("cors");
 const passport = require("passport");
-const { storeOauthReturnUrl } = require("../middlewares");
+const { storeOauthReturnUrl } = require("../middlewares/storeOauthReturnUrl");
 const { config } = require("@workspace/config");
 const { registerAction } = require("../controllers/registerAction");
 const {
@@ -25,9 +25,9 @@ const { updatePasswordAction } = require("../controllers/updatePasswordAction");
 const { resetPasswordAction } = require("../controllers/resetPasswordAction");
 const { verifyEmailAction } = require("../controllers/verifyEmailAction");
 const { logoutAction } = require("../controllers/logoutAction");
-const { localStrategy } = require("../config/local-strategy");
-const { googleStrategy } = require("../config/google-strategy");
-const { githubStrategy } = require("../config/github-strategy");
+const { localStrategy } = require("../strategies/local-strategy");
+const { googleStrategy } = require("../strategies/google-strategy");
+const { githubStrategy } = require("../strategies/github-strategy");
 
 const { APP_BASE_URL } = config.auth;
 

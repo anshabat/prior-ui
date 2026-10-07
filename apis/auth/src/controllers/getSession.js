@@ -3,7 +3,7 @@
  * @typedef {import('express').Response} Response
  */
 
-const { extractSessionFromJWT } = require("../passport/utils");
+const { extractSessionFromJWT } = require("../lib/jwt");
 
 /**
  * @param {Request} req

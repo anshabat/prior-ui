@@ -1,11 +1,11 @@
 /**
- * @typedef {import('../types').AuthSession} AuthSession
+ * @typedef {import('../../types').AuthSession} AuthSession
  */
 
 const express = require("express");
 const cors = require("cors");
 const { config } = require("@workspace/config");
-const { getSession } = require("./controllers/getSession");
+const { getSession } = require("../controllers/getSession");
 
 const { CLIENT_APPS_URLS, APP_BASE_URL } = config.auth;
 
