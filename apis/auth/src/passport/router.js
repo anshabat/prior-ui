@@ -16,8 +16,10 @@ const cors = require("cors");
 const passport = require("passport");
 const { storeOauthReturnUrl } = require("../middlewares");
 const { config } = require("@workspace/config");
-const { createOAuthCallbackHandler } = require("./utils.js");
 const { registerAction } = require("../controllers/registerAction");
+const {
+  createOauthCallbackAction,
+} = require("../controllers/createOauthCallbackAction");
 const { signInAction } = require("../controllers/signInAction");
 const { updatePasswordAction } = require("../controllers/updatePasswordAction");
 const { resetPasswordAction } = require("../controllers/resetPasswordAction");
@@ -31,44 +33,25 @@ const { APP_BASE_URL } = config.auth;
 
 const router = express.Router();
 router.use(cors({ origin: APP_BASE_URL, credentials: true }));
-router.use((passport.initialize()));
+router.use(passport.initialize());
 
 passport.use(localStrategy);
 passport.use(googleStrategy);
 passport.use(githubStrategy);
 
 router.post("/api/register", registerAction);
-
-// Handle browser click, redirects to OAuth login page
 router.get(
   "/api/auth/signin/google",
   storeOauthReturnUrl,
   passport.authenticate("google"),
 );
-
-// Handle browser click, redirects to GitHub OAuth login page
 router.get(
   "/api/auth/signin/github",
   storeOauthReturnUrl,
   passport.authenticate("github"),
 );
-
-router.get("/api/auth/callback/google", (req, res, next) => {
-  passport.authenticate(
-    "google",
-    { session: false },
-    createOAuthCallbackHandler("google")(req, res),
-  )(req, res, next);
-});
-
-router.get("/api/auth/callback/github", (req, res, next) => {
-  passport.authenticate(
-    "github",
-    { session: false },
-    createOAuthCallbackHandler("github")(req, res),
-  )(req, res, next);
-});
-
+router.get("/api/auth/callback/google", createOauthCallbackAction("google"));
+router.get("/api/auth/callback/github", createOauthCallbackAction("github"));
 router.post("/api/signin", signInAction);
 router.post("/api/logout", logoutAction);
 router.post("/api/reset-password", resetPasswordAction);
