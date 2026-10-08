@@ -4,7 +4,7 @@
  * @typedef {import('../../types').RegisterResponse} RegisterResponse
  */
 
-const { registerUser } = require("../lib/utils");
+const { registerUser } = require("../services/registerUser");
 
 /**
  * Registers a new user with the provided email and password.
