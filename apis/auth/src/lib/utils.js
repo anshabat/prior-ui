@@ -1,47 +1,38 @@
 /**
  * @typedef {import('../../types').PasswordResetToken} PasswordResetToken
  * @typedef {import('../../types').User} User
- * @typedef {import('../../types').Account} Account
  * @typedef {import('../../types').TwoFactorToken} TwoFactorToken
  * @typedef {import('../../types').VerificationToken} VerificationToken
- * @typedef {import('../../types').CreateUserData} CreateUserData
- * @typedef {import('../../types').CreateAccountData} CreateAccountData
  */
 
 const bcrypt = require("bcryptjs");
 const { randomUUID, randomInt } = require("node:crypto");
-const db = require("./db");
 const { sendVerificationEmail } = require("./mail");
+const { getUserByEmail, createUser } = require("../repository/userRepository");
+const {
+  getAccountByProvider,
+  createAccount,
+} = require("../repository/accountRepository");
+const {
+  getVerificationTokenByToken,
+  getVerificationTokenByEmail,
+  deleteVerificationToken,
+  createVerificationToken,
+  confirmVerificationToken,
+} = require("../repository/verificationTokenRepository");
+const {
+  getTwoFactorTokenByEmail,
+  deleteTwoFactorToken,
+  createTwoFactorToken,
+} = require("../repository/twoFactorTokenRepository");
+const {
+  getPasswordResetTokenByEmail,
+  deletePasswordResetToken,
+  createPasswordResetToken,
+  confirmPasswordResetToken,
+} = require("../repository/passwordResetTokenRepository");
 
 const SALT_ROUNDS = 10;
-
-/**
- * @param {string} id
- * @returns {Promise<User | null>}
- */
-const getUserById = async (id) => {
-  try {
-    const user = await db.user.findUnique({ where: { id } });
-
-    return user;
-  } catch {
-    return null;
-  }
-};
-
-/**
- * @param {string} email
- * @returns {Promise<User | null>}
- */
-const getUserByEmail = async (email) => {
-  try {
-    const user = await db.user.findUnique({ where: { email } });
-
-    return user;
-  } catch {
-    return null;
-  }
-};
 
 /**
  * @param {string} password
@@ -49,23 +40,6 @@ const getUserByEmail = async (email) => {
  */
 const generatePasswordHash = async (password) => {
   return await bcrypt.hash(password, SALT_ROUNDS);
-};
-
-/**
- *
- * @param {string} email
- * @returns {Promise<VerificationToken | null>}
- */
-const getVerificationTokenByEmail = async (email) => {
-  try {
-    const verificationToken = await db.verificationToken.findFirst({
-      where: { email },
-    });
-
-    return verificationToken;
-  } catch {
-    return null;
-  }
 };
 
 /**
@@ -78,42 +52,22 @@ const generateVerificationToken = async (email) => {
   const existingToken = await getVerificationTokenByEmail(email);
 
   if (existingToken) {
-    await db.verificationToken.delete({
-      where: { id: existingToken.id },
-    });
+    const deletedToken = await deleteVerificationToken(existingToken.id);
+    if (!deletedToken) {
+      throw new Error("Failed to delete verification token");
+    }
   }
 
-  const verificationToken = await db.verificationToken.create({
-    data: { email, token, expires },
+  const verificationToken = await createVerificationToken({
+    email,
+    token,
+    expires,
   });
+  if (!verificationToken) {
+    throw new Error("Failed to create verification token");
+  }
 
   return verificationToken;
-};
-
-/**
- * @param {CreateUserData} data
- * @returns {Promise<User | null>}
- */
-const createUser = async (data) => {
-  try {
-    return await db.user.create({ data });
-  } catch (error) {
-    console.error("Error creating user:", error);
-    return null;
-  }
-};
-
-/**
- * @param {CreateAccountData} data
- * @returns {Promise<Account | null>}
- */
-const createAccount = async (data) => {
-  try {
-    return await db.account.create({ data });
-  } catch (error) {
-    console.error("Error creating user:", error);
-    return null;
-  }
 };
 
 /**
@@ -155,36 +109,6 @@ const registerUser = async (email, password) => {
 };
 
 /**
- * @param {string} email
- * @returns {Promise<TwoFactorToken | null>}
- */
-const getTwoFactorTokenByEmail = async (email) => {
-  try {
-    return await db.twoFactorToken.findFirst({ where: { email } });
-  } catch (error) {
-    console.error("Error getting two factor token by email", error);
-    return null;
-  }
-};
-
-/**
- *
- * @param {TwoFactorToken} twoFactorToken
- * @returns {Promise<boolean>}
- */
-const deleteTwoFactorToken = async (twoFactorToken) => {
-  try {
-    const deletedToken = await db.twoFactorToken.delete({
-      where: { id: twoFactorToken.id },
-    });
-    return Boolean(deletedToken);
-  } catch (error) {
-    console.error("Error deleting two factor token", error);
-    return false;
-  }
-};
-
-/**
  *
  * @param {string} email
  * @returns {Promise<TwoFactorToken>}
@@ -196,14 +120,20 @@ const generateTwoFactorToken = async (email) => {
   const existingToken = await getTwoFactorTokenByEmail(email);
 
   if (existingToken) {
-    await db.twoFactorToken.delete({
-      where: { id: existingToken.id },
-    });
+    const isTokenDeleted = await deleteTwoFactorToken(existingToken);
+    if (!isTokenDeleted) {
+      throw new Error("Failed to delete two factor token");
+    }
   }
 
-  const twoFactorToken = await db.twoFactorToken.create({
-    data: { email, token, expires },
+  const twoFactorToken = await createTwoFactorToken({
+    email,
+    token,
+    expires,
   });
+  if (!twoFactorToken) {
+    throw new Error("Failed to create two factor token");
+  }
 
   return twoFactorToken;
 };
@@ -224,70 +154,38 @@ const findOrCreateOAuthUser = async ({
   name = null,
   image = null,
 }) => {
-  try {
-    // Check if account already exists
-    const existingAccount = await db.account.findUnique({
-      where: {
-        provider_providerAccountId: {
-          provider,
-          providerAccountId,
-        },
-      },
-      include: {
-        user: true,
-      },
-    });
+  const existingAccount = await getAccountByProvider(
+    provider,
+    providerAccountId,
+  );
 
-    if (existingAccount) {
-      return existingAccount.user;
-    }
-
-    // Check if user with this email exists and create new user if not
-    let user = email ? await db.user.findUnique({ where: { email } }) : null;
-    if (!user) {
-      user = await createUser({
-        email,
-        name,
-        image,
-        emailVerified: new Date(),
-      });
-    }
-
-    // Create new account
-    if (user) {
-      const account = await createAccount({
-        userId: user.id,
-        provider,
-        providerAccountId,
-      });
-      if (!account) {
-        return null;
-      }
-    }
-
-    return user;
-  } catch (error) {
-    console.error("Error creating user", error);
-    return null;
+  if (existingAccount) {
+    return existingAccount.user;
   }
-};
 
-/**
- *
- * @param {string} token
- * @returns {Promise<VerificationToken | null>}
- */
-const getVerificationTokenByToken = async (token) => {
-  try {
-    const verificationToken = await db.verificationToken.findFirst({
-      where: { token },
+  let user = email ? await getUserByEmail(email) : null;
+  if (!user) {
+    user = await createUser({
+      email,
+      name,
+      image,
+      emailVerified: new Date(),
     });
-
-    return verificationToken;
-  } catch (error) {
-    console.error("Error getting verification token by token", error);
-    return null;
   }
+
+  if (user) {
+    const account = await createAccount({
+      userId: user.id,
+      provider,
+      providerAccountId,
+    });
+    if (!account) {
+      // TODO: Create the user and account in one transaction. A failed account create returns null after createUser has already persisted the user.
+      return null;
+    }
+  }
+
+  return user;
 };
 
 /**
@@ -309,15 +207,10 @@ const verifyEmail = async (token) => {
     throw new Error("Verification");
   }
 
-  await db.$transaction([
-    db.user.update({
-      where: { email: verificationToken.email },
-      data: { emailVerified: new Date() },
-    }),
-    db.verificationToken.delete({
-      where: { id: verificationToken.id },
-    }),
-  ]);
+  const confirmed = await confirmVerificationToken(verificationToken);
+  if (!confirmed) {
+    throw new Error("Verification");
+  }
 
   return true;
 };
@@ -341,33 +234,8 @@ const resendVerificationEmail = async (email) => {
 };
 
 /**
- * @param {string} token
- * @returns {Promise<PasswordResetToken | null>}
- */
-const getPasswordResetTokenByToken = async (token) => {
-  try {
-    return await db.passwordResetToken.findFirst({ where: { token } });
-  } catch (error) {
-    console.error("Error getting password reset token by token", error);
-    return null;
-  }
-};
-
-/**
  * @param {string} email
- * @returns {Promise<PasswordResetToken | null>}
- */
-const getPasswordResetTokenByEmail = async (email) => {
-  try {
-    return db.passwordResetToken.findFirst({ where: { email } });
-  } catch {
-    return null;
-  }
-};
-
-/**
- * @param {string} email
- * @returns {Promise<PasswordResetToken | null>}
+ * @returns {Promise<PasswordResetToken>}
  */
 const generatePasswordResetToken = async (email) => {
   const token = randomUUID();
@@ -375,14 +243,20 @@ const generatePasswordResetToken = async (email) => {
   const existingToken = await getPasswordResetTokenByEmail(email);
 
   if (existingToken) {
-    await db.passwordResetToken.delete({
-      where: { id: existingToken.id },
-    });
+    const deletedToken = await deletePasswordResetToken(existingToken.id);
+    if (!deletedToken) {
+      throw new Error("Failed to delete password reset token");
+    }
   }
 
-  const passwordResetToken = await db.passwordResetToken.create({
-    data: { email, token, expires },
+  const passwordResetToken = await createPasswordResetToken({
+    email,
+    token,
+    expires,
   });
+  if (!passwordResetToken) {
+    throw new Error("Failed to create password reset token");
+  }
 
   return passwordResetToken;
 };
@@ -399,35 +273,22 @@ const updateUserPasswordByToken = async (userId, tokenId, password) => {
   }
 
   const passwordHash = await generatePasswordHash(password);
-
-  try {
-    await db.$transaction([
-      db.user.update({
-        where: { id: userId },
-        data: { password: passwordHash },
-      }),
-      db.passwordResetToken.delete({
-        where: { id: tokenId },
-      }),
-    ]);
-  } catch (error) {
-    console.error("Error updating user password", error);
-
+  const confirmed = await confirmPasswordResetToken(
+    userId,
+    passwordHash,
+    tokenId,
+  );
+  if (!confirmed) {
     throw new Error("Failed to update user password");
   }
 };
 
 module.exports = {
   registerUser,
-  getUserById,
-  getUserByEmail,
-  getTwoFactorTokenByEmail,
-  deleteTwoFactorToken,
   generateTwoFactorToken,
   findOrCreateOAuthUser,
   verifyEmail,
   resendVerificationEmail,
-  getPasswordResetTokenByToken,
   generatePasswordResetToken,
   updateUserPasswordByToken,
 };

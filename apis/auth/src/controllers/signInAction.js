@@ -4,11 +4,11 @@
  */
 
 const passport = require("passport");
+const { generateTwoFactorToken } = require("../lib/utils.js");
 const {
-  generateTwoFactorToken,
   deleteTwoFactorToken,
   getTwoFactorTokenByEmail,
-} = require("../lib/utils.js");
+} = require("../repository/twoFactorTokenRepository");
 const {
   createCredentialsJWT,
   extractSessionFromJWT,

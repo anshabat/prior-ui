@@ -4,10 +4,8 @@
  */
 
 const { sendPasswordResetEmail } = require("../lib/mail.js");
-const {
-  getUserByEmail,
-  generatePasswordResetToken,
-} = require("../lib/utils.js");
+const { generatePasswordResetToken } = require("../lib/utils.js");
+const { getUserByEmail } = require("../repository/userRepository");
 
 /**
  * @param {import('express').Request<{}, {}, ResetPasswordPayload>} req

@@ -3,11 +3,11 @@
  * @typedef {import('../../types').UpdatePasswordResponse} UpdatePasswordResponse
  */
 
+const { updateUserPasswordByToken } = require("../lib/utils");
 const {
   getPasswordResetTokenByToken,
-  getUserByEmail,
-  updateUserPasswordByToken,
-} = require("../lib/utils");
+} = require("../repository/passwordResetTokenRepository");
+const { getUserByEmail } = require("../repository/userRepository");
 /**
  * @param {import('express').Request<{}, {}, UpdatePasswordPayload>} req
  * @param {import('express').Response<UpdatePasswordResponse>} res

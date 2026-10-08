@@ -4,7 +4,8 @@
  */
 
 const bcrypt = require("bcryptjs");
-const { getUserByEmail, resendVerificationEmail } = require("../lib/utils");
+const { resendVerificationEmail } = require("../lib/utils");
+const { getUserByEmail } = require("../repository/userRepository");
 
 /**
  * @param {Object} params
