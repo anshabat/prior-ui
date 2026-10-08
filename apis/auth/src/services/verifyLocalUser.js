@@ -3,7 +3,7 @@
  * @typedef {{ message: string, status: number }} VerifyLocalError
  */
 
-const bcrypt = require("bcryptjs");
+const { comparePassword } = require("../lib/password");
 const { resendVerificationEmail } = require("../lib/utils");
 const { getUserByEmail } = require("../repository/userRepository");
 
@@ -30,7 +30,7 @@ const verifyLocalUser = async ({ email, password }) => {
     };
   }
 
-  const valid = await bcrypt.compare(password, user.password);
+  const valid = await comparePassword(password, user.password);
   if (!valid) {
     return {
       data: null,

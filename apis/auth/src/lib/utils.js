@@ -5,8 +5,8 @@
  * @typedef {import('../../types').VerificationToken} VerificationToken
  */
 
-const bcrypt = require("bcryptjs");
 const { randomUUID, randomInt } = require("node:crypto");
+const { generatePasswordHash } = require("./password");
 const { sendVerificationEmail } = require("./mail");
 const { getUserByEmail, createUser } = require("../repository/userRepository");
 const {
@@ -31,16 +31,6 @@ const {
   createPasswordResetToken,
   confirmPasswordResetToken,
 } = require("../repository/passwordResetTokenRepository");
-
-const SALT_ROUNDS = 10;
-
-/**
- * @param {string} password
- * @returns {Promise<string>}
- */
-const generatePasswordHash = async (password) => {
-  return await bcrypt.hash(password, SALT_ROUNDS);
-};
 
 /**
  * @param {string} email
