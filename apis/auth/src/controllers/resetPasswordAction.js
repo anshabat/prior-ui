@@ -4,7 +4,9 @@
  */
 
 const { sendPasswordResetEmail } = require("../lib/mail.js");
-const { generatePasswordResetToken } = require("../lib/utils.js");
+const {
+  generatePasswordResetToken,
+} = require("../services/generatePasswordResetToken");
 const { getUserByEmail } = require("../repository/userRepository");
 
 /**
