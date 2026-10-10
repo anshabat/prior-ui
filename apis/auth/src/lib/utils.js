@@ -6,7 +6,6 @@
  */
 
 const { randomUUID, randomInt } = require("node:crypto");
-const { generatePasswordHash } = require("./password");
 const { sendVerificationEmail } = require("./mail");
 const { getUserByEmail, createUser } = require("../repository/userRepository");
 const {
@@ -27,7 +26,6 @@ const {
   getPasswordResetTokenByEmail,
   deletePasswordResetToken,
   createPasswordResetToken,
-  confirmPasswordResetToken,
 } = require("../repository/passwordResetTokenRepository");
 
 /**
@@ -184,33 +182,10 @@ const generatePasswordResetToken = async (email) => {
   return passwordResetToken;
 };
 
-/**
- * @param {string} userId
- * @param {string} tokenId
- * @param {string} password
- * @returns {Promise<void>}
- */
-const updateUserPasswordByToken = async (userId, tokenId, password) => {
-  if (!userId || !password || !tokenId) {
-    throw new Error("Missing params");
-  }
-
-  const passwordHash = await generatePasswordHash(password);
-  const confirmed = await confirmPasswordResetToken(
-    userId,
-    passwordHash,
-    tokenId,
-  );
-  if (!confirmed) {
-    throw new Error("Failed to update user password");
-  }
-};
-
 module.exports = {
   generateVerificationToken,
   generateTwoFactorToken,
   findOrCreateOAuthUser,
   resendVerificationEmail,
   generatePasswordResetToken,
-  updateUserPasswordByToken,
 };

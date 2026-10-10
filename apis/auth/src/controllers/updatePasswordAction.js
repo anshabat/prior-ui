@@ -3,7 +3,9 @@
  * @typedef {import('../../types').UpdatePasswordResponse} UpdatePasswordResponse
  */
 
-const { updateUserPasswordByToken } = require("../lib/utils");
+const {
+  updateUserPasswordByToken,
+} = require("../services/updateUserPasswordByToken");
 const {
   getPasswordResetTokenByToken,
 } = require("../repository/passwordResetTokenRepository");
