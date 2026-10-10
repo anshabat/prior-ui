@@ -14,11 +14,9 @@ const {
   createAccount,
 } = require("../repository/accountRepository");
 const {
-  getVerificationTokenByToken,
   getVerificationTokenByEmail,
   deleteVerificationToken,
   createVerificationToken,
-  confirmVerificationToken,
 } = require("../repository/verificationTokenRepository");
 const {
   getTwoFactorTokenByEmail,
@@ -141,33 +139,6 @@ const findOrCreateOAuthUser = async ({
 };
 
 /**
- * @param {string} token
- * @returns {Promise<boolean>}
- */
-const verifyEmail = async (token) => {
-  const verificationToken = await getVerificationTokenByToken(token);
-
-  if (!verificationToken) {
-    // TODO: Logger
-    console.error("Verification token not found");
-    throw new Error("Verification");
-  }
-
-  if (new Date(verificationToken.expires) < new Date()) {
-    // TODO: Logger
-    console.error("Verification token expired");
-    throw new Error("Verification");
-  }
-
-  const confirmed = await confirmVerificationToken(verificationToken);
-  if (!confirmed) {
-    throw new Error("Verification");
-  }
-
-  return true;
-};
-
-/**
  * @param {string} email
  * @returns {Promise<boolean>}
  */
@@ -239,7 +210,6 @@ module.exports = {
   generateVerificationToken,
   generateTwoFactorToken,
   findOrCreateOAuthUser,
-  verifyEmail,
   resendVerificationEmail,
   generatePasswordResetToken,
   updateUserPasswordByToken,

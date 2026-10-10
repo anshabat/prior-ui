@@ -3,7 +3,7 @@
  * @typedef {import('express').Response} Response
  */
 
-const { verifyEmail } = require("../lib/utils.js");
+const { verifyEmail } = require("../services/verifyEmail");
 
 /**
  * @param {Request} req
