@@ -3,7 +3,7 @@
  * @typedef {import('express').Response} Response
  */
 
-const { extractSessionFromJWT } = require("../lib/jwt");
+const { getSession } = require("../services/getSession");
 
 /**
  * @param {Request} req
@@ -13,16 +13,12 @@ const { extractSessionFromJWT } = require("../lib/jwt");
 function getSessionAction(req, res) {
   const token = req.cookies.authToken;
 
-  if (!token) {
-    return res.status(401).json({ error: "No session found" });
-  }
-
   try {
-    const session = extractSessionFromJWT(token);
+    const session = getSession(token);
     return res.status(200).json(session);
   } catch (error) {
-    if (error instanceof Error && error.name === "TokenExpiredError") {
-      return res.status(401).json({ error: "Token expired" });
+    if (error instanceof Error) {
+      return res.status(401).json({ error: error.message });
     }
     return res.status(401).json({ error: "Invalid token" });
   }

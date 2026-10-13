@@ -11,11 +11,9 @@ const {
   getTwoFactorTokenByEmail,
   createTwoFactorToken,
 } = require("../repository/twoFactorTokenRepository");
-const {
-  createCredentialsJWT,
-  extractSessionFromJWT,
-} = require("../lib/jwt");
+const { createCredentialsJWT } = require("../lib/jwt");
 const { sendTwoFactorTokenEmail } = require("../lib/mail.js");
+const { getSession } = require("../services/getSession");
 
 /**
  * @param {string} email
@@ -122,7 +120,17 @@ async function signInAction(req, res, next) {
       }
 
       const token = createCredentialsJWT(user);
-      const session = extractSessionFromJWT(token);
+
+      let session;
+      try {
+        session = getSession(token);
+      } catch (error) {
+        return res.status(500).json({
+          error: error instanceof Error ? error.message : "SignInError",
+          session: null,
+          twoFactor: false,
+        });
+      }
 
       res.cookie("authToken", token, {
         path: "/",
