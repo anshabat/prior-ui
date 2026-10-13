@@ -1,19 +1,50 @@
 /**
  * @typedef {import('../../types').User} User
  * @typedef {import('../../types').SignInResponse} SignInResponse
+ * @typedef {import('../../types').TwoFactorToken} TwoFactorToken
  */
 
+const { randomInt } = require("node:crypto");
 const passport = require("passport");
-const { generateTwoFactorToken } = require("../lib/utils.js");
 const {
   deleteTwoFactorToken,
   getTwoFactorTokenByEmail,
+  createTwoFactorToken,
 } = require("../repository/twoFactorTokenRepository");
 const {
   createCredentialsJWT,
   extractSessionFromJWT,
 } = require("../lib/jwt");
 const { sendTwoFactorTokenEmail } = require("../lib/mail.js");
+
+/**
+ * @param {string} email
+ * @returns {Promise<TwoFactorToken>}
+ */
+const generateTwoFactorToken = async (email) => {
+  const token = randomInt(100_000, 1_000_000).toString(); // 6 digit code
+  const expires = new Date(Date.now() + 1000 * 60 * 10); // 10 minutes
+
+  const existingToken = await getTwoFactorTokenByEmail(email);
+
+  if (existingToken) {
+    const isTokenDeleted = await deleteTwoFactorToken(existingToken);
+    if (!isTokenDeleted) {
+      throw new Error("Failed to delete two factor token");
+    }
+  }
+
+  const twoFactorToken = await createTwoFactorToken({
+    email,
+    token,
+    expires,
+  });
+  if (!twoFactorToken) {
+    throw new Error("Failed to create two factor token");
+  }
+
+  return twoFactorToken;
+};
 
 /**
  * @param {import('express').Request} req
