@@ -10,7 +10,7 @@ const { extractSessionFromJWT } = require("../lib/jwt");
  * @param {Response} res
  * @returns {Response}
  */
-function getSession(req, res) {
+function getSessionAction(req, res) {
   const token = req.cookies.authToken;
 
   if (!token) {
@@ -28,4 +28,4 @@ function getSession(req, res) {
   }
 }
 
-module.exports = { getSession };
+module.exports = { getSession: getSessionAction };
