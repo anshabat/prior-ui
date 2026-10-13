@@ -4,12 +4,13 @@
  */
 
 const { comparePassword } = require("../lib/password");
-const { sendVerificationEmail } = require("../lib/mail");
-const { generateVerificationToken } = require("../lib/utils");
 const { getUserByEmail } = require("../repository/userRepository");
 const {
   getVerificationTokenByEmail,
 } = require("../repository/verificationTokenRepository");
+const {
+  generateVerificationToken,
+} = require("./generateVerificationToken");
 
 /**
  * @param {string} email
@@ -21,8 +22,7 @@ const resendVerificationEmail = async (email) => {
     existingToken && new Date(existingToken.expires) < new Date();
 
   if (!existingToken || isExpired) {
-    const newToken = await generateVerificationToken(email);
-    await sendVerificationEmail(email, newToken.token);
+    await generateVerificationToken(email);
     return true;
   }
 

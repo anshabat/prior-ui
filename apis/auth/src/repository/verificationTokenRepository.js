@@ -38,27 +38,29 @@ const getVerificationTokenByEmail = async (email) => {
 };
 
 /**
- * @param {string} id
- * @returns {Promise<VerificationToken | null>}
- */
-const deleteVerificationToken = async (id) => {
-  try {
-    return await db.verificationToken.delete({
-      where: { id },
-    });
-  } catch {
-    return null;
-  }
-};
-
-/**
+ * Replaces any existing token for the email with the given one.
  * @param {{ email: string, token: string, expires: Date }} data
  * @returns {Promise<VerificationToken | null>}
  */
-const createVerificationToken = async (data) => {
+const replaceVerificationToken = async ({ email, token, expires }) => {
   try {
-    return await db.verificationToken.create({ data });
-  } catch {
+    return await db.$transaction(async (tx) => {
+      const existingToken = await tx.verificationToken.findFirst({
+        where: { email },
+      });
+
+      if (existingToken) {
+        await tx.verificationToken.delete({
+          where: { id: existingToken.id },
+        });
+      }
+
+      return tx.verificationToken.create({
+        data: { email, token, expires },
+      });
+    });
+  } catch (error) {
+    console.error("Error replacing verification token", error);
     return null;
   }
 };
@@ -90,7 +92,6 @@ const confirmVerificationToken = async (verificationToken) => {
 module.exports = {
   getVerificationTokenByToken,
   getVerificationTokenByEmail,
-  deleteVerificationToken,
-  createVerificationToken,
+  replaceVerificationToken,
   confirmVerificationToken,
 };

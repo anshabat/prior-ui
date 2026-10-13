@@ -3,10 +3,9 @@
  */
 
 const { randomUUID } = require("node:crypto");
+const { sendVerificationEmail } = require("../lib/mail");
 const {
-  getVerificationTokenByEmail,
-  deleteVerificationToken,
-  createVerificationToken,
+  replaceVerificationToken,
 } = require("../repository/verificationTokenRepository");
 
 /**
@@ -16,27 +15,18 @@ const {
 const generateVerificationToken = async (email) => {
   const token = randomUUID();
   const expires = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
-  const existingToken = await getVerificationTokenByEmail(email);
-
-  if (existingToken) {
-    const deletedToken = await deleteVerificationToken(existingToken.id);
-    if (!deletedToken) {
-      throw new Error("Failed to delete verification token");
-    }
-  }
-
-  const verificationToken = await createVerificationToken({
+  const verificationToken = await replaceVerificationToken({
     email,
     token,
     expires,
   });
   if (!verificationToken) {
-    throw new Error("Failed to create verification token");
+    throw new Error("Failed to generate verification token");
   }
+
+  await sendVerificationEmail(email, verificationToken.token);
 
   return verificationToken;
 };
 
-module.exports = {
-  generateVerificationToken,
-};
+module.exports = { generateVerificationToken };

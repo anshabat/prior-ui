@@ -3,10 +3,11 @@
  * @typedef {import('../../types').VerificationToken} VerificationToken
  */
 
-const { sendVerificationEmail } = require("../lib/mail");
 const { generatePasswordHash } = require("../lib/password");
-const { generateVerificationToken } = require("../lib/utils");
 const { getUserByEmail, createUser } = require("../repository/userRepository");
+const {
+  generateVerificationToken,
+} = require("./generateVerificationToken");
 
 /**
  * @param {string} email
@@ -25,7 +26,6 @@ const registerUser = async (email, password) => {
     }
 
     const verificationToken = await generateVerificationToken(email);
-    await sendVerificationEmail(email, verificationToken.token);
 
     return { user: existingUser, verificationToken };
   }
@@ -41,7 +41,6 @@ const registerUser = async (email, password) => {
   }
 
   const verificationToken = await generateVerificationToken(email);
-  await sendVerificationEmail(email, verificationToken.token);
 
   return { user, verificationToken };
 };
