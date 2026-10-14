@@ -1,53 +1,50 @@
-class DomainError extends Error {
+/** @enum {string} */
+const ErrorCode = Object.freeze({
+  PASSWORD_RESET_FAILED: "PASSWORD_RESET_FAILED",
+  VALIDATION_FAILED: "VALIDATION_FAILED",
+});
+
+class HttpError extends Error {
   /**
-   * @param {string} message
-   * @param {number} [statusCode=400]
-   * @param {string} [code='DOMAIN_ERROR']
+   * @param {string} message - Technical log message (never sent to client)
+   * @param {string} code - Public machine-readable code
+   * @param {number} [statusCode=500] - HTTP status code
+   * @param {Record<string, any> | null} [context=null] - Internal debug metadata (never sent to client)
    */
-  constructor(message, statusCode = 400, code = "DOMAIN_ERROR") {
+  constructor(message, code, statusCode = 500, context = null) {
     super(message);
     this.name = this.constructor.name;
     this.statusCode = statusCode;
     this.code = code;
-
-    // Captures a clean stack trace excluding this constructor call (Node.js/V8)
+    this.context = context;
+    //
     // if (Error.captureStackTrace) {
     //   Error.captureStackTrace(this, this.constructor);
     // }
   }
 }
 
-class NotFoundError extends DomainError {
-  /**
-   * @param {string} entity
-   * @param {string|number} id
-   */
-  constructor(entity, id) {
-    super(`${entity} with ID ${id} not found`, 404, "NOT_FOUND");
-  }
-}
+/**
+ * @typedef {Object} FieldError
+ * @property {string} field
+ * @property {string} code
+ */
 
-class BusinessRuleViolationError extends DomainError {
+class ValidationError extends HttpError {
   /**
-   * @param {string} message
+   * @param {string} message - Technical log message
+   * @param {FieldError[]} errors - Public array of field violations
+   * @param {Record<string, any> | null} [context=null] - Internal debug metadata
    */
-  constructor(message) {
-    super(message, 422, "UNPROCESSABLE_ENTITY");
-  }
-}
-
-class UnauthorizedError extends DomainError {
-  /**
-   * @param {string} [message='Unauthorized']
-   */
-  constructor(message = "Unauthorized") {
-    super(message, 401, "UNAUTHORIZED");
+  constructor(message, errors, context = null) {
+    super(message, ErrorCode.VALIDATION_FAILED, 422, context);
+    /** @type {FieldError[]} */
+    this.errors = errors;
   }
 }
 
 module.exports = {
-  BusinessRuleViolationError,
-  DomainError: Error,
-  NotFoundError,
-  UnauthorizedError,
+  HttpError,
+  ValidationError,
+  ErrorCode,
 };

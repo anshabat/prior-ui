@@ -3,13 +3,8 @@
  * @typedef {import('../../types').UpdatePasswordResponse} UpdatePasswordResponse
  */
 
-const {
-  updateUserPasswordByToken,
-} = require("../services/updateUserPasswordByToken");
-const {
-  getPasswordResetTokenByToken,
-} = require("../repository/passwordResetTokenRepository");
-const { getUserByEmail } = require("../repository/userRepository");
+const { resetPassword } = require("../services/passwordResetService");
+
 /**
  * @param {import('express').Request<{}, {}, UpdatePasswordPayload>} req
  * @param {import('express').Response<UpdatePasswordResponse>} res
@@ -18,24 +13,7 @@ const { getUserByEmail } = require("../repository/userRepository");
 const updatePasswordAction = async (req, res) => {
   try {
     const { token, password } = req.body ?? {};
-    const passwordResetToken = await getPasswordResetTokenByToken(token);
-
-    if (!passwordResetToken) {
-      return res
-        .status(400)
-        .json({ success: false, error: "Invalid or expired token" });
-    }
-
-    if (passwordResetToken.expires < new Date()) {
-      return res.status(400).json({ success: false, error: "Token expired" });
-    }
-
-    const user = await getUserByEmail(passwordResetToken.email);
-    if (!user) {
-      return res.status(400).json({ success: false, error: "User not found" });
-    }
-
-    await updateUserPasswordByToken(user.id, passwordResetToken.id, password);
+    await resetPassword(token, password);
     return res.json({ success: true, data: true });
   } catch (error) {
     console.error("Failed to update password", error);
