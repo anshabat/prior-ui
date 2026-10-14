@@ -4,6 +4,7 @@
  */
 
 const passport = require("passport");
+const { authTokenCookie, oauthReturnUrlCookie } = require("../lib/cookies");
 const { createOauthJWT } = require("../lib/jwt");
 
 /**
@@ -41,9 +42,9 @@ function createOauthCallbackAction(provider) {
        */
       async (err, user) => {
         const serverRoot = `${req.protocol}://${req.get("host")}`;
-        const returnUrl = req.cookies.oauth_return_url || serverRoot;
+        const returnUrl = oauthReturnUrlCookie.get(req) || serverRoot;
 
-        res.clearCookie("oauth_return_url");
+        oauthReturnUrlCookie.clear(res);
 
         if (err || !user) {
           console.error(
@@ -56,11 +57,7 @@ function createOauthCallbackAction(provider) {
         }
 
         const token = createOauthJWT(user, provider);
-        res.cookie("authToken", token, {
-          path: "/",
-          httpOnly: true,
-          sameSite: "lax",
-        });
+        authTokenCookie.set(res, token);
         return res.redirect(buildOauthRedirectUrl(returnUrl));
       },
     )(req, res, next);

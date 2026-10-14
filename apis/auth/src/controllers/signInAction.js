@@ -11,6 +11,7 @@ const {
   getTwoFactorTokenByEmail,
   createTwoFactorToken,
 } = require("../repository/twoFactorTokenRepository");
+const { authTokenCookie } = require("../lib/cookies");
 const { createCredentialsJWT } = require("../lib/jwt");
 const { sendTwoFactorTokenEmail } = require("../lib/mail.js");
 const { getSession } = require("../services/getSession");
@@ -132,12 +133,7 @@ async function signInAction(req, res, next) {
         });
       }
 
-      res.cookie("authToken", token, {
-        path: "/",
-        httpOnly: true,
-        sameSite: "lax",
-        // secure: true, // enable in production (requires HTTPS)
-      });
+      authTokenCookie.set(res, token);
 
       return res.status(200).json({
         error: null,

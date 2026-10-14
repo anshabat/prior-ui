@@ -3,6 +3,7 @@
  * @typedef {import('express').Response} Response
  */
 
+const { authTokenCookie } = require("../lib/cookies");
 const { getSession } = require("../services/getSession");
 
 /**
@@ -11,7 +12,7 @@ const { getSession } = require("../services/getSession");
  * @returns {Response}
  */
 function getSessionAction(req, res) {
-  const token = req.cookies.authToken;
+  const token = authTokenCookie.get(req);
 
   try {
     const session = getSession(token);
