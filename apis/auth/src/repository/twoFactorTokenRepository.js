@@ -19,18 +19,12 @@ const getTwoFactorTokenByEmail = async (email) => {
 
 /**
  * @param {TwoFactorToken} twoFactorToken
- * @returns {Promise<boolean>}
+ * @returns {Promise<TwoFactorToken>}
  */
-const deleteTwoFactorToken = async (twoFactorToken) => {
-  try {
-    const deletedToken = await db.twoFactorToken.delete({
-      where: { id: twoFactorToken.id },
-    });
-    return Boolean(deletedToken);
-  } catch (error) {
-    console.error("Error deleting two factor token", error);
-    return false;
-  }
+const deleteTwoFactorToken = (twoFactorToken) => {
+  return db.twoFactorToken.delete({
+    where: { id: twoFactorToken.id },
+  });
 };
 
 /**

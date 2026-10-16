@@ -2,6 +2,8 @@
 const ErrorCode = Object.freeze({
   PASSWORD_RESET_FAILED: "PASSWORD_RESET_FAILED",
   VALIDATION_FAILED: "VALIDATION_FAILED",
+  TWO_FACTOR_INVALID_CODE: "TwoFactorInvalidCode",
+  TWO_FACTOR_EXPIRED_CODE: "TwoFactorExpiredCode",
 });
 
 class HttpError extends Error {
