@@ -1,11 +1,10 @@
 /**
  * @typedef {import('express').RequestHandler} RequestHandler
- * @typedef {import('../../types').User} User
  */
 
-const passport = require("passport");
 const { authTokenCookie, oauthReturnUrlCookie } = require("../lib/cookies");
 const { createOauthJWT } = require("../lib/jwt");
+const { authenticateOAuth } = require("../lib/passport");
 
 /**
  * Replace or remove the error search param on an absolute return URL.
@@ -32,35 +31,25 @@ const buildOauthRedirectUrl = (returnUrl, error) => {
  * @returns {RequestHandler}
  */
 function createOauthCallbackAction(provider) {
-  return (req, res, next) => {
-    passport.authenticate(
-      provider,
-      { session: false },
-      /**
-       * @param {Error | null} err
-       * @param {User | false} user
-       */
-      async (err, user) => {
-        const serverRoot = `${req.protocol}://${req.get("host")}`;
-        const returnUrl = oauthReturnUrlCookie.get(req) || serverRoot;
+  return async (req, res, next) => {
+    const { user, err } = await authenticateOAuth(provider, req, res, next);
 
-        oauthReturnUrlCookie.clear(res);
+    const serverRoot = `${req.protocol}://${req.get("host")}`;
+    const returnUrl = oauthReturnUrlCookie.get(req) || serverRoot;
 
-        if (err || !user) {
-          console.error(
-            `OAuth ${provider} callback failed:`,
-            err ?? "Unauthorized",
-          );
-          return res.redirect(
-            buildOauthRedirectUrl(returnUrl, "OAuthSignInError"),
-          );
-        }
+    oauthReturnUrlCookie.clear(res);
 
-        const token = createOauthJWT(user, provider);
-        authTokenCookie.set(res, token);
-        return res.redirect(buildOauthRedirectUrl(returnUrl));
-      },
-    )(req, res, next);
+    if (err || !user) {
+      console.error(
+        `OAuth ${provider} callback failed:`,
+        err ?? "Unauthorized",
+      );
+      return res.redirect(buildOauthRedirectUrl(returnUrl, "OAuthSignInError"));
+    }
+
+    const token = createOauthJWT(user, provider);
+    authTokenCookie.set(res, token);
+    return res.redirect(buildOauthRedirectUrl(returnUrl));
   };
 }
 

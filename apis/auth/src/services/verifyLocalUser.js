@@ -11,6 +11,7 @@ const {
 const {
   generateVerificationToken,
 } = require("./generateVerificationToken");
+const { ErrorCode } = require("../lib/error");
 
 /**
  * @param {string} email
@@ -41,7 +42,7 @@ const verifyLocalUser = async ({ email, password }) => {
   if (!user) {
     return {
       data: null,
-      error: { message: "CredentialsSignin", status: 401 },
+      error: { message: ErrorCode.CREDENTIALS_SIGN_IN, status: 401 },
     };
   }
 
@@ -56,7 +57,7 @@ const verifyLocalUser = async ({ email, password }) => {
   if (!valid) {
     return {
       data: null,
-      error: { message: "CredentialsSignin", status: 401 },
+      error: { message: ErrorCode.CREDENTIALS_SIGN_IN, status: 401 },
     };
   }
 
