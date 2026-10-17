@@ -1,12 +1,4 @@
-/** @enum {string} */
-const ErrorCode = {
-  PASSWORD_RESET_FAILED: "PASSWORD_RESET_FAILED",
-  VALIDATION_FAILED: "VALIDATION_FAILED",
-  TWO_FACTOR_INVALID_CODE: "TwoFactorInvalidCode",
-  TWO_FACTOR_EXPIRED_CODE: "TwoFactorExpiredCode",
-  SIGN_IN_FAILED: "SignInError",
-  CREDENTIALS_SIGN_IN: "CredentialsSignin",
-};
+const { ErrorCode } = require("./errorCodes");
 
 class HttpError extends Error {
   /**
@@ -21,10 +13,6 @@ class HttpError extends Error {
     this.statusCode = statusCode;
     this.code = code;
     this.context = context;
-    //
-    // if (Error.captureStackTrace) {
-    //   Error.captureStackTrace(this, this.constructor);
-    // }
   }
 }
 
@@ -50,5 +38,4 @@ class ValidationError extends HttpError {
 module.exports = {
   HttpError,
   ValidationError,
-  ErrorCode,
 };

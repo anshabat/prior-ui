@@ -1,17 +1,9 @@
-const jwt = require("jsonwebtoken");
-
 /**
  * @typedef {import('../../types').AuthSession} AuthSession
  * @typedef {import('../../types').SessionUser} SessionUser
  */
 
-/**
- * @param {number} timestamp
- * @returns {string}
- */
-const jwtTimestampToISO = (timestamp) => {
-  return new Date(timestamp * 1000).toISOString();
-};
+const jwt = require("jsonwebtoken");
 
 /**
  * @param {string | undefined} token
@@ -22,22 +14,15 @@ const getSession = (token) => {
     throw new Error("No session found");
   }
 
-  try {
-    const decoded = /** @type {SessionUser & { exp: number; iat: number }} */ (
-      jwt.verify(token, process.env.AUTH_SECRET)
-    );
-    const { exp, iat, ...user } = decoded; // eslint-disable-line no-unused-vars
+  const decoded = /** @type {SessionUser & { exp: number; iat: number }} */ (
+    jwt.verify(token, process.env.AUTH_SECRET)
+  );
+  const { exp, iat, ...user } = decoded; // eslint-disable-line no-unused-vars
 
-    return {
-      user,
-      expires: jwtTimestampToISO(exp),
-    };
-  } catch (error) {
-    if (error instanceof Error && error.name === "TokenExpiredError") {
-      throw new Error("Token expired");
-    }
-    throw new Error("Invalid token");
-  }
+  return {
+    user,
+    expires: new Date(exp * 1000).toISOString(),
+  };
 };
 
 module.exports = { getSession };

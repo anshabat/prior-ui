@@ -13,16 +13,8 @@ const { getSession } = require("../services/getSession");
  */
 function getSessionAction(req, res) {
   const token = authTokenCookie.get(req);
-
-  try {
-    const session = getSession(token);
-    return res.status(200).json(session);
-  } catch (error) {
-    if (error instanceof Error) {
-      return res.status(401).json({ error: error.message });
-    }
-    return res.status(401).json({ error: "Invalid token" });
-  }
+  const session = getSession(token);
+  return res.status(200).json(session);
 }
 
 module.exports = { getSession: getSessionAction };
