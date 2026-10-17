@@ -8,61 +8,43 @@ const db = require("../lib/db");
  * @param {string} token
  * @returns {Promise<VerificationToken | null>}
  */
-const getVerificationTokenByToken = async (token) => {
-  try {
-    const verificationToken = await db.verificationToken.findFirst({
-      where: { token },
-    });
-
-    return verificationToken;
-  } catch (error) {
-    console.error("Error getting verification token by token", error);
-    return null;
-  }
+const getVerificationTokenByToken = (token) => {
+  return db.verificationToken.findFirst({
+    where: { token },
+  });
 };
 
 /**
  * @param {string} email
  * @returns {Promise<VerificationToken | null>}
  */
-const getVerificationTokenByEmail = async (email) => {
-  try {
-    const verificationToken = await db.verificationToken.findFirst({
-      where: { email },
-    });
-
-    return verificationToken;
-  } catch {
-    return null;
-  }
+const getVerificationTokenByEmail = (email) => {
+  return db.verificationToken.findFirst({
+    where: { email },
+  });
 };
 
 /**
  * Replaces any existing token for the email with the given one.
  * @param {{ email: string, token: string, expires: Date }} data
- * @returns {Promise<VerificationToken | null>}
+ * @returns {Promise<VerificationToken>}
  */
-const replaceVerificationToken = async ({ email, token, expires }) => {
-  try {
-    return await db.$transaction(async (tx) => {
-      const existingToken = await tx.verificationToken.findFirst({
-        where: { email },
-      });
-
-      if (existingToken) {
-        await tx.verificationToken.delete({
-          where: { id: existingToken.id },
-        });
-      }
-
-      return tx.verificationToken.create({
-        data: { email, token, expires },
-      });
+const replaceVerificationToken = ({ email, token, expires }) => {
+  return db.$transaction(async (tx) => {
+    const existingToken = await tx.verificationToken.findFirst({
+      where: { email },
     });
-  } catch (error) {
-    console.error("Error replacing verification token", error);
-    return null;
-  }
+
+    if (existingToken) {
+      await tx.verificationToken.delete({
+        where: { id: existingToken.id },
+      });
+    }
+
+    return tx.verificationToken.create({
+      data: { email, token, expires },
+    });
+  });
 };
 
 /**
@@ -71,22 +53,17 @@ const replaceVerificationToken = async ({ email, token, expires }) => {
  * @returns {Promise<boolean>}
  */
 const confirmVerificationToken = async (verificationToken) => {
-  try {
-    await db.$transaction([
-      db.user.update({
-        where: { email: verificationToken.email },
-        data: { emailVerified: new Date() },
-      }),
-      db.verificationToken.delete({
-        where: { id: verificationToken.id },
-      }),
-    ]);
+  await db.$transaction([
+    db.user.update({
+      where: { email: verificationToken.email },
+      data: { emailVerified: new Date() },
+    }),
+    db.verificationToken.delete({
+      where: { id: verificationToken.id },
+    }),
+  ]);
 
-    return true;
-  } catch (error) {
-    console.error("Error consuming verification token", error);
-    return false;
-  }
+  return true;
 };
 
 module.exports = {

@@ -8,13 +8,8 @@ const db = require("../lib/db");
  * @param {string} email
  * @returns {Promise<TwoFactorToken | null>}
  */
-const getTwoFactorTokenByEmail = async (email) => {
-  try {
-    return await db.twoFactorToken.findFirst({ where: { email } });
-  } catch (error) {
-    console.error("Error getting two factor token by email", error);
-    return null;
-  }
+const getTwoFactorTokenByEmail = (email) => {
+  return db.twoFactorToken.findFirst({ where: { email } });
 };
 
 /**
@@ -29,15 +24,10 @@ const deleteTwoFactorToken = (twoFactorToken) => {
 
 /**
  * @param {{ email: string, token: string, expires: Date }} data
- * @returns {Promise<TwoFactorToken | null>}
+ * @returns {Promise<TwoFactorToken>}
  */
-const createTwoFactorToken = async (data) => {
-  try {
-    return await db.twoFactorToken.create({ data });
-  } catch (error) {
-    console.error("Error creating two factor token", error);
-    return null;
-  }
+const createTwoFactorToken = (data) => {
+  return db.twoFactorToken.create({ data });
 };
 
 module.exports = {

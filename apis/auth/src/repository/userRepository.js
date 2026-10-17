@@ -9,27 +9,16 @@ const db = require("../lib/db");
  * @param {string} email
  * @returns {Promise<User | null>}
  */
-const getUserByEmail = async (email) => {
-  try {
-    const user = await db.user.findUnique({ where: { email } });
-
-    return user;
-  } catch {
-    return null;
-  }
+const getUserByEmail = (email) => {
+  return db.user.findUnique({ where: { email } });
 };
 
 /**
  * @param {CreateUserData} data
- * @returns {Promise<User | null>}
+ * @returns {Promise<User>}
  */
-const createUser = async (data) => {
-  try {
-    return await db.user.create({ data });
-  } catch (error) {
-    console.error("Error creating user:", error);
-    return null;
-  }
+const createUser = (data) => {
+  return db.user.create({ data });
 };
 
 module.exports = {

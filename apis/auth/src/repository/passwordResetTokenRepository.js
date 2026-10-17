@@ -8,51 +8,34 @@ const db = require("../lib/db");
  * @param {string} token
  * @returns {Promise<PasswordResetToken | null>}
  */
-const getPasswordResetTokenByToken = async (token) => {
-  try {
-    return await db.passwordResetToken.findFirst({ where: { token } });
-  } catch (error) {
-    console.error("Error getting password reset token by token", error);
-    return null;
-  }
+const getPasswordResetTokenByToken = (token) => {
+  return db.passwordResetToken.findFirst({ where: { token } });
 };
 
 /**
  * @param {string} email
  * @returns {Promise<PasswordResetToken | null>}
  */
-const getPasswordResetTokenByEmail = async (email) => {
-  try {
-    return await db.passwordResetToken.findFirst({ where: { email } });
-  } catch {
-    return null;
-  }
+const getPasswordResetTokenByEmail = (email) => {
+  return db.passwordResetToken.findFirst({ where: { email } });
 };
 
 /**
  * @param {string} id
- * @returns {Promise<PasswordResetToken | null>}
+ * @returns {Promise<PasswordResetToken>}
  */
-const deletePasswordResetToken = async (id) => {
-  try {
-    return await db.passwordResetToken.delete({
-      where: { id },
-    });
-  } catch {
-    return null;
-  }
+const deletePasswordResetToken = (id) => {
+  return db.passwordResetToken.delete({
+    where: { id },
+  });
 };
 
 /**
  * @param {{ email: string, token: string, expires: Date }} data
- * @returns {Promise<PasswordResetToken | null>}
+ * @returns {Promise<PasswordResetToken>}
  */
-const createPasswordResetToken = async (data) => {
-  try {
-    return await db.passwordResetToken.create({ data });
-  } catch {
-    return null;
-  }
+const createPasswordResetToken = (data) => {
+  return db.passwordResetToken.create({ data });
 };
 
 /**
@@ -63,22 +46,17 @@ const createPasswordResetToken = async (data) => {
  * @returns {Promise<boolean>}
  */
 const confirmPasswordResetToken = async (userId, passwordHash, tokenId) => {
-  try {
-    await db.$transaction([
-      db.user.update({
-        where: { id: userId },
-        data: { password: passwordHash },
-      }),
-      db.passwordResetToken.delete({
-        where: { id: tokenId },
-      }),
-    ]);
+  await db.$transaction([
+    db.user.update({
+      where: { id: userId },
+      data: { password: passwordHash },
+    }),
+    db.passwordResetToken.delete({
+      where: { id: tokenId },
+    }),
+  ]);
 
-    return true;
-  } catch (error) {
-    console.error("Error confirming password reset token", error);
-    return false;
-  }
+  return true;
 };
 
 module.exports = {

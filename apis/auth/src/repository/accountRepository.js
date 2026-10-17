@@ -12,35 +12,26 @@ const db = require("../lib/db");
  * @param {string} providerAccountId
  * @returns {Promise<AccountWithUser | null>}
  */
-const getAccountByProvider = async (provider, providerAccountId) => {
-  try {
-    return await db.account.findUnique({
-      where: {
-        provider_providerAccountId: {
-          provider,
-          providerAccountId,
-        },
+const getAccountByProvider = (provider, providerAccountId) => {
+  return db.account.findUnique({
+    where: {
+      provider_providerAccountId: {
+        provider,
+        providerAccountId,
       },
-      include: {
-        user: true,
-      },
-});
-  } catch {
-    return null;
-  }
+    },
+    include: {
+      user: true,
+    },
+  });
 };
 
 /**
  * @param {CreateAccountData} data
- * @returns {Promise<Account | null>}
+ * @returns {Promise<Account>}
  */
-const createAccount = async (data) => {
-  try {
-    return await db.account.create({ data });
-  } catch (error) {
-    console.error("Error creating user:", error);
-    return null;
-  }
+const createAccount = (data) => {
+  return db.account.create({ data });
 };
 
 module.exports = {
