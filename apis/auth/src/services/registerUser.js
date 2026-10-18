@@ -19,14 +19,11 @@ const registerUser = async (email, password) => {
     }
   } else {
     const passwordHash = await generatePasswordHash(password);
-    const user = await createUser({
+    await createUser({
       email,
       password: passwordHash,
       name: "Session user",
     });
-    if (!user) {
-      throw new Error("Failed to create user");
-    }
   }
 
   await issueVerificationToken(email);
