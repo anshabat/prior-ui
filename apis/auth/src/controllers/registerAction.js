@@ -10,17 +10,12 @@ const { registerUser } = require("../services/registerUser");
  * Registers a new user with the provided email and password.
  * @param {import('express').Request<{}, RegisterResponse, RegisterPayload>} req
  * @param {import('express').Response<RegisterResponse>} res
- * @param {import('express').NextFunction} next
- * @returns {Promise<Response | undefined>}
+ * @returns {Promise<Response>}
  */
-async function registerAction(req, res, next) {
+async function registerAction(req, res) {
   const { email, password } = req.body ?? {};
-  try {
-    await registerUser(email, password);
-    return res.json({ data: true, error: null });
-  } catch (error) {
-    next(error);
-  }
+  await registerUser(email, password);
+  return res.json({ data: true, error: null });
 }
 
 module.exports = { registerAction };

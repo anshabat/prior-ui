@@ -16,6 +16,7 @@ const cors = require("cors");
 const passport = require("passport");
 const { storeOauthReturnUrl } = require("../middlewares/storeOauthReturnUrl");
 const { config } = require("@workspace/config");
+const { asyncErrorHandler } = require("../lib/error");
 const { registerAction } = require("../controllers/registerAction");
 const {
   createOauthCallbackAction,
@@ -39,7 +40,7 @@ passport.use(localStrategy);
 passport.use(googleStrategy);
 passport.use(githubStrategy);
 
-router.post("/api/register", registerAction);
+router.post("/api/register", asyncErrorHandler(registerAction));
 router.get(
   "/api/auth/signin/google",
   storeOauthReturnUrl,
