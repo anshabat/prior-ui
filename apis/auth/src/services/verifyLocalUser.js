@@ -8,9 +8,7 @@ const { getUserByEmail } = require("../repository/userRepository");
 const {
   getVerificationTokenByEmail,
 } = require("../repository/verificationTokenRepository");
-const {
-  generateVerificationToken,
-} = require("./generateVerificationToken");
+const { issueVerificationToken } = require("./issueVerificationToken");
 const { ErrorCode } = require("../lib/error");
 
 /**
@@ -23,7 +21,7 @@ const resendVerificationEmail = async (email) => {
     existingToken && new Date(existingToken.expires) < new Date();
 
   if (!existingToken || isExpired) {
-    await generateVerificationToken(email);
+    await issueVerificationToken(email);
     return true;
   }
 

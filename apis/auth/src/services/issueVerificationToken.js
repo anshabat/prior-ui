@@ -1,7 +1,3 @@
-/**
- * @typedef {import('../../types').VerificationToken} VerificationToken
- */
-
 const { randomUUID } = require("node:crypto");
 const { sendVerificationEmail } = require("../lib/mail");
 const {
@@ -10,9 +6,9 @@ const {
 
 /**
  * @param {string} email
- * @returns {Promise<VerificationToken>}
+ * @returns {Promise<void>}
  */
-const generateVerificationToken = async (email) => {
+const issueVerificationToken = async (email) => {
   const token = randomUUID();
   const expires = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
   const verificationToken = await replaceVerificationToken({
@@ -25,8 +21,6 @@ const generateVerificationToken = async (email) => {
   }
 
   await sendVerificationEmail(email, verificationToken.token);
-
-  return verificationToken;
 };
 
-module.exports = { generateVerificationToken };
+module.exports = { issueVerificationToken };

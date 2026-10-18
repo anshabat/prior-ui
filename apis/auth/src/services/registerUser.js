@@ -1,18 +1,11 @@
-/**
- * @typedef {import('../../types').User} User
- * @typedef {import('../../types').VerificationToken} VerificationToken
- */
-
 const { generatePasswordHash } = require("../lib/password");
 const { getUserByEmail, createUser } = require("../repository/userRepository");
-const {
-  generateVerificationToken,
-} = require("./generateVerificationToken");
+const { issueVerificationToken } = require("./issueVerificationToken");
 
 /**
  * @param {string} email
  * @param {string} password
- * @returns {Promise<{ user: User, verificationToken: VerificationToken }>}
+ * @returns {Promise<void>}
  */
 const registerUser = async (email, password) => {
   if (!email || !password) {
@@ -24,25 +17,19 @@ const registerUser = async (email, password) => {
     if (existingUser.emailVerified) {
       throw new Error("UserAlreadyExists");
     }
-
-    const verificationToken = await generateVerificationToken(email);
-
-    return { user: existingUser, verificationToken };
+  } else {
+    const passwordHash = await generatePasswordHash(password);
+    const user = await createUser({
+      email,
+      password: passwordHash,
+      name: "Session user",
+    });
+    if (!user) {
+      throw new Error("Failed to create user");
+    }
   }
 
-  const passwordHash = await generatePasswordHash(password);
-  const user = await createUser({
-    email,
-    password: passwordHash,
-    name: "Session user",
-  });
-  if (!user) {
-    throw new Error("Failed to create user");
-  }
-
-  const verificationToken = await generateVerificationToken(email);
-
-  return { user, verificationToken };
+  await issueVerificationToken(email);
 };
 
 module.exports = { registerUser };
