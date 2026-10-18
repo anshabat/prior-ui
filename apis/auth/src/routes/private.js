@@ -55,7 +55,7 @@ router.get("/api/auth/callback/google", createOauthCallbackAction("google"));
 router.get("/api/auth/callback/github", createOauthCallbackAction("github"));
 router.post("/api/signin", signInAction);
 router.post("/api/logout", logoutAction);
-router.post("/api/reset-password", resetPasswordAction);
+router.post("/api/reset-password", asyncErrorHandler(resetPasswordAction));
 router.post("/api/update-password", updatePasswordAction);
 router.get("/page/verify-email", verifyEmailAction);
 

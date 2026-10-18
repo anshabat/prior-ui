@@ -19,22 +19,14 @@ const generatePasswordResetToken = async (email) => {
   const existingToken = await getPasswordResetTokenByEmail(email);
 
   if (existingToken) {
-    const deletedToken = await deletePasswordResetToken(existingToken.id);
-    if (!deletedToken) {
-      throw new Error("Failed to delete password reset token");
-    }
+    await deletePasswordResetToken(existingToken.id);
   }
 
-  const passwordResetToken = await createPasswordResetToken({
+  return createPasswordResetToken({
     email,
     token,
     expires,
   });
-  if (!passwordResetToken) {
-    throw new Error("Failed to create password reset token");
-  }
-
-  return passwordResetToken;
 };
 
 module.exports = { generatePasswordResetToken };

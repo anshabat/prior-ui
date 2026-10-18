@@ -26,15 +26,6 @@ const requestPasswordReset = async (email, callbackUrl) => {
   }
 
   const passwordResetToken = await generatePasswordResetToken(email);
-  if (!passwordResetToken) {
-    throw new HttpError(
-      "Failed to generate password reset token",
-      ErrorCode.PASSWORD_RESET_FAILED,
-      500,
-      { email },
-    );
-  }
-
   await sendPasswordResetEmail(email, passwordResetToken.token, callbackUrl);
 };
 

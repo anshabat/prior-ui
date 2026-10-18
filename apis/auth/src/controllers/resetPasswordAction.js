@@ -11,19 +11,9 @@ const { requestPasswordReset } = require("../services/passwordResetService");
  * @returns {Promise<import('express').Response>}
  */
 const resetPasswordAction = async (req, res) => {
-  try {
-    const { email, callbackUrl } = req.body ?? {};
-    await requestPasswordReset(email, callbackUrl);
-
-    return res.json({ success: true, data: true });
-  } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({ success: false, error: error.message });
-    }
-    return res
-      .status(500)
-      .json({ success: false, error: "Failed to reset password" });
-  }
+  const { email, callbackUrl } = req.body ?? {};
+  await requestPasswordReset(email, callbackUrl);
+  return res.json({ success: true, data: true });
 };
 
 module.exports = { resetPasswordAction };
