@@ -56,7 +56,7 @@ router.get("/api/auth/callback/github", createOauthCallbackAction("github"));
 router.post("/api/signin", signInAction);
 router.post("/api/logout", logoutAction);
 router.post("/api/reset-password", asyncErrorHandler(resetPasswordAction));
-router.post("/api/update-password", updatePasswordAction);
+router.post("/api/update-password", asyncErrorHandler(updatePasswordAction));
 router.get("/page/verify-email", verifyEmailAction);
 
 module.exports = router;

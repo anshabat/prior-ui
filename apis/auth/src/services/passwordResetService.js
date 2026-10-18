@@ -1,8 +1,9 @@
 const { HttpError, ErrorCode } = require("../lib/error");
 const { sendPasswordResetEmail } = require("../lib/mail");
+const { generatePasswordHash } = require("../lib/password");
 const { generatePasswordResetToken } = require("./generatePasswordResetToken");
-const { updateUserPasswordByToken } = require("./updateUserPasswordByToken");
 const {
+  confirmPasswordResetToken,
   getPasswordResetTokenByToken,
 } = require("../repository/passwordResetTokenRepository");
 const { getUserByEmail } = require("../repository/userRepository");
@@ -67,7 +68,8 @@ const resetPassword = async (token, password) => {
     );
   }
 
-  await updateUserPasswordByToken(user.id, passwordResetToken.id, password);
+  const passwordHash = await generatePasswordHash(password);
+  await confirmPasswordResetToken(user.id, passwordHash, passwordResetToken.id);
 };
 
 module.exports = { requestPasswordReset, resetPassword };

@@ -11,19 +11,9 @@ const { resetPassword } = require("../services/passwordResetService");
  * @returns {Promise<import('express').Response>}
  */
 const updatePasswordAction = async (req, res) => {
-  try {
-    const { token, password } = req.body ?? {};
-    await resetPassword(token, password);
-    return res.json({ success: true, data: true });
-  } catch (error) {
-    console.error("Failed to update password", error);
-    if (error instanceof Error) {
-      return res.status(500).json({ success: false, error: error.message });
-    }
-    return res
-      .status(500)
-      .json({ success: false, error: "Failed to update password" });
-  }
+  const { token, password } = req.body ?? {};
+  await resetPassword(token, password);
+  return res.json({ success: true, data: true });
 };
 
 module.exports = { updatePasswordAction };
