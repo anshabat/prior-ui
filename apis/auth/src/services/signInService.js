@@ -67,7 +67,7 @@ const resolveSignIn = async ({ user, info, err, code }) => {
 
   if (!user) {
     throw new HttpError(
-      "Local authentication failed",
+      info?.message || "Local authentication failed",
       ErrorCode.CREDENTIALS_SIGN_IN,
       info?.status || 401,
       info,

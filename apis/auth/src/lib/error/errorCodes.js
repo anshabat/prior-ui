@@ -9,6 +9,7 @@ const ErrorCode = {
   ACCOUNT_NOT_LINKED: "AccountNotLinked",
   EMAIL_VERIFICATION_REQUIRED: "EmailVerificationRequired",
   EMAIL_NOT_VERIFIED: "EmailNotVerified",
+  OAUTH_SIGN_IN: "OAuthSignInError",
 };
 
 module.exports = {

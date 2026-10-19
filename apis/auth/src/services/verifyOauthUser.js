@@ -1,8 +1,8 @@
 /**
  * @typedef {import('../../types').User} User
- * @typedef {{ message: string, status: number }} VerifyOauthError
  */
 
+const { HttpError, ErrorCode } = require("../lib/error");
 const { getUserByEmail, createUser } = require("../repository/userRepository");
 const {
   getAccountByProvider,
@@ -13,18 +13,22 @@ const {
  * @param {Object} params
  * @param {string} params.provider
  * @param {string} params.providerAccountId
- * @param {string} params.email
+ * @param {string | undefined} params.email
  * @param {string | null} params.name
  * @param {string | null} params.image
- * @returns {Promise<User | null>}
+ * @returns {Promise<User>}
  */
-const findOrCreateOAuthUser = async ({
+const verifyOauthUser = async ({
   provider,
   providerAccountId,
   email,
   name = null,
   image = null,
 }) => {
+  if (!email) {
+    throw new HttpError("No email provided", ErrorCode.OAUTH_SIGN_IN, 400);
+  }
+
   const existingAccount = await getAccountByProvider(
     provider,
     providerAccountId,
@@ -34,7 +38,7 @@ const findOrCreateOAuthUser = async ({
     return existingAccount.user;
   }
 
-  let user = email ? await getUserByEmail(email) : null;
+  let user = await getUserByEmail(email);
   if (!user) {
     user = await createUser({
       email,
@@ -44,56 +48,14 @@ const findOrCreateOAuthUser = async ({
     });
   }
 
-  if (user) {
-    const account = await createAccount({
-      userId: user.id,
-      provider,
-      providerAccountId,
-    });
-    if (!account) {
-      // TODO: Create the user and account in one transaction. A failed account create returns null after createUser has already persisted the user.
-      return null;
-    }
-  }
-
-  return user;
-};
-
-/**
- * @param {Object} params
- * @param {string} params.provider
- * @param {string} params.providerAccountId
- * @param {string | undefined} params.email
- * @param {string | null} params.name
- * @param {string | null} params.image
- * @returns {Promise<{data: User | null, error: VerifyOauthError | null}>}
- */
-const verifyOauthUser = async ({
-  provider,
-  providerAccountId,
-  email,
-  name,
-  image,
-}) => {
-  if (!email) {
-    return {
-      data: null,
-      error: { message: "No email provided", status: 400 },
-    };
-  }
-
-  const user = await findOrCreateOAuthUser({
+  // TODO: Create the user and account in one transaction. A failed account create returns null after createUser has already persisted the user.
+  await createAccount({
+    userId: user.id,
     provider,
     providerAccountId,
-    name,
-    email,
-    image,
   });
-  if (!user) {
-    return { data: null, error: { message: "No user found", status: 401 } };
-  }
 
-  return { data: user, error: null };
+  return user;
 };
 
 module.exports = { verifyOauthUser };

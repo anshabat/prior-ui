@@ -26,19 +26,18 @@ const googleStrategy = new GoogleStrategy(
    * @param {import('passport-google-oauth20').VerifyCallback} done
    */
   async (_accessToken, _refreshToken, profile, done) => {
-    const { data: user, error } = await verifyOauthUser({
-      email: profile.emails?.[0]?.value,
-      provider: "google",
-      providerAccountId: profile.id,
-      name: profile.displayName || "",
-      image: profile.photos?.[0]?.value ?? null,
-    });
-
-    if(error) {
-      return done(error.message, false);
+    try {
+      const user = await verifyOauthUser({
+        email: profile.emails?.[0]?.value,
+        provider: "google",
+        providerAccountId: profile.id,
+        name: profile.displayName || "",
+        image: profile.photos?.[0]?.value ?? null,
+      });
+      return done(null, user);
+    } catch (error) {
+      return done(error);
     }
-
-    return done(null, user || false);
   },
 );
 

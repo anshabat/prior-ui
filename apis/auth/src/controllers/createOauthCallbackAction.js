@@ -3,6 +3,7 @@
  */
 
 const { authTokenCookie, oauthReturnUrlCookie } = require("../lib/cookies");
+const { HttpError, ErrorCode } = require("../lib/error");
 const { createOauthJWT } = require("../lib/jwt");
 const { authenticateOAuth } = require("../lib/passport");
 
@@ -40,11 +41,13 @@ function createOauthCallbackAction(provider) {
     oauthReturnUrlCookie.clear(res);
 
     if (err || !user) {
+      const errorCode =
+        err instanceof HttpError ? err.code : ErrorCode.OAUTH_SIGN_IN;
       console.error(
         `OAuth ${provider} callback failed:`,
         err ?? "Unauthorized",
       );
-      return res.redirect(buildOauthRedirectUrl(returnUrl, "OAuthSignInError"));
+      return res.redirect(buildOauthRedirectUrl(returnUrl, errorCode));
     }
 
     const token = createOauthJWT(user, provider);
