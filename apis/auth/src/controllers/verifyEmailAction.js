@@ -4,6 +4,7 @@
  */
 
 const { verifyEmail } = require("../services/verifyEmail");
+const { HttpError, ErrorCode } = require("../lib/error");
 
 /**
  * @param {Request} req
@@ -13,18 +14,18 @@ const { verifyEmail } = require("../services/verifyEmail");
 async function verifyEmailAction(req, res) {
   const { token } = req.query;
 
-  try {
-    if (typeof token !== "string" || token.length === 0) {
-      throw new Error("Invalid token");
-    }
-    await verifyEmail(token);
-    return res.status(200).json({ success: true });
-  } catch (error) {
-    if (error instanceof Error) {
-      return res.status(400).json({ error: error.message });
-    }
-    return res.status(400).json({ error: "Failed to verify email" });
+  // TODO: remove after adding validation layer
+  if (typeof token !== "string" || token.length === 0) {
+    throw new HttpError(
+      "Email verification token is missing or empty",
+      ErrorCode.EMAIL_NOT_VERIFIED,
+      400,
+      { token },
+    );
   }
+
+  await verifyEmail(token);
+  return res.status(200).json({ success: true });
 }
 
 module.exports = { verifyEmailAction };

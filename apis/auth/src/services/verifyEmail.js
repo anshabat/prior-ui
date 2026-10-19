@@ -1,3 +1,4 @@
+const { HttpError, ErrorCode } = require("../lib/error");
 const {
   getVerificationTokenByToken,
   confirmVerificationToken,
@@ -5,29 +6,30 @@ const {
 
 /**
  * @param {string} token
- * @returns {Promise<boolean>}
+ * @returns {Promise<void>}
  */
 const verifyEmail = async (token) => {
   const verificationToken = await getVerificationTokenByToken(token);
 
   if (!verificationToken) {
-    // TODO: Logger
-    console.error("Verification token not found");
-    throw new Error("Verification");
+    throw new HttpError(
+      "Verification token not found",
+      ErrorCode.EMAIL_NOT_VERIFIED,
+      400,
+      { token },
+    );
   }
 
   if (new Date(verificationToken.expires) < new Date()) {
-    // TODO: Logger
-    console.error("Verification token expired");
-    throw new Error("Verification");
+    throw new HttpError(
+      "Verification token expired",
+      ErrorCode.EMAIL_NOT_VERIFIED,
+      400,
+      { token, expired_at: verificationToken.expires },
+    );
   }
 
-  const confirmed = await confirmVerificationToken(verificationToken);
-  if (!confirmed) {
-    throw new Error("Verification");
-  }
-
-  return true;
+  await confirmVerificationToken(verificationToken);
 };
 
 module.exports = { verifyEmail };

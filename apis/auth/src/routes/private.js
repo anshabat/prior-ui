@@ -63,6 +63,6 @@ router.post("/api/signin", asyncErrorHandler(signInAction));
 router.post("/api/logout", asyncErrorHandler(logoutAction));
 router.post("/api/reset-password", asyncErrorHandler(resetPasswordAction));
 router.post("/api/update-password", asyncErrorHandler(updatePasswordAction));
-router.get("/page/verify-email", verifyEmailAction);
+router.get("/page/verify-email", asyncErrorHandler(verifyEmailAction));
 
 module.exports = router;
