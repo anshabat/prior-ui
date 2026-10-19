@@ -1,5 +1,5 @@
 const { Strategy: LocalStrategy } = require("passport-local");
-const { verifyLocalUser } = require("../services/verifyLocalUser");
+const { verifyLocalUser } = require("../services/signInService");
 
 /** @type {import('passport-local').VerifyFunction} */
 const verify = async (email, password, done) => {

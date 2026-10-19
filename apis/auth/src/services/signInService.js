@@ -4,11 +4,54 @@
 
 const { HttpError, ErrorCode } = require("../lib/error");
 const { createCredentialsJWT } = require("../lib/jwt");
+const { comparePassword } = require("../lib/password");
+const {
+  getVerificationTokenByEmail,
+} = require("../repository/verificationTokenRepository");
+const { getUserByEmail } = require("../repository/userRepository");
 const { getSession } = require("./getSession");
+const { issueVerificationToken } = require("./issueVerificationToken");
 const {
   verifyTwoFactorCode,
   issueTwoFactorToken,
 } = require("./twoFactorService");
+
+/**
+ * @param {Object} params
+ * @param {string} params.email
+ * @param {string} params.password
+ * @returns {Promise<User>}
+ */
+const verifyLocalUser = async ({ email, password }) => {
+  const user = await getUserByEmail(email);
+
+  if (!user) {
+    throw new HttpError(
+      "Local sign-in rejected",
+      ErrorCode.CREDENTIALS_SIGN_IN,
+      401,
+    );
+  }
+
+  if (!user.password) {
+    throw new HttpError(
+      "Local sign-in rejected for unlinked account",
+      ErrorCode.ACCOUNT_NOT_LINKED,
+      403,
+    );
+  }
+
+  const valid = await comparePassword(password, user.password);
+  if (!valid) {
+    throw new HttpError(
+      "Local sign-in rejected",
+      ErrorCode.CREDENTIALS_SIGN_IN,
+      401,
+    );
+  }
+
+  return user;
+};
 
 /**
  * @param {Object} params
@@ -25,13 +68,27 @@ const resolveSignIn = async ({ user, info, err, code }) => {
   if (!user) {
     throw new HttpError(
       "Local authentication failed",
-      info?.message || ErrorCode.CREDENTIALS_SIGN_IN,
+      ErrorCode.CREDENTIALS_SIGN_IN,
       info?.status || 401,
-      info ?? null,
+      info,
     );
   }
 
-  if (user?.isTwoFactorEnabled) {
+  if (!user.emailVerified) {
+    const existingToken = await getVerificationTokenByEmail(user.email);
+    const isExpired =
+      existingToken && new Date(existingToken.expires) < new Date();
+    if (!existingToken || isExpired) {
+      await issueVerificationToken(user.email);
+    }
+    throw new HttpError(
+      "Local sign-in rejected for unverified email",
+      ErrorCode.EMAIL_VERIFICATION_REQUIRED,
+      403,
+    );
+  }
+
+  if (user.isTwoFactorEnabled) {
     if (code) {
       await verifyTwoFactorCode(user.email, code);
     } else {
@@ -47,4 +104,4 @@ const resolveSignIn = async ({ user, info, err, code }) => {
   return { session, twoFactor: false, jwt };
 };
 
-module.exports = { resolveSignIn };
+module.exports = { resolveSignIn, verifyLocalUser };
