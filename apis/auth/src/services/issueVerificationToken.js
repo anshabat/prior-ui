@@ -11,15 +11,12 @@ const {
 const issueVerificationToken = async (email) => {
   const token = randomUUID();
   const expires = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
+
   const verificationToken = await replaceVerificationToken({
     email,
     token,
     expires,
   });
-  if (!verificationToken) {
-    throw new Error("Failed to generate verification token");
-  }
-
   await sendVerificationEmail(email, verificationToken.token);
 };
 

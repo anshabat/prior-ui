@@ -1,6 +1,5 @@
 /**
  * @typedef {import('../../types').User} User
- * @typedef {{ message: string, status: number }} VerifyLocalError
  */
 
 const { comparePassword } = require("../lib/password");
@@ -9,65 +8,57 @@ const {
   getVerificationTokenByEmail,
 } = require("../repository/verificationTokenRepository");
 const { issueVerificationToken } = require("./issueVerificationToken");
-const { ErrorCode } = require("../lib/error");
-
-/**
- * @param {string} email
- * @returns {Promise<boolean>}
- */
-const resendVerificationEmail = async (email) => {
-  const existingToken = await getVerificationTokenByEmail(email);
-  const isExpired =
-    existingToken && new Date(existingToken.expires) < new Date();
-
-  if (!existingToken || isExpired) {
-    await issueVerificationToken(email);
-    return true;
-  }
-
-  return false;
-};
+const { ErrorCode, HttpError } = require("../lib/error");
 
 /**
  * @param {Object} params
  * @param {string} params.email
  * @param {string} params.password
- * @returns {Promise<{ data: User | null, error: VerifyLocalError | null }>}
+ * @returns {Promise<User>}
  */
 const verifyLocalUser = async ({ email, password }) => {
   const user = await getUserByEmail(email);
 
   if (!user) {
-    return {
-      data: null,
-      error: { message: ErrorCode.CREDENTIALS_SIGN_IN, status: 401 },
-    };
+    throw new HttpError(
+      "Local sign-in rejected",
+      ErrorCode.CREDENTIALS_SIGN_IN,
+      401,
+    );
   }
 
   if (!user.password) {
-    return {
-      data: null,
-      error: { message: "AccountNotLinked", status: 403 },
-    };
+    throw new HttpError(
+      "Local sign-in rejected for unlinked account",
+      ErrorCode.ACCOUNT_NOT_LINKED,
+      403,
+    );
   }
 
   const valid = await comparePassword(password, user.password);
   if (!valid) {
-    return {
-      data: null,
-      error: { message: ErrorCode.CREDENTIALS_SIGN_IN, status: 401 },
-    };
+    throw new HttpError(
+      "Local sign-in rejected",
+      ErrorCode.CREDENTIALS_SIGN_IN,
+      401,
+    );
   }
 
   if (!user.emailVerified) {
-    await resendVerificationEmail(email);
-    return {
-      data: null,
-      error: { message: "EmailRequired", status: 403 },
-    };
+    const existingToken = await getVerificationTokenByEmail(email);
+    const isExpired =
+      existingToken && new Date(existingToken.expires) < new Date();
+    if (!existingToken || isExpired) {
+      await issueVerificationToken(email);
+    }
+    throw new HttpError(
+      "Local sign-in rejected for unverified email",
+      ErrorCode.EMAIL_VERIFICATION_REQUIRED,
+      403,
+    );
   }
 
-  return { data: user, error: null };
+  return user;
 };
 
 module.exports = { verifyLocalUser };

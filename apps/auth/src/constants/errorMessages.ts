@@ -71,7 +71,7 @@ export const ERROR_MESSAGES = {
   TwoFactorError: "Two-factor authentication failed. Please try again.",
 
   // Email verification-specific
-  EmailRequired: "Email verification is required.",
+  EmailVerificationRequired: "Email verification is required.",
   EmailNotVerified:
     "Invalid or expired email verification token. Please request a new sign-in link.",
   OAuthProvidersRequestFailed:

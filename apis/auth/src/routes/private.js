@@ -51,10 +51,16 @@ router.get(
   storeOauthReturnUrl,
   passport.authenticate("github"),
 );
-router.get("/api/auth/callback/google", createOauthCallbackAction("google"));
-router.get("/api/auth/callback/github", createOauthCallbackAction("github"));
-router.post("/api/signin", signInAction);
-router.post("/api/logout", logoutAction);
+router.get(
+  "/api/auth/callback/google",
+  asyncErrorHandler(createOauthCallbackAction("google")),
+);
+router.get(
+  "/api/auth/callback/github",
+  asyncErrorHandler(createOauthCallbackAction("github")),
+);
+router.post("/api/signin", asyncErrorHandler(signInAction));
+router.post("/api/logout", asyncErrorHandler(logoutAction));
 router.post("/api/reset-password", asyncErrorHandler(resetPasswordAction));
 router.post("/api/update-password", asyncErrorHandler(updatePasswordAction));
 router.get("/page/verify-email", verifyEmailAction);
