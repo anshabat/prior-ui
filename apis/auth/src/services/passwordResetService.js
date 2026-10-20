@@ -31,7 +31,7 @@ const requestPasswordReset = async (email, callbackUrl) => {
 
   const existingToken = await getPasswordResetTokenByEmail(email);
   if (existingToken) {
-    await deletePasswordResetToken('lalala');
+    await deletePasswordResetToken(existingToken.id);
   }
 
   const passwordResetToken = await createPasswordResetToken({
