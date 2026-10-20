@@ -1,8 +1,27 @@
+const { randomUUID } = require("node:crypto");
 const { HttpError, ErrorCode } = require("../lib/error");
+const { sendVerificationEmail } = require("../lib/mail");
 const {
-  getVerificationTokenByToken,
   confirmVerificationToken,
+  getVerificationTokenByToken,
+  replaceVerificationToken,
 } = require("../repository/verificationTokenRepository");
+
+/**
+ * @param {string} email
+ * @returns {Promise<void>}
+ */
+const issueVerificationToken = async (email) => {
+  const token = randomUUID();
+  const expires = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
+
+  const verificationToken = await replaceVerificationToken({
+    email,
+    token,
+    expires,
+  });
+  await sendVerificationEmail(email, verificationToken.token);
+};
 
 /**
  * @param {string} token
@@ -32,4 +51,4 @@ const verifyEmail = async (token) => {
   await confirmVerificationToken(verificationToken);
 };
 
-module.exports = { verifyEmail };
+module.exports = { issueVerificationToken, verifyEmail };

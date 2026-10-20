@@ -1,9 +1,12 @@
+const { randomUUID } = require("node:crypto");
 const { HttpError, ErrorCode } = require("../lib/error");
 const { sendPasswordResetEmail } = require("../lib/mail");
 const { generatePasswordHash } = require("../lib/password");
-const { generatePasswordResetToken } = require("./generatePasswordResetToken");
 const {
   confirmPasswordResetToken,
+  createPasswordResetToken,
+  deletePasswordResetToken,
+  getPasswordResetTokenByEmail,
   getPasswordResetTokenByToken,
 } = require("../repository/passwordResetTokenRepository");
 const { getUserByEmail } = require("../repository/userRepository");
@@ -26,7 +29,16 @@ const requestPasswordReset = async (email, callbackUrl) => {
     );
   }
 
-  const passwordResetToken = await generatePasswordResetToken(email);
+  const existingToken = await getPasswordResetTokenByEmail(email);
+  if (existingToken) {
+    await deletePasswordResetToken(existingToken.id);
+  }
+
+  const passwordResetToken = await createPasswordResetToken({
+    email,
+    token: randomUUID(),
+    expires: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
+  });
   await sendPasswordResetEmail(email, passwordResetToken.token, callbackUrl);
 };
 

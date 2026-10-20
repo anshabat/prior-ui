@@ -1,6 +1,6 @@
 const { generatePasswordHash } = require("../lib/password");
 const { getUserByEmail, createUser } = require("../repository/userRepository");
-const { issueVerificationToken } = require("./issueVerificationToken");
+const { issueVerificationToken } = require("./emailVerification");
 
 /**
  * @param {string} email

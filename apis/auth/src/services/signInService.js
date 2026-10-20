@@ -10,7 +10,7 @@ const {
 } = require("../repository/verificationTokenRepository");
 const { getUserByEmail } = require("../repository/userRepository");
 const { getSession } = require("./getSession");
-const { issueVerificationToken } = require("./issueVerificationToken");
+const { issueVerificationToken } = require("./emailVerification");
 const {
   verifyTwoFactorCode,
   issueTwoFactorToken,
