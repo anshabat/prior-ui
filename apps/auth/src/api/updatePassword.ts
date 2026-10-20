@@ -5,6 +5,7 @@ import type {
 import { config } from "@workspace/config";
 import { tryCatchAsync } from "@workspace/utils";
 import { ERROR_MESSAGES } from "../constants";
+import { getErrorMessage } from "../utils";
 
 const { API_BASE_URL } = config.auth;
 
@@ -29,7 +30,12 @@ export async function updatePassword({
   }
 
   if (!data.success) {
-    throw new Error(data.error);
+    throw new Error(
+      getErrorMessage(
+        data.error,
+        ERROR_MESSAGES.PasswordResetTokenGenerationFailed,
+      ),
+    );
   }
 
   if (!response.ok) {

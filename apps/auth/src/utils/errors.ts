@@ -10,7 +10,7 @@ export const getErrorMessage = (
   errorKey: string | undefined | null,
   fallbackMessage?: string,
 ): string => {
-  if (isErrorKey(errorKey)) {
+  if (isErrorKey(errorKey) && errorKey !== "InternalServerError") {
     return ERROR_MESSAGES[errorKey];
   }
   return fallbackMessage || ERROR_MESSAGES.InternalServerError;
