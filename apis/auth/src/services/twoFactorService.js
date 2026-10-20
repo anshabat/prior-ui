@@ -1,7 +1,3 @@
-/**
- * @typedef {import('../../types').TwoFactorToken} TwoFactorToken
- */
-
 const { randomInt } = require("node:crypto");
 const { HttpError, ErrorCode } = require("../lib/error");
 const { sendTwoFactorTokenEmail } = require("../lib/mail");
@@ -13,12 +9,9 @@ const {
 
 /**
  * @param {string} email
- * @returns {Promise<TwoFactorToken>}
+ * @returns {Promise<void>}
  */
-const generateTwoFactorToken = async (email) => {
-  const token = randomInt(100_000, 1_000_000).toString(); // 6 digit code
-  const expires = new Date(Date.now() + 1000 * 60 * 10); // 10 minutes
-
+const issueTwoFactorToken = async (email) => {
   const existingToken = await getTwoFactorTokenByEmail(email);
   if (existingToken) {
     await deleteTwoFactorToken(existingToken);
@@ -26,22 +19,10 @@ const generateTwoFactorToken = async (email) => {
 
   const twoFactorToken = await createTwoFactorToken({
     email,
-    token,
-    expires,
+    token: randomInt(100_000, 1_000_000).toString(), // 6 digit code
+    expires: new Date(Date.now() + 1000 * 60 * 10), // 10 minutes
   });
-  if (!twoFactorToken) {
-    throw new Error("Failed to create two factor token");
-  }
 
-  return twoFactorToken;
-};
-
-/**
- * @param {string} email
- * @returns {Promise<void>}
- */
-const issueTwoFactorToken = async (email) => {
-  const twoFactorToken = await generateTwoFactorToken(email);
   await sendTwoFactorTokenEmail(twoFactorToken.email, twoFactorToken.token);
 };
 
