@@ -24,10 +24,20 @@ const issueVerificationToken = async (email) => {
 };
 
 /**
- * @param {string} token
+ * @param {unknown} token
  * @returns {Promise<void>}
  */
 const verifyEmail = async (token) => {
+  // TODO: remove after adding validation layer
+  if (typeof token !== "string" || token.length === 0) {
+    throw new HttpError(
+      "Email verification token is missing or empty",
+      ErrorCode.EMAIL_NOT_VERIFIED,
+      400,
+      { token },
+    );
+  }
+
   const verificationToken = await getVerificationTokenByToken(token);
 
   if (!verificationToken) {
