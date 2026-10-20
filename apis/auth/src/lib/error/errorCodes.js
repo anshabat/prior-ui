@@ -1,6 +1,6 @@
 /** @enum {string} */
 const ErrorCode = {
-  PASSWORD_RESET_FAILED: "PASSWORD_RESET_FAILED",
+  PASSWORD_RESET_FAILED: "PasswordResetFailed",
   TWO_FACTOR_INVALID_CODE: "TwoFactorInvalidCode",
   SIGN_IN_FAILED: "SignInError",
   ACCOUNT_NOT_LINKED: "AccountNotLinked",
