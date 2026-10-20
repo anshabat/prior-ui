@@ -66,7 +66,7 @@ const verifyTwoFactorCode = async (email, code) => {
     await deleteTwoFactorToken(twoFactorToken);
     throw new HttpError(
       "Two factor token expired",
-      ErrorCode.TWO_FACTOR_EXPIRED_CODE,
+      ErrorCode.TWO_FACTOR_INVALID_CODE,
       401,
       { email, expired_at: twoFactorToken.expires },
     );

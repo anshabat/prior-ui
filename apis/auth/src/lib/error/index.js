@@ -1,5 +1,5 @@
 const { ErrorCode } = require("./errorCodes");
-const { HttpError, ValidationError } = require("./errors");
+const { HttpError } = require("./errors");
 const {
   asyncErrorHandler,
   globalErrorHandlerMiddleware,
@@ -9,6 +9,5 @@ module.exports = {
   asyncErrorHandler,
   globalErrorHandlerMiddleware,
   HttpError,
-  ValidationError,
   ErrorCode,
 };

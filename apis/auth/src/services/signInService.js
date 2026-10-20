@@ -28,7 +28,7 @@ const verifyLocalUser = async ({ email, password }) => {
   if (!user) {
     throw new HttpError(
       "Local sign-in rejected",
-      ErrorCode.CREDENTIALS_SIGN_IN,
+      ErrorCode.SIGN_IN_FAILED,
       401,
     );
   }
@@ -45,7 +45,7 @@ const verifyLocalUser = async ({ email, password }) => {
   if (!valid) {
     throw new HttpError(
       "Local sign-in rejected",
-      ErrorCode.CREDENTIALS_SIGN_IN,
+      ErrorCode.SIGN_IN_FAILED,
       401,
     );
   }
@@ -68,7 +68,7 @@ const resolveSignIn = async ({ user, info, err, code }) => {
   if (!user) {
     throw new HttpError(
       info?.message || "Local authentication failed",
-      ErrorCode.CREDENTIALS_SIGN_IN,
+      ErrorCode.SIGN_IN_FAILED,
       info?.status || 401,
       info,
     );
