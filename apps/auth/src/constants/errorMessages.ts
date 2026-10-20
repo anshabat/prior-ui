@@ -3,6 +3,7 @@ export const ERROR_MESSAGES = {
   SignInError: "Sign-in failed. Please try again.",
 
   // Maps an apis/auth ErrorCode.
+  InternalServerError: "Something went wrong. Please try again.",
   AccountNotLinked:
     "This email is already associated with an account, but not with this sign-in method. Use the method you originally used.",
   EmailVerificationRequired: "Email verification is required.",
@@ -12,7 +13,6 @@ export const ERROR_MESSAGES = {
   TwoFactorInvalidCode: "Invalid two-factor code. Please try again.",
 
   // Used in the client.
-  Default: "Authentication failed. Please try again.",
   RegisterError: "Registration failed. Please try again.",
   SignOutError: "Sign-out encountered an issue.",
   PasswordResetFailed: "Failed to request password reset",

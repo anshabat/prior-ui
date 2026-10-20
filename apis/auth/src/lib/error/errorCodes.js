@@ -1,5 +1,6 @@
 /** @enum {string} */
 const ErrorCode = {
+  INTERNAL_SERVER_ERROR: "InternalServerError",
   PASSWORD_RESET_FAILED: "PasswordResetFailed",
   TWO_FACTOR_INVALID_CODE: "TwoFactorInvalidCode",
   SIGN_IN_FAILED: "SignInError",

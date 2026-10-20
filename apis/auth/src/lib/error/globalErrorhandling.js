@@ -4,6 +4,7 @@
  * @typedef {import('express').NextFunction} NextFunction
  */
 
+const { ErrorCode } = require("./errorCodes");
 const { HttpError } = require("./errors");
 
 /**
@@ -41,7 +42,7 @@ function globalErrorHandlerMiddleware(err, req, res, next) {
     return res.status(err.statusCode).json({ error: err.code });
   }
 
-  return res.status(500).json({ error: "Internal server error" });
+  return res.status(500).json({ error: ErrorCode.INTERNAL_SERVER_ERROR });
 }
 
 module.exports = { asyncErrorHandler, globalErrorHandlerMiddleware };

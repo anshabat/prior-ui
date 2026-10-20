@@ -13,5 +13,5 @@ export const getErrorMessage = (
   if (isErrorKey(errorKey)) {
     return ERROR_MESSAGES[errorKey];
   }
-  return fallbackMessage || ERROR_MESSAGES.Default;
+  return fallbackMessage || ERROR_MESSAGES.InternalServerError;
 };
