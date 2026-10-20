@@ -27,7 +27,7 @@ const verifyLocalUser = async ({ email, password }) => {
 
   if (!user) {
     throw new HttpError(
-      "Local sign-in rejected",
+      "User not found, email or password wrong",
       ErrorCode.SIGN_IN_FAILED,
       401,
     );
