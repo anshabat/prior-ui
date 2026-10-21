@@ -4,6 +4,7 @@
  */
 
 const { config } = require("@workspace/config");
+const { buildSuccessRedirectUrl } = require("../lib/redirectUrl");
 const { verifyEmail } = require("../services/emailVerification");
 
 const { APP_BASE_URL } = config.auth;
@@ -17,7 +18,7 @@ async function verifyEmailAction(req, res) {
   const { token } = req.query;
 
   await verifyEmail(token);
-  res.redirect(APP_BASE_URL);
+  res.redirect(buildSuccessRedirectUrl(APP_BASE_URL, "EmailVerified"));
 }
 
 module.exports = { verifyEmailAction };
