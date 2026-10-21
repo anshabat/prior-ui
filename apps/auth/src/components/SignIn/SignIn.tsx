@@ -3,8 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { signInWithOAuth } from "../../api";
 import { SEARCH_PARAMS } from "../../constants";
 import { SignInForm } from "../ui/SignInForm.tsx";
-import { useLoginMutation, useSignOutMutation } from "../../hooks/useAuthApi.ts";
-import { getErrorMessage, getSearchParams, removeSearchParam } from "../../utils";
+import {
+  useLoginMutation,
+  useSignOutMutation,
+} from "../../hooks/useAuthApi.ts";
+import { getErrorMessage, removeSearchParam } from "../../utils";
+import { useFlashQueryParam } from "../../hooks/useFlashQueryParam.ts";
 
 interface SignInProps {
   refreshSession: () => Promise<unknown>;
@@ -12,22 +16,18 @@ interface SignInProps {
 
 export function SignIn({ refreshSession }: SignInProps) {
   const [isTwoFactorStep, setIsTwoFactorStep] = useState(false);
+  const flashError = useFlashQueryParam("error");
   const [error, setError] = useState<string | null>(() => {
-    const { error: errorSearchParam } = getSearchParams();
-
-    if (!errorSearchParam) {
-      return null;
-    }
-
-    return getErrorMessage(errorSearchParam, errorSearchParam);
+    if (!flashError) return null;
+    return getErrorMessage(flashError, flashError);
   });
 
   const clearError = () => {
     setError(null);
     navigate(removeSearchParam(SEARCH_PARAMS.ERROR), { replace: true });
-  }
+  };
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { mutate: signWithCredentials } = useLoginMutation({
     onSuccess: (data) => {

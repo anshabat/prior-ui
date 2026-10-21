@@ -20,3 +20,8 @@ export const ERROR_MESSAGES = {
   UpdataPasswordMatch: "Passwords do not match",
   UpdatePasswordMissingToken: "Missing token",
 } as const;
+
+export const SUCCESS_MESSAGES = {
+  // Maps an apis/auth success code and is used directly in the client.
+  EmailVerified: "Your email has been verified.",
+} as const;
