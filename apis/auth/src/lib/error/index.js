@@ -3,11 +3,13 @@ const { HttpError } = require("./errors");
 const {
   asyncErrorHandler,
   globalErrorHandlerMiddleware,
-} = require("./globalErrorhandling");
+  redirectErrorHandlerMiddleware,
+} = require("./globalErrorHandling");
 
 module.exports = {
   asyncErrorHandler,
   globalErrorHandlerMiddleware,
+  redirectErrorHandlerMiddleware,
   HttpError,
   ErrorCode,
 };

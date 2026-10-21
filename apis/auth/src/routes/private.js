@@ -16,7 +16,10 @@ const cors = require("cors");
 const passport = require("passport");
 const { storeOauthReturnUrl } = require("../middlewares/storeOauthReturnUrl");
 const { config } = require("@workspace/config");
-const { asyncErrorHandler } = require("../lib/error");
+const {
+  asyncErrorHandler,
+  redirectErrorHandlerMiddleware,
+} = require("../lib/error");
 const { registerAction } = require("../controllers/registerAction");
 const {
   createOauthCallbackAction,
@@ -63,6 +66,10 @@ router.post("/api/signin", asyncErrorHandler(signInAction));
 router.post("/api/logout", asyncErrorHandler(logoutAction));
 router.post("/api/reset-password", asyncErrorHandler(resetPasswordAction));
 router.post("/api/update-password", asyncErrorHandler(updatePasswordAction));
-router.get("/page/verify-email", asyncErrorHandler(verifyEmailAction));
+router.get(
+  "/page/verify-email",
+  asyncErrorHandler(verifyEmailAction),
+  redirectErrorHandlerMiddleware,
+);
 
 module.exports = router;

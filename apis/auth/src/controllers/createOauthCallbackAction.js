@@ -6,24 +6,7 @@ const { authTokenCookie, oauthReturnUrlCookie } = require("../lib/cookies");
 const { HttpError, ErrorCode } = require("../lib/error");
 const { createOauthJWT } = require("../lib/jwt");
 const { authenticateOAuth } = require("../lib/passport");
-
-/**
- * Replace or remove the error search param on an absolute return URL.
- * @param {string} returnUrl
- * @param {string} [error]
- * @returns {string}
- */
-const buildOauthRedirectUrl = (returnUrl, error) => {
-  const url = new URL(returnUrl);
-
-  if (error) {
-    url.searchParams.set("error", error);
-  } else {
-    url.searchParams.delete("error");
-  }
-
-  return url.href;
-};
+const { buildRedirectUrl } = require("../lib/redirectUrl");
 
 /**
  * Passport callback for an OAuth provider.
@@ -47,12 +30,12 @@ function createOauthCallbackAction(provider) {
         `OAuth ${provider} callback failed:`,
         err ?? "Unauthorized",
       );
-      return res.redirect(buildOauthRedirectUrl(returnUrl, errorCode));
+      return res.redirect(buildRedirectUrl(returnUrl, errorCode));
     }
 
     const token = createOauthJWT(user, provider);
     authTokenCookie.set(res, token);
-    return res.redirect(buildOauthRedirectUrl(returnUrl));
+    return res.redirect(buildRedirectUrl(returnUrl));
   };
 }
 
