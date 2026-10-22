@@ -45,21 +45,21 @@ passport.use(githubStrategy);
 
 router.post("/api/register", asyncErrorHandler(registerAction));
 router.get(
-  "/api/auth/signin/google",
+  "/api/signin/google",
   storeOauthReturnUrl,
   passport.authenticate("google"),
 );
 router.get(
-  "/api/auth/signin/github",
+  "/api/signin/github",
   storeOauthReturnUrl,
   passport.authenticate("github"),
 );
 router.get(
-  "/api/auth/callback/google",
+  "/api/signin/google/callback",
   asyncErrorHandler(createOauthCallbackAction("google")),
 );
 router.get(
-  "/api/auth/callback/github",
+  "/api/signin/github/callback",
   asyncErrorHandler(createOauthCallbackAction("github")),
 );
 router.post("/api/signin", asyncErrorHandler(signInAction));

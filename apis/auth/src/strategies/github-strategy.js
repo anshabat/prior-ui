@@ -10,7 +10,7 @@ const { API_BASE_URL } = config.auth;
 
 const GITHUB_CLIENT_ID = process.env.AUTH_GITHUB_ID;
 const GITHUB_CLIENT_SECRET = process.env.AUTH_GITHUB_SECRET;
-const GITHUB_CALLBACK_URL = `${API_BASE_URL}/api/auth/callback/github`;
+const GITHUB_CALLBACK_URL = `${API_BASE_URL}/api/signin/github/callback`;
 
 const githubStrategy = new GitHubStrategy(
   {

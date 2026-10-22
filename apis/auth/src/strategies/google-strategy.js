@@ -10,7 +10,7 @@ const { API_BASE_URL } = config.auth;
 
 const GOOGLE_CLIENT_ID = process.env.AUTH_GOOGLE_ID;
 const GOOGLE_CLIENT_SECRET = process.env.AUTH_GOOGLE_SECRET;
-const GOOGLE_CALLBACK_URL = `${API_BASE_URL}/api/auth/callback/google`;
+const GOOGLE_CALLBACK_URL = `${API_BASE_URL}/api/signin/google/callback`;
 
 const googleStrategy = new GoogleStrategy(
   {
