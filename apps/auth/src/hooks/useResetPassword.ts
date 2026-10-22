@@ -1,23 +1,20 @@
 import { useMutation } from "@tanstack/react-query";
 import type {
-  ResetPasswordPayload,
   ResetPasswordResponse,
-  UpdatePasswordPayload,
   UpdatePasswordResponse,
 } from "@workspace/api-auth";
+import { resetPassword, updatePassword } from "../api";
+import { ERROR_MESSAGES } from "../constants";
 import type { MutationHook } from "./types";
-import { ERROR_MESSAGES } from "../utils/errors";
 
-export const useResetPassword: MutationHook<
-  ResetPasswordResponse,
-  string,
-  ResetPasswordPayload
-> = (fetcher, options = {}) => {
+export const useResetPassword: MutationHook<ResetPasswordResponse, string> = (
+  options = {},
+) => {
   return useMutation({
     ...options,
     mutationFn: (email) => {
       const callbackUrl = `${window.location.origin}${window.location.pathname}`;
-      return fetcher({ email, callbackUrl });
+      return resetPassword({ email, callbackUrl });
     },
   });
 };
@@ -30,9 +27,8 @@ type UpdatePasswordParams = {
 
 export const useUpdatePassword: MutationHook<
   UpdatePasswordResponse,
-  UpdatePasswordParams,
-  UpdatePasswordPayload
-> = (fetcher, options = {}) => {
+  UpdatePasswordParams
+> = (options = {}) => {
   return useMutation({
     ...options,
     mutationFn: ({ token, password, confirmPassword }) => {
@@ -42,7 +38,7 @@ export const useUpdatePassword: MutationHook<
       if (password !== confirmPassword) {
         return Promise.reject(new Error(ERROR_MESSAGES.UpdataPasswordMatch));
       }
-      return fetcher({ token, password });
+      return updatePassword({ token, password });
     },
   });
 };

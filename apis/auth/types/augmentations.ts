@@ -1,24 +1,8 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import type { SessionUser } from "./session";
+import { PrismaClient } from "@prisma/client";
 
 declare module "passport-local" {
   interface IVerifyOptions {
     status?: number;
-  }
-}
-
-declare module "@auth/core/jwt" {
-  interface JWT {
-    role: SessionUser["role"];
-    provider: SessionUser["provider"];
-  }
-}
-
-declare module "@auth/express" {
-  interface User extends Prisma.UserGetPayload<{}> {}
-  interface Session {
-    user: SessionUser;
-    expires: string;
   }
 }
 

@@ -1,16 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type {
-  AuthSession,
-  SignInResponse,
-  SignOutResponse,
-} from "@workspace/api-auth";
+import type { SignInResponse, SignOutResponse } from "@workspace/api-auth";
+import { getSession, logout, signIn } from "../api";
 import type { MutationHook } from "./types";
 
 const keys = {
   getSession: () => ["session"],
 };
 
-export function useSessionQuery(getSession: () => Promise<AuthSession | null>) {
+export function useSessionQuery() {
   const {
     data: session,
     isLoading,
@@ -45,38 +42,35 @@ type LoginMutationPayload = {
   password: string;
   twoFactorCode?: string;
 };
+
 export const useLoginMutation: MutationHook<
   SignInResponse,
   LoginMutationPayload
-> = (fetcher, options = {}) => {
+> = (options = {}) => {
   const invalidateSession = useSessionInvalidate();
 
-  const mutation = useMutation({
+  return useMutation({
     ...options,
-    mutationFn: fetcher,
+    mutationFn: ({ email, password, twoFactorCode }) =>
+      signIn({ email, password, code: twoFactorCode }),
     onSuccess: async (...params) => {
       await invalidateSession();
       options.onSuccess?.(...params);
     },
   });
-
-  return mutation;
 };
 
 export const useSignOutMutation: MutationHook<SignOutResponse, void> = (
-  fetcher,
   options = {},
 ) => {
   const invalidateSession = useSessionInvalidate();
 
-  const mutation = useMutation({
+  return useMutation({
     ...options,
-    mutationFn: fetcher,
+    mutationFn: logout,
     onSuccess: async (...params) => {
       await invalidateSession();
       options.onSuccess?.(...params);
     },
   });
-
-  return mutation;
 };
