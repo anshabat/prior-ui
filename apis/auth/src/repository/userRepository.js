@@ -21,7 +21,22 @@ const createUser = (data) => {
   return db.user.create({ data });
 };
 
+/**
+ * @param {CreateUserData} userData
+ * @param {{ provider: string, providerAccountId: string }} account
+ * @returns {Promise<User>}
+ */
+const createUserWithAccount = (userData, { provider, providerAccountId }) => {
+  return db.user.create({
+    data: {
+      ...userData,
+      accounts: { create: { provider, providerAccountId } },
+    },
+  });
+};
+
 module.exports = {
   getUserByEmail,
   createUser,
+  createUserWithAccount,
 };

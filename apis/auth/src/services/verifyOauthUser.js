@@ -3,7 +3,10 @@
  */
 
 const { HttpError, ErrorCode } = require("../lib/error");
-const { getUserByEmail, createUser } = require("../repository/userRepository");
+const {
+  getUserByEmail,
+  createUserWithAccount,
+} = require("../repository/userRepository");
 const {
   getAccountByProvider,
   createAccount,
@@ -38,17 +41,14 @@ const verifyOauthUser = async ({
     return existingAccount.user;
   }
 
-  let user = await getUserByEmail(email);
+  const user = await getUserByEmail(email);
   if (!user) {
-    user = await createUser({
-      email,
-      name,
-      image,
-      emailVerified: new Date(),
-    });
+    return createUserWithAccount(
+      { email, name, image, emailVerified: new Date() },
+      { provider, providerAccountId },
+    );
   }
 
-  // TODO: Create the user and account in one transaction. A failed account create returns null after createUser has already persisted the user.
   await createAccount({
     userId: user.id,
     provider,
