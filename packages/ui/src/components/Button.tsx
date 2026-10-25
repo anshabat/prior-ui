@@ -33,7 +33,7 @@ export const Button = ({
 };
 
 const createClasses = tv({
-  base: "whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed",
+  base: "whitespace-nowrap disabled:cursor-not-allowed",
   variants: {
     variant: {
       solid: "border",
@@ -57,7 +57,7 @@ const createClasses = tv({
       variant: "solid",
       colorScheme: "primary",
       class:
-        "bg-color-bg-primary text-color-text-onPrimary border-color-bg-primary hover:bg-color-bg-primary-hover",
+        "bg-brand text-strong-inverse border-color-bg-primary hover:bg-color-bg-primary-hover",
     },
     {
       variant: "solid",
