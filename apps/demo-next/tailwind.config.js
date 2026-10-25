@@ -1,4 +1,4 @@
-import { defaultTheme } from "@workspace/ui/src/themes/default.ts";
+import { defaultTheme } from "@workspace/ui/src/theme";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
