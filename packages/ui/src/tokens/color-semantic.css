@@ -1,0 +1,26 @@
+:root {
+    /*
+     BACKGROUND
+     - Raised is a section sitting on the page, such as a card, group, or a panel. The page stays bg-base and the card is bg-raised
+     - Overlay is a surface floating above the page and above raised cards: a dialog, a menu, a popover, or a drawer
+     - Alternate is a second surface used for contrast, such as a sidebar against the main column or a zebra row
+     */
+    --color-background-brand: var(--color-brand-light-1000);
+
+    /* interaction state overlays, layered on top of a fill */
+    --color-background-hover: var(--color-grey-light-50);
+    --color-background-press: var(--color-grey-light-100);
+    --color-background-disabled: var(--color-grey-light-100);
+
+    /**** TEXT ****/
+    /* main, primary text color */
+    --color-text-strong: var(--color-grey-light-1000);
+    --color-text-strong-inverse: var(--color-grey-dark-1000);
+
+    /* lighter secondary text color */
+    --color-text-weak: var(--color-grey-light-700);
+    --color-text-weak-inverse: var(--color-grey-dark-700);
+
+    /* Border */
+    --color-border-focus: var(--color-brand-light-1000);
+}
