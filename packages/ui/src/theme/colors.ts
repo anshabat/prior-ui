@@ -14,8 +14,11 @@ export const color = {
       default: "var(--color-text-weak)",
       inverse: "var(--color-text-weak-inverse)",
     },
+    brand: "var(--color-text-brand)",
   },
-  outlineColor: {
-    focus: "var(--color-border-focus)",
+  borderColor: {
+    brand: {
+      strong: "var(--color-border-brand-strong)",
+    },
   },
 };

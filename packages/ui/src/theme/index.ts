@@ -2,6 +2,7 @@ import { Config } from "tailwindcss";
 import { color } from "./colors";
 import { spacing } from "./spacing";
 import { typography } from "./typography";
+import { elevation } from "./elevation";
 
 export const defaultTheme = {
   theme: {
@@ -14,6 +15,7 @@ export const defaultTheme = {
       ...spacing,
       ...color,
       ...typography,
+      ...elevation,
     },
   },
   plugins: [],

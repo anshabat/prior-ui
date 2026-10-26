@@ -1,5 +1,5 @@
 import { HTMLAttributes, ReactNode } from "react";
-import { tv } from "tailwind-variants";
+import { tv } from "tailwind-variants/lite";
 
 type ColorScheme = "error" | "success" | "warning" | "info";
 type Variant = "solid" | "outline";

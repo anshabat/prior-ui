@@ -16,24 +16,14 @@ export default function Page() {
           <Checkbox />
         </div>
         <div className="grid gap-6 justify-items-center">
-          <Button colorScheme="primary" variant="solid" size="md">
-            primary solid
-          </Button>
-          <Button colorScheme="primary" variant="outline" size="md">
-            primary outline
-          </Button>
-          <Button colorScheme="subtle" variant="solid" size="lg">
-            subtle solid
-          </Button>
-          <Button colorScheme="subtle" variant="outline" size="sm">
-            subtle outline
-          </Button>
-          <Button colorScheme="primary" variant="ghost" size="md">
-            ghost primary
-          </Button>
-          <Button colorScheme="subtle" variant="ghost" size="md">
-            ghost subtle
-          </Button>
+          <Button size="small">Small</Button>
+          <Button size="medium">Medium</Button>
+          <Button size="large">Large</Button>
+        </div>
+        <div className="grid gap-6 justify-items-center">
+          <Button variant="primary">Primary</Button>
+          <Button variant="secondary">Secondary</Button>
+          <Button variant="tertiary">Tertiary</Button>
         </div>
         <div className="grid gap-6 justify-items-center">
           <Alert title="Solid success" colorScheme="success">

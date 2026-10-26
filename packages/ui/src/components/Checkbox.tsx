@@ -1,5 +1,5 @@
 import { InputHTMLAttributes } from "react";
-import { tv } from "tailwind-variants";
+import { tv } from "tailwind-variants/lite";
 
 export type CheckboxProps = InputHTMLAttributes<HTMLInputElement>;
 

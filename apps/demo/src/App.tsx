@@ -30,6 +30,11 @@ function App() {
             <Button size="large">Large</Button>
           </div>
           <div className="grid gap-6 justify-items-center">
+            <Button variant="primary">Primary</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="tertiary">Tertiary</Button>
+          </div>
+          <div className="grid gap-6 justify-items-center">
             <Alert title="Solid success" colorScheme="success">
               This is a description
             </Alert>

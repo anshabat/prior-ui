@@ -21,6 +21,9 @@
     --color-text-weak: var(--color-grey-light-700);
     --color-text-weak-inverse: var(--color-grey-dark-700);
 
+    /* brand coloured text, such as secondary and tertiary buttons */
+    --color-text-brand: var(--color-brand-light-1000);
+
     /* Border */
-    --color-border-focus: var(--color-brand-light-1000);
+    --color-border-brand-strong: var(--color-brand-light-800);
 }
