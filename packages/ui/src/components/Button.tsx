@@ -2,28 +2,19 @@ import { ButtonHTMLAttributes, ReactNode } from "react";
 import { tv } from "tailwind-variants";
 import { twMerge } from "tailwind-merge";
 
-type Size = "sm" | "md" | "lg";
-type ColorScheme = "primary" | "subtle";
-type Variant = "solid" | "outline" | "ghost" | "link";
+type Size = "small" | "medium" | "large";
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   size?: Size;
-  variant?: Variant;
-  colorScheme?: ColorScheme;
   children: ReactNode;
 };
 export const Button = ({
   children,
-  size = "md",
-  colorScheme = "primary",
-  variant = "solid",
+  size = "large",
   className,
   ...rootProps
 }: ButtonProps) => {
-  const classes = twMerge(
-    createClasses({ variant, colorScheme, size }),
-    className,
-  );
+  const classes = twMerge(createClasses({ size }), className);
 
   return (
     <button className={classes} {...rootProps}>
@@ -33,66 +24,19 @@ export const Button = ({
 };
 
 const createClasses = tv({
-  base: "whitespace-nowrap disabled:cursor-not-allowed",
+  base: [
+    "inline-flex items-center justify-center",
+    "font-strong whitespace-nowrap",
+    "disabled:cursor-not-allowed",
+  ],
   variants: {
-    variant: {
-      solid: "border",
-      outline: "border",
-      ghost: "",
-      link: "",
-    },
-    colorScheme: {
-      primary: "",
-      subtle: "",
-      link: "",
-    },
     size: {
-      sm: "px-4 min-h-8 text-sm",
-      md: "px-6 min-h-10 text-base",
-      lg: "px-8 min-h-12 text-lg",
+      small: "h-32 px-16 rounded-8 font-body text-tiny",
+      medium: "h-48 px-20 rounded-8 font-body text-small",
+      large: "h-56 px-24 rounded-12 font-heading text-heading-4",
     },
   },
-  compoundVariants: [
-    {
-      variant: "solid",
-      colorScheme: "primary",
-      class:
-        "bg-brand text-strong-inverse border-color-bg-primary hover:bg-color-bg-primary-hover",
-    },
-    {
-      variant: "solid",
-      colorScheme: "subtle",
-      class:
-        "bg-color-bg-subtle text-color-text-onSubtle border-color-border-light hover:bg-color-bg-subtle-hover",
-    },
-    {
-      variant: "outline",
-      colorScheme: "primary",
-      class:
-        "text-color-text-primary bg-transparent border-color-text-primary hover:bg-color-bg-primary hover:text-color-text-onPrimary",
-    },
-    {
-      variant: "outline",
-      colorScheme: "subtle",
-      class:
-        "text-color-text-subtle bg-transparent border-color-border-medium hover:bg-color-bg-subtle hover:text-color-text-onSubtle",
-    },
-    {
-      variant: "ghost",
-      colorScheme: "primary",
-      class:
-        "text-color-text-primary bg-transparent hover:bg-color-bg-primary hover:text-color-text-onPrimary",
-    },
-    {
-      variant: "ghost",
-      colorScheme: "subtle",
-      class:
-        "text-color-text-subtle bg-transparent hover:bg-color-bg-subtle hover:text-color-text-onSubtle",
-    },
-  ],
   defaultVariants: {
-    variant: "solid",
-    colorScheme: "primary",
-    size: "md",
+    size: "large",
   },
 });
