@@ -11,8 +11,8 @@
       "default": "./dist/index.js"
     },
     "./config": {
-      "types": "./dist/node/tailwind.d.ts",
-      "default": "./dist/node/tailwind.js"
+      "types": "./dist/node/withUi.d.ts",
+      "default": "./dist/node/withUi.js"
     },
     "./tokens.css": "./src/tokens/index.css"
   },
