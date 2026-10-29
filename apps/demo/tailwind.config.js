@@ -1,4 +1,4 @@
-import { defaultTheme } from "@workspace/ui/src/theme";
+import { defaultTheme } from "@workspace/ui/theme";
 
 /** @type {import('tailwindcss').Config} */
 export default {
