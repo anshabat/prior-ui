@@ -51,7 +51,7 @@ export function LoginScreen({ onError, onSuccess }: LoginScreenProps) {
         autoComplete="off"
         className="border border-gray-300 rounded px-3 py-2"
       />
-      <Button colorScheme="primary" variant="solid" size="md">
+      <Button variant="primary" tone="brand" size="medium">
         Submit
       </Button>
     </form>
