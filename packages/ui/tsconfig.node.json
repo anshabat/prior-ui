@@ -1,0 +1,13 @@
+{
+  // Code that runs in Node (src/node, e.g. the Tailwind config helper), so only this project gets Node types
+  "extends": "./tsconfig.lib.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "tsBuildInfoFile": "dist/tsconfig.node.tsbuildinfo"
+  },
+  "include": ["src/node"],
+  "exclude": [],
+  // src/node imports ../theme, which belongs to the lib project: use its built .d.ts and build it first,
+  // instead of compiling theme here too (TS6307 otherwise)
+  "references": [{ "path": "./tsconfig.lib.json" }]
+}

@@ -23,5 +23,6 @@
   },
   "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"],
-  "references": [{ "path": "../../packages/ui" }]
+  // packages/ui/tsconfig.json is a solution config without "composite", so reference the components project directly (TS6306 otherwise)
+  "references": [{ "path": "../../packages/ui/tsconfig.lib.json" }]
 }

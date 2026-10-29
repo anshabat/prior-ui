@@ -10,18 +10,18 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./theme": {
-      "types": "./dist/theme/index.d.ts",
-      "default": "./dist/theme/index.js"
+    "./config": {
+      "types": "./dist/node/tailwind.d.ts",
+      "default": "./dist/node/tailwind.js"
     },
     "./tokens.css": "./src/tokens/index.css"
   },
   "scripts": {
-    "build": "rm -rf dist && tsc",
-    "build:legacy": "tsc",
-    "dev": "tsc --watch --preserveWatchOutput",
+    "build": "rm -rf dist && tsc -b",
+    "build:legacy": "tsc -b",
+    "dev": "tsc -b --watch --preserveWatchOutput",
     "lint": "eslint .",
-    "ts": "tsc --noEmit"
+    "ts": "tsc -b --noEmit"
   },
   "keywords": [],
   "author": "",
@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "9.37.0",
+    "@types/node": "^20.4.2",
     "@types/react": "^19.1.1",
     "@types/react-dom": "^19.1.1",
     "eslint": "9.37.0",
