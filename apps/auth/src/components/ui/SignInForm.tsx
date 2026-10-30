@@ -1,4 +1,5 @@
 import { type FormEvent, useState } from "react";
+import { Button } from "@workspace/ui";
 
 export interface SignInFormProps {
   title?: string;
@@ -97,9 +98,9 @@ export function SignInForm({
         )}
 
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          <button type="submit">
+          <Button type="submit">
             {isTwoFactorStep ? "Verify code" : "Sign in"}
-          </button>
+          </Button>
           {isTwoFactorStep && (
             <button type="button" onClick={handleCancelTwoFactor}>
               Back

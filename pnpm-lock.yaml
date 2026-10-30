@@ -132,6 +132,9 @@ importers:
       '@workspace/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@workspace/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@workspace/utils':
         specifier: workspace:*
         version: link:../../packages/utils
