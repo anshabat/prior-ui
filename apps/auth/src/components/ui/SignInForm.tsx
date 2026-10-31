@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from "react";
-import { Button } from "@workspace/ui";
+import { Button, Input } from "@workspace/ui";
 
 export interface SignInFormProps {
   title?: string;
@@ -64,7 +64,7 @@ export function SignInForm({
           <>
             <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
               Email
-              <input
+              <Input
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
@@ -73,7 +73,7 @@ export function SignInForm({
 
             <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
               Password
-              <input
+              <Input
                 type="password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
@@ -85,7 +85,7 @@ export function SignInForm({
         {isTwoFactorStep && (
           <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             OTP Code
-            <input
+            <Input
               type="text"
               inputMode="numeric"
               autoComplete="one-time-code"
