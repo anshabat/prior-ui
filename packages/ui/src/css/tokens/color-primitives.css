@@ -15,7 +15,7 @@
     /* Grey slate / Light */
     --color-grey-slate-light-25: rgb(0 21 128 / 2%);
     --color-grey-slate-light-50: rgb(0 21 128 / 4%);
-    --color-grey-slate-light-100: rgb(0 17 102 / 10%);
+    --color-grey-slate-light-100: rgb(0 17 102 / 16%); /* original: rgb(0 17 102 / 10%) */
     --color-grey-slate-light-500: rgb(0 13 77 / 45%);
     --color-grey-slate-light-700: rgb(0 9 51 / 65%);
     --color-grey-slate-light-1000: rgb(0 6 38 / 90%);

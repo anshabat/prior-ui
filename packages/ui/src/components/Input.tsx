@@ -22,6 +22,8 @@ const createClasses = tv({
     "w-full rounded-8 border",
     "font-body font-weak",
     "bg-fill-strong-inverse border-strong text-strong placeholder:text-weak",
+    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
+    "disabled:border-disabled disabled:text-disabled disabled:placeholder:text-disabled disabled:cursor-not-allowed",
   ],
   variants: {
     // Heights and text sizes match Button's small and medium

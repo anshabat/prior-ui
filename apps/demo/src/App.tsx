@@ -1,4 +1,4 @@
-import { Alert, Button, Checkbox } from "@workspace/ui";
+import { Alert, Button, Checkbox, Input } from "@workspace/ui";
 import { useThemeRef } from "./hooks/usePreferredColorScheme";
 import { CaretUp, Checked } from "@workspace/icons";
 import { Header } from "./components/Header";
@@ -152,6 +152,11 @@ function App() {
                 Inverse
               </Button>
             </div>
+          </div>
+          <div className="grid gap-6 w-256">
+            <Input aria-label="Medium" placeholder="Medium" />
+            <Input aria-label="Small" placeholder="Small" size="small" />
+            <Input aria-label="Disabled" placeholder="Disabled" disabled />
           </div>
         </div>
       </div>
