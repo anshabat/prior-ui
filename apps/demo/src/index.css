@@ -1,3 +1,4 @@
+@import "@workspace/ui/fonts.css";
 @import "@workspace/ui/tokens.css";
 
 @tailwind base;
