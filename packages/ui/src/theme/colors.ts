@@ -1,4 +1,4 @@
-// Mirrors src/tokens/color-semantic.css. Each Figma group is exposed only
+// Mirrors src/css/tokens/color-semantic.css. Each Figma group is exposed only
 // through the utilities it is meant for.
 
 const text = {

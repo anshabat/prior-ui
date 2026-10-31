@@ -1,7 +1,7 @@
 # @workspace/ui
 
 ## Sources of truth
-- **Tokens:** the CSS tokens (`src/tokens`) and the Tailwind theme (`src/theme`)
+- **Tokens:** the CSS tokens (`src/css/tokens`) and the Tailwind theme (`src/theme`)
   are the source of truth for every design value: colors, spacing, radii,
   typography, shadows.
 - **Components:** the Figma design file is the source of truth for component
@@ -18,7 +18,7 @@
   role to use; the token decides the actual value, even when it differs from Figma.
 - Style components only with the existing tokens, through the Tailwind classes
   the theme generates. No hardcoded values or arbitrary values (`bg-[#…]`, `p-[13px]`).
-- Do not change, rename or add tokens in `src/tokens` or `src/theme` while
+- Do not change, rename or add tokens in `src/css/tokens` or `src/theme` while
   building components.
 - If a Figma value differs from the tokens, use the closest matching token.
   If no token is a close match, stop and escalate to the maintainer with the

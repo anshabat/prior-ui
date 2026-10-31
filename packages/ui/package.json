@@ -14,8 +14,8 @@
       "types": "./dist/node/withUi.d.ts",
       "default": "./dist/node/withUi.js"
     },
-    "./tokens.css": "./src/tokens/index.css",
-    "./fonts.css": "./src/fonts.css",
+    "./tokens.css": "./src/css/tokens/index.css",
+    "./fonts.css": "./src/css/fonts.css",
     "./styles.css": "./dist/styles.css"
   },
   "scripts": {

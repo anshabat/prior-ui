@@ -1,5 +1,5 @@
 /* Entry for the pre-built stylesheet (dist/styles.css) used by apps without Tailwind */
-@import "./tokens/index.css";
+@import "./css/tokens/index.css";
 
 @tailwind base;
 @tailwind components;
