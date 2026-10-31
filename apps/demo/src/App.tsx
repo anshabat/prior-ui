@@ -157,6 +157,7 @@ function App() {
             <Input aria-label="Medium" placeholder="Medium" />
             <Input aria-label="Small" placeholder="Small" size="small" />
             <Input aria-label="Disabled" placeholder="Disabled" disabled />
+            <Input aria-label="Invalid" placeholder="Invalid" aria-invalid />
           </div>
         </div>
       </div>

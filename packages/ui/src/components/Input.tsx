@@ -3,15 +3,20 @@ import { tv } from "tailwind-variants/lite";
 
 type Size = "small" | "medium";
 
-// Native `size` (width in characters) is replaced by the design-system size scale
-export type InputProps = Omit<ComponentProps<"input">, "size"> & {
+// Native `size` (width in characters) is replaced by the design-system size scale.
+// `className` and `style` are not accepted: the input's look is owned by the design system.
+export type InputProps = Omit<
+  ComponentProps<"input">,
+  "size" | "className" | "style"
+> & {
   size?: Size;
 };
 
 export const Input = ({ type = "text", size, ...nativeProps }: InputProps) => {
   const classes = createClasses({ size });
 
-  return <input type={type} className={classes} {...nativeProps} />;
+  // className goes last so it can't be overridden by props that bypass the type
+  return <input {...nativeProps} type={type} className={classes} />;
 };
 
 const createClasses = tv({
@@ -24,6 +29,10 @@ const createClasses = tv({
     "bg-fill-strong-inverse border-strong text-strong placeholder:text-weak",
     "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
     "disabled:border-disabled disabled:text-disabled disabled:placeholder:text-disabled disabled:cursor-not-allowed",
+    // Invalid is driven by aria-invalid, so the visual state always matches what assistive tech announces.
+    // The 2px stroke is a 1px border plus a 1px inset ring: a thicker border would shift the text.
+      "enabled:aria-[invalid=true]:bg-fill-error-weak enabled:aria-[invalid=true]:border-error-strong",
+      "enabled:aria-[invalid=true]:ring-1 enabled:aria-[invalid=true]:ring-inset enabled:aria-[invalid=true]:ring-error-strong",
   ],
   variants: {
     // Heights and text sizes match Button's small and medium
