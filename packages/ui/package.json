@@ -14,7 +14,7 @@
       "types": "./dist/node/withUi.d.ts",
       "default": "./dist/node/withUi.js"
     },
-    "./tokens.css": "./src/css/tokens/index.css",
+    "./theme.css": "./src/theme.css",
     "./fonts.css": "./src/css/fonts.css",
     "./styles.css": "./dist/styles.css"
   },
