@@ -15,16 +15,15 @@
       "default": "./dist/node/withUi.js"
     },
     "./theme.css": "./src/theme.css",
-    "./fonts.css": "./src/css/fonts.css",
-    "./styles.css": "./dist/styles.css"
+    "./styles.css": "./src/styles.css"
   },
   "scripts": {
     "build": "rm -rf dist && tsc -b && pnpm run build:css",
     "build:legacy": "tsc -b",
-    "build:css": "tailwindcss -i ./src/styles.css -o ./dist/styles.css",
+    "build:css": "tailwindcss -o ./dist/tailwind.css",
     "dev": "pnpm run \"/^dev:(ts|css)$/\"",
     "dev:ts": "tsc -b --watch --preserveWatchOutput",
-    "dev:css": "tailwindcss -i ./src/styles.css -o ./dist/styles.css --watch",
+    "dev:css": "tailwindcss -o ./dist/tailwind.css --watch",
     "lint": "eslint .",
     "ts": "tsc -b --noEmit"
   },
