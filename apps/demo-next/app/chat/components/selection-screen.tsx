@@ -51,8 +51,8 @@ export function SelectionScreen({
         <div className="flex flex-1 flex-col gap-y-4 overflow-y-auto">
           <Button
             className="w-full justify-between"
-            variant="outline"
-            colorScheme="primary"
+            variant="secondary"
+            tone="brand"
             onClick={handleNewConversation}
             disabled={isPending}
           >

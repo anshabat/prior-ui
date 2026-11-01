@@ -1,0 +1,40 @@
+/* Theme colors.
+ * Source: Figma variables export. Each token aliases a tier 1 primitive.
+ */
+
+:root {
+    /* Brand → Blue */
+    --color-brand-light-50: var(--color-blue-light-50);
+    --color-brand-light-200: var(--color-blue-light-200);
+    --color-brand-light-800: var(--color-blue-light-800);
+    --color-brand-light-1000: var(--color-blue-light-1000);
+
+    --color-brand-dark-50: var(--color-blue-dark-50);
+    --color-brand-dark-200: var(--color-blue-dark-200);
+    --color-brand-dark-800: var(--color-blue-dark-800);
+    --color-brand-dark-1000: var(--color-blue-dark-1000);
+
+    /* Grey solid → Grey slate solid */
+    --color-grey-solid-0: var(--color-grey-slate-solid-0);
+    --color-grey-solid-50: var(--color-grey-slate-solid-50);
+    --color-grey-solid-800: var(--color-grey-slate-solid-800);
+    --color-grey-solid-850: var(--color-grey-slate-solid-850);
+    --color-grey-solid-900: var(--color-grey-slate-solid-900);
+    --color-grey-solid-1000: var(--color-grey-slate-solid-1000);
+
+    /* Grey / Light → Grey slate / Light */
+    --color-grey-light-25: var(--color-grey-slate-light-25);
+    --color-grey-light-50: var(--color-grey-slate-light-50);
+    --color-grey-light-100: var(--color-grey-slate-light-100);
+    --color-grey-light-500: var(--color-grey-slate-light-500);
+    --color-grey-light-700: var(--color-grey-slate-light-700);
+    --color-grey-light-1000: var(--color-grey-slate-light-1000);
+
+    /* Grey / Dark → Grey neutral / Dark */
+    --color-grey-dark-25: var(--color-grey-neutral-dark-25);
+    --color-grey-dark-50: var(--color-grey-neutral-dark-50);
+    --color-grey-dark-100: var(--color-grey-neutral-dark-100);
+    --color-grey-dark-500: var(--color-grey-neutral-dark-500);
+    --color-grey-dark-700: var(--color-grey-neutral-dark-700);
+    --color-grey-dark-1000: var(--color-grey-neutral-dark-1000);
+}

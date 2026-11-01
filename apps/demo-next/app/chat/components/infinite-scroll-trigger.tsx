@@ -36,8 +36,8 @@ export const InfiniteScrollTrigger = ({
       <Button
         disabled={!canLoadMore || isLoadingMore}
         onClick={onLoadMore}
-        size="sm"
-        variant="ghost"
+        size="small"
+        variant="tertiary"
       >
         {text}
       </Button>

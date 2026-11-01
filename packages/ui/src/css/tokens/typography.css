@@ -1,0 +1,47 @@
+/* Typography tokens.
+ * Source: Figma Typography collection.
+ * Desktop is the default. Add data-typography="mobile" to use the Mobile mode.
+ * Font weight tokens use the numeric weight of the Figma font style:
+ * Strong is Semi Bold (600), Weak is Regular (400).
+ */
+
+:root {
+    /* Font family */
+    --font-family-heading: "Inter", sans-serif;
+    --font-family-body: "Inter", sans-serif;
+
+    /* Font weight */
+    --font-weight-strong: 600;
+    --font-weight-weak: 400;
+
+    /* Font size */
+    --font-size-display: 56px;
+    --font-size-heading-1: 40px;
+    --font-size-heading-2: 32px;
+    --font-size-heading-3: 24px;
+    --font-size-heading-4: 20px;
+    --font-size-small: 16px;
+    --font-size-tiny: 14px;
+    --font-size-uppercase: 14px;
+
+    /* Line height */
+    --line-height-display: 64px;
+    --line-height-heading-1: 48px;
+    --line-height-heading-2: 40px;
+    --line-height-heading-3: 32px;
+    --line-height-heading-4: 28px;
+    --line-height-small: 24px;
+    --line-height-tiny: 20px;
+    --line-height-uppercase: 20px;
+}
+
+/* or maybe @media (max-width: 767px) { */
+[data-typography="mobile"] {
+    --font-size-display: 40px;
+    --font-size-heading-1: 36px;
+    --font-size-heading-2: 28px;
+
+    --line-height-display: 48px;
+    --line-height-heading-1: 44px;
+    --line-height-heading-2: 36px;
+}

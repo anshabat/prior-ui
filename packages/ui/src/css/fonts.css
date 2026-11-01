@@ -1,0 +1,7 @@
+/* Self-hosted Inter, the font family used by the typography tokens.
+ * Only the weights the tokens use: Weak (400) and Strong (600).
+ * Kept out of styles.css on purpose: the Tailwind CLI inlines @imports, which would
+ * break the relative font file urls. Apps import this file so their bundler resolves them.
+ */
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/600.css";

@@ -7,6 +7,16 @@ module.exports = {
   svgProps: {
     style: "{iconStyle}",
   },
+  // svgo's default preset drops viewBox when width/height are set;
+  // without it icons crop instead of scale
+  svgoConfig: {
+    plugins: [
+      {
+        name: "preset-default",
+        params: { overrides: { removeViewBox: false } },
+      },
+    ],
+  },
 };
 
 function template(variables, { tpl }) {

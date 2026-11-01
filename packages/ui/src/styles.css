@@ -1,0 +1,3 @@
+/* Entry for apps without Tailwind: the theme plus the prebuilt Tailwind output */
+@import "./theme.css";
+@import "../dist/tailwind.css";

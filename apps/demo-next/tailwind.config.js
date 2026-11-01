@@ -1,11 +1,10 @@
-import { defaultTheme } from "@workspace/ui/src/themes/default.ts";
+import { withUi } from "@workspace/ui/config";
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  presets: [defaultTheme],
-  content: ["./app/**/*.{ts,tsx}", "../../packages/ui/src/**/*.{ts,tsx}"],
+module.exports = withUi({
+  content: ["./app/**/*.{ts,tsx}"],
   theme: {
     extend: {},
   },
   plugins: [],
-};
+});
