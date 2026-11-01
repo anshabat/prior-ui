@@ -1,27 +1,37 @@
 # @workspace/ui
 
 ## Sources of truth
-- **Tokens:** the CSS tokens (`src/css/tokens`) and the Tailwind theme (`src/theme`)
-  are the source of truth for every design value: colors, spacing, radii,
-  typography, shadows.
-- **Components:** the Figma design file is the source of truth for component
-  structure, variants and states.
+- **Tokens** (`src/css/tokens`, `src/theme`) decide every design value: colors,
+  spacing, radii, typography, shadows.
+- **Figma** decides variants, states and which token role applies to each
+  property (fill, stroke, text, shadow, size, spacing, radius, text style).
+  The token decides the actual value, even when it differs from Figma.
   - Design file: https://www.figma.com/design/vLd7saIPGNhXmCxIBlBTjI/Practical-UI-design-system
-  - Use the Figma MCP server to read components, variants and states from this
-    file before implementing or changing anything in this package.
+  - Read the component with the Figma MCP server before implementing or changing it.
+- **Industry standards** (WAI-ARIA practices, established design systems) decide
+  structure: HTML elements, nesting, component parts, props API, accessibility.
+  Don't mirror Figma's layer tree in markup.
 
 ## Rules
-- Match Figma's component structure exactly: variants, states, layers and
-  which property each value applies to (fill, stroke, text, shadow, size,
-  spacing, radius, text style).
-- Take each value from the tokens, not from Figma. Figma tells you which token
-  role to use; the token decides the actual value, even when it differs from Figma.
-- Style components only with the existing tokens, through the Tailwind classes
-  the theme generates. No hardcoded values or arbitrary values (`bg-[#…]`, `p-[13px]`).
-- Do not change, rename or add tokens in `src/css/tokens` or `src/theme` while
-  building components.
-- If a Figma value differs from the tokens, use the closest matching token.
-  If no token is a close match, stop and escalate to the maintainer with the
-  Figma value and the closest candidates; don't invent a token or a value.
-- Do not add, simplify or "improve" styles. If you think a deviation from Figma
-  is better, escalate it to the maintainer and wait for a decision.
+- Style only with the Tailwind classes the theme generates. No hardcoded or
+  arbitrary values (`bg-[#…]`, `p-[13px]`).
+- Don't change, rename or add tokens while building components.
+- If no token is a close match for a Figma value, stop and escalate to the
+  maintainer with the value and the closest candidates.
+- Don't add, simplify or "improve" styles. Escalate deviations from Figma and
+  wait for a decision. Approved so far:
+  - Text inputs (Input, later Textarea and Select): no hover or press states,
+    white at rest, focus ring only.
+
+## Component conventions
+- **Server-component safe:** no `"use client"`, context, `useState`/`useEffect`
+  or internal event handlers; apps own state. Wire parts with props or render
+  props (see `Field`). `useId` is allowed.
+- **Closed styling API:** no `className` or `style` props. Spread native props
+  first, set `className` last.
+- **No preflight:** `dist/tailwind.css` is built without it, so components reset
+  the browser defaults they rely on (`m-0`, `box-border`, `border-solid`, …).
+- **No class merging** (`tailwind-variants/lite`): classes for the same CSS
+  property must be either/or variants, never both applied.
+- **Files:** one folder per component (`Button/Button.tsx` + `index.ts`), `tv`
+  styles at the bottom of the component file, public exports listed in `src/index.ts`.
