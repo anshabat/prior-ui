@@ -1,0 +1,6 @@
+<svg data-icon="x-octagon" fill="none" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24"
+  xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <path stroke-linecap="round" stroke-linejoin="round"
+    d="M15 9L9 15M9 9L15 15M7.86 2H16.14L22 7.86V16.14L16.14 22H7.86L2 16.14V7.86L7.86 2Z">
+  </path>
+</svg>
