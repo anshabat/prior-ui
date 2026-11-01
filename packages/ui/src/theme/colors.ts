@@ -146,7 +146,9 @@ const icon = {
 };
 
 export const color = {
-  textColor: text,
+  // Icons draw with currentColor, so icon tokens also work through `color`: text-icon-neutral, …
+  // Namespaced under `icon` so they can't be mistaken for text tokens.
+  textColor: { ...text, icon },
   placeholderColor: text,
   caretColor: text,
   textDecorationColor: text,

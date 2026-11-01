@@ -81,6 +81,14 @@ is drawn with `box-shadow` and takes no space.
 - **`:focus-visible`** always matches on text inputs (keyboard and mouse both
   show it), so for Input it behaves like `:focus`. It's used for consistency
   with Button, where it only shows for keyboard focus.
+- **The frame's ring follows the input only: `:has(input:focus-visible)`, not
+  `:focus-within`.** `:focus-within` matches any focused element inside the
+  frame, so tabbing to an icon button in `startIcon`/`endIcon` would light up
+  the frame's ring as well as the button's own: two focus indicators for one
+  focused element. It also follows `:focus`, not `:focus-visible`, so a mouse
+  click on that button would show the frame's ring too. Use `:focus-within` only
+  if the whole group should act as one control and inner buttons drop their
+  own ring.
 - **Contrast.** The border needs 3:1 against the background (WCAG 1.4.11).
   Disabled text is exempt from text contrast rules (WCAG 1.4.3), but is kept
   readable on purpose.

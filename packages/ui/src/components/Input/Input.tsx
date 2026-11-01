@@ -10,55 +10,64 @@ export type InputProps = Omit<
   "size" | "className" | "style"
 > & {
   size?: Size;
-  // An icon element, e.g. <Search />. Input's wrapper sets its size, color and aria-hidden.
+  // An icon (<Search />) or an icon button (<button><X /></button>) inside the frame.
+  // Input sets the size and color; the content decides whether it's interactive.
   startIcon?: ReactNode;
+  endIcon?: ReactNode;
 };
 
 // The frame (border, background, states) lives on a wrapper, so icons can sit inside the border.
 export const Input = ({
   type = "text",
   size,
+  disabled,
   startIcon,
+  endIcon,
   ...nativeProps
 }: InputProps) => {
-  const classes = createClasses({ size, hasStartIcon: Boolean(startIcon) });
+  const ariaInvalid = nativeProps["aria-invalid"];
+  const invalid = ariaInvalid === true || ariaInvalid === "true";
+
+  const classes = createClasses({
+    size,
+    disabled,
+    invalid,
+    hasStartIcon: Boolean(startIcon),
+    hasEndIcon: Boolean(endIcon),
+  });
 
   return (
     <div className={classes.frame()}>
       {startIcon && (
-        // Decorative: the input's label carries the meaning
-        <span aria-hidden="true" className={classes.startIcon()}>
+        <InputIcon side="start" size={size} disabled={disabled}>
           {startIcon}
-        </span>
+        </InputIcon>
       )}
       {/* className goes last so it can't be overridden by props that bypass the type */}
-      <input {...nativeProps} type={type} className={classes.control()} />
+      <input
+        {...nativeProps}
+        type={type}
+        disabled={disabled}
+        className={classes.control()}
+      />
+      {endIcon && (
+        <InputIcon side="end" size={size} disabled={disabled}>
+          {endIcon}
+        </InputIcon>
+      )}
     </div>
   );
 };
 
 const createClasses = tv({
   slots: {
-    // The frame reacts to the state of the input inside it via :has()
     frame: [
-      "group/input relative",
-      "box-border border-solid",
+      "relative box-border border-solid",
       "flex items-center w-full rounded-8 border",
-      "bg-fill-strong-inverse border-strong",
-      "has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus",
-      "has-[:disabled]:border-disabled has-[:disabled]:cursor-not-allowed",
-      // The 2px stroke is a 1px border plus a 1px inset ring: a thicker border would shift the text.
-      "has-[:enabled[aria-invalid=true]]:bg-fill-error-weak has-[:enabled[aria-invalid=true]]:border-error-strong",
-      "has-[:enabled[aria-invalid=true]]:ring-1 has-[:enabled[aria-invalid=true]]:ring-inset has-[:enabled[aria-invalid=true]]:ring-error-strong",
-    ],
-    // Overlays the input's padding and lets clicks through, so clicking the icon focuses the input
-    startIcon: [
-      "pointer-events-none absolute top-1/2 -translate-y-1/2 flex",
-      // The wrapper styles the icon through the child selector (*:), so the icon element needs no props.
-      // Child rules are more specific than a class on the icon itself, so they win.
-      "*:size-full *:stroke-neutral",
-      // Read from the DOM, so a disabled <fieldset> greys the icon too
-      "group-has-[:disabled]/input:*:stroke-disabled",
+      // Focus is a live DOM state, so it stays in CSS. `input` (not any element) keeps a focused
+      // icon button from lighting up the frame.
+      "has-[input:focus-visible]:outline has-[input:focus-visible]:outline-2",
+      "has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-focus",
     ],
     control: [
       // Reset browser defaults: dist/tailwind.css is built without preflight
@@ -79,31 +88,110 @@ const createClasses = tv({
   variants: {
     // Heights and text sizes match Button's small and medium
     size: {
-      small: {
-        frame: "h-32",
-        startIcon: "left-12 size-16",
-        control: "pr-12 text-tiny",
-      },
-      medium: {
-        frame: "h-48",
-        startIcon: "left-16 size-24",
-        control: "pr-16 text-small",
-      },
+      small: { frame: "h-32", control: "text-tiny" },
+      medium: { frame: "h-48", control: "text-small" },
+    },
+    disabled: {
+      true: { frame: "bg-fill-strong-inverse border-disabled cursor-not-allowed" },
+      false: {},
+    },
+    invalid: {
+      true: {},
+      false: {},
     },
     hasStartIcon: {
       true: {},
       false: {},
     },
+    hasEndIcon: {
+      true: {},
+      false: {},
+    },
   },
-  // Left padding is either/or: the edge padding, or edge + icon + gap so text clears the icon
   compoundVariants: [
+    // Frame colors are either/or. Disabled wins over invalid: a disabled field can't be fixed.
+    {
+      disabled: false,
+      invalid: false,
+      class: { frame: "bg-fill-strong-inverse border-strong" },
+    },
+    {
+      disabled: false,
+      invalid: true,
+      // The 2px stroke is a 1px border plus a 1px inset ring: a thicker border would shift the text.
+      class: {
+        frame: "bg-fill-error-weak border-error-strong ring-1 ring-inset ring-error-strong",
+      },
+    },
+    // Padding is either/or per side: the edge padding, or edge + icon + gap so text clears the icon
     { size: "small", hasStartIcon: false, class: { control: "pl-12" } },
     { size: "small", hasStartIcon: true, class: { control: "pl-32" } },
     { size: "medium", hasStartIcon: false, class: { control: "pl-16" } },
     { size: "medium", hasStartIcon: true, class: { control: "pl-48" } },
+    { size: "small", hasEndIcon: false, class: { control: "pr-12" } },
+    { size: "small", hasEndIcon: true, class: { control: "pr-32" } },
+    { size: "medium", hasEndIcon: false, class: { control: "pr-16" } },
+    { size: "medium", hasEndIcon: true, class: { control: "pr-48" } },
   ],
   defaultVariants: {
     size: "medium",
+    disabled: false,
+    invalid: false,
     hasStartIcon: false,
+    hasEndIcon: false,
+  },
+});
+
+type InputIconProps = {
+  side: "start" | "end";
+  size?: Size;
+  disabled?: boolean;
+  children: ReactNode;
+};
+
+// Positions an icon or icon button inside the frame, over the input's padding
+const InputIcon = ({ side, size, disabled, children }: InputIconProps) => {
+  const classes = createIconClasses({ side, size, disabled });
+
+  return <span className={classes}>{children}</span>;
+};
+
+const createIconClasses = tv({
+  base: [
+    "absolute top-1/2 -translate-y-1/2 flex",
+    // A plain icon lets clicks through to the input; a slot holding a button takes them
+    "pointer-events-none has-[button]:pointer-events-auto",
+    // Size is layout (the text padding is calculated for it), so it's forced: these rules are
+    // more specific than a size class on the element itself.
+    // The direct child (an icon or a button) fills the slot...
+    "*:size-full",
+    // ...and every icon inside, also one nested in a button, gets the same size
+    "[&_svg]:size-full",
+  ],
+  variants: {
+    side: {
+      start: "",
+      end: "",
+    },
+    size: {
+      small: "size-16",
+      medium: "size-24",
+    },
+    // A default, not a force: icons draw with currentColor and inherit it,
+    // so an icon with its own color class or `color` prop keeps it
+    disabled: {
+      false: "text-icon-neutral",
+      true: "text-icon-disabled",
+    },
+  },
+  compoundVariants: [
+    { side: "start", size: "small", class: "left-12" },
+    { side: "start", size: "medium", class: "left-16" },
+    { side: "end", size: "small", class: "right-12" },
+    { side: "end", size: "medium", class: "right-16" },
+  ],
+  defaultVariants: {
+    size: "medium",
+    disabled: false,
   },
 });

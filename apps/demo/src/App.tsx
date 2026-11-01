@@ -1,6 +1,6 @@
 import { Alert, Button, Checkbox, Field, Input } from "@workspace/ui";
 import { useThemeRef } from "./hooks/usePreferredColorScheme";
-import { CheckCircle, ChevronUp, Search } from "@workspace/icons";
+import { CheckCircle, ChevronDown, ChevronUp, Search, X } from "@workspace/icons";
 import { Header } from "./components/Header";
 
 function App() {
@@ -180,12 +180,14 @@ function App() {
             </Field>
             <Input
               aria-label="Search"
+              name="search"
               type="search"
               placeholder="Search"
               startIcon={<Search />}
             />
             <Input
               aria-label="Search small"
+              name="search-small"
               type="search"
               placeholder="Search"
               startIcon={<Search />}
@@ -193,10 +195,32 @@ function App() {
             />
             <Input
               aria-label="Search disabled"
+              name="search-disabled"
               type="search"
               placeholder="Search"
               startIcon={<Search />}
               disabled
+            />
+            <Input
+              aria-label="Decorative end icon"
+              name="decorative-end-icon"
+              placeholder="Decorative end icon"
+              endIcon={<ChevronDown />}
+            />
+            <Input
+              aria-label="Icon button"
+              name="icon-button"
+              placeholder="Icon button at the end"
+              startIcon={<Search />}
+              endIcon={
+                <button
+                  type="button"
+                  aria-label="Clear"
+                  onClick={() => alert("Clear clicked")}
+                >
+                  <X />
+                </button>
+              }
             />
           </div>
         </div>
