@@ -17,7 +17,7 @@ don't treat it as a name.
 
 | Prop | Default | Notes |
 |---|---|---|
-| `size` | `"medium"` | `"small"` (32px) or `"medium"` (48px), matching Button's heights. Replaces the native `size` attribute (width in characters) |
+| `size` | `"medium"` | `"small"` (32px) or `"medium"` (48px), matching Button's heights and text sizes. Replaces the native `size` attribute (width in characters) |
 | `type` | `"text"` | Any native text-like type: `email`, `password`, `search`, … |
 | `startIcon`, `endIcon` | — | An icon or an icon button inside the input (see Icons) |
 | `className`, `style` | — | Not accepted: the input's look is owned by the design system |
@@ -45,16 +45,23 @@ rest, focus ring only), as in shadcn/ui and Stripe.
 ```
 
 - **Overlay, not a frame.** Icons are absolutely positioned over the input's
-  own padding; the input keeps its border and states. The text padding grows to
-  clear the icon (Figma: medium 16px edge + 24px icon + 8px gap = 48px; small
+  own padding; the input keeps its border and states. Padding is either/or per
+  side: the edge padding alone, or edge + icon + gap so the text clears the
+  icon (Figma: medium 16px edge + 24px icon + 8px gap = 48px; small
   12 + 16 + 4 = 32px).
+- **Centered with flex.** The slot is `flex`, so the icon is a flex item
+  rather than inline content; an inline `<svg>` sits on the text baseline and
+  the space left below it shifts the icon off center.
 - **Clicks.** A plain icon is `pointer-events-none`, so clicking it focuses the
   input underneath, without JavaScript. A slot that contains a `<button>` takes
   clicks (`has-[button]:pointer-events-auto`).
 - **Accessibility belongs to the content.** Icons from `@workspace/icons` are
   `aria-hidden` by default; an icon button needs its own `aria-label`.
 - **Size is forced, color is a default.** The slot's size is layout (the padding
-  is calculated for it), so the icon is made to fill it. The color is inherited:
+  is calculated for it), so the icon is made to fill it: `*:size-full` sizes the
+  direct child (an icon or a button), and `[&_svg]:size-full` gives an icon
+  nested in a button the same size. These selectors are more specific than a
+  size class on the element itself, so they win. The color is inherited:
   the slot sets `text-icon-neutral` (`text-icon-disabled` when disabled), and
   icons draw with `currentColor`, so an icon's own color class or `color` prop
   still wins.

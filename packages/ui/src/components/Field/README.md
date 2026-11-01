@@ -38,7 +38,9 @@ where you wire `htmlFor`, `id` and `aria-describedby` yourself.
   `aria-invalid` only when an error message is shown (WCAG 3.3.1), so "red
   without an explanation" can't happen.
 - **One prop, every part.** `required` adds the label's `*` and the control's
-  native `required`; `disabled` dims the label and disables the control.
+  native `required`; `disabled` dims the label and description and disables the
+  control, so the whole field reads as one inactive unit (as in MUI, Carbon and
+  Primer; Figma keeps the description `text-weak`, an approved deviation).
 
 ## Using the render prop
 

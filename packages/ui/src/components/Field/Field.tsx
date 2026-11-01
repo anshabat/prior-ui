@@ -56,7 +56,9 @@ export const Field = ({
           {label}
         </FieldLabel>
         {hasDescription && (
-          <FieldDescription id={descriptionId}>{description}</FieldDescription>
+          <FieldDescription id={descriptionId} disabled={disabled}>
+            {description}
+          </FieldDescription>
         )}
       </div>
       {hasError && <FieldError id={errorId}>{error}</FieldError>}
@@ -137,13 +139,15 @@ export type FieldDescriptionProps = Omit<
   "id" | "className" | "style"
 > & {
   id: string;
+  disabled?: boolean;
 };
 
 export const FieldDescription = ({
+  disabled,
   children,
   ...nativeProps
 }: FieldDescriptionProps) => {
-  const classes = createDescriptionClasses();
+  const classes = createDescriptionClasses({ disabled });
 
   return (
     <p {...nativeProps} className={classes}>
@@ -153,7 +157,17 @@ export const FieldDescription = ({
 };
 
 const createDescriptionClasses = tv({
-  base: ["m-0", "font-body font-weak text-tiny text-weak"],
+  base: ["m-0", "font-body font-weak text-tiny"],
+  variants: {
+    // Dims together with the label, so a disabled field reads as one unit (approved deviation from Figma)
+    disabled: {
+      false: "text-weak",
+      true: "text-disabled",
+    },
+  },
+  defaultVariants: {
+    disabled: false,
+  },
 });
 
 // `id` is required for the same reason as FieldDescription: the control points at it via aria-describedby

@@ -22,6 +22,8 @@
   wait for a decision. Approved so far:
   - Text inputs (Input, later Textarea and Select): no hover or press states,
     white at rest, focus ring only.
+  - Field: the description dims to `text-disabled` with the label when the field
+    is disabled (Figma keeps it `text-weak`).
 
 ## Component conventions
 - **Server-component safe:** no `"use client"`, context, `useState`/`useEffect`
