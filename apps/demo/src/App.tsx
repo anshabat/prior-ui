@@ -1,6 +1,6 @@
 import { Alert, Button, Checkbox, Field, Input } from "@workspace/ui";
 import { useThemeRef } from "./hooks/usePreferredColorScheme";
-import { CheckCircle, ChevronUp } from "@workspace/icons";
+import { CheckCircle, ChevronUp, Search } from "@workspace/icons";
 import { Header } from "./components/Header";
 
 function App() {
@@ -178,6 +178,26 @@ function App() {
             <Field label="Company" description="Set by your admin" disabled>
               {(control) => <Input {...control} defaultValue="Acme" />}
             </Field>
+            <Input
+              aria-label="Search"
+              type="search"
+              placeholder="Search"
+              startIcon={<Search />}
+            />
+            <Input
+              aria-label="Search small"
+              type="search"
+              placeholder="Search"
+              startIcon={<Search />}
+              size="small"
+            />
+            <Input
+              aria-label="Search disabled"
+              type="search"
+              placeholder="Search"
+              startIcon={<Search />}
+              disabled
+            />
           </div>
         </div>
       </div>
