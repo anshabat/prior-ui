@@ -1,6 +1,83 @@
-import { ComponentProps } from "react";
+import { ComponentProps, ReactNode, useId } from "react";
 import { tv } from "tailwind-variants/lite";
 import { XOctagon } from "@workspace/icons";
+
+// Props Field hands to its control. Any control (Input, later Textarea, Select) accepts them natively.
+export type FieldControlProps = {
+  id: string;
+  "aria-describedby"?: string;
+  "aria-invalid"?: true;
+  required?: boolean;
+  disabled?: boolean;
+};
+
+export type FieldProps = {
+  label: ReactNode;
+  description?: ReactNode;
+  // Invalid state is derived from `error`, so a field can't turn red without a message explaining why
+  error?: ReactNode;
+  required?: boolean;
+  disabled?: boolean;
+  id?: string;
+  // Render prop instead of context: Field stays usable in server components
+  children: (control: FieldControlProps) => ReactNode;
+};
+
+export const Field = ({
+  label,
+  description,
+  error,
+  required,
+  disabled,
+  id,
+  children,
+}: FieldProps) => {
+  // Hooks can't be called conditionally, so useId always runs even when `id` is passed
+  const generatedId = useId();
+  const controlId = id ?? generatedId;
+  const descriptionId = `${controlId}-description`;
+  const errorId = `${controlId}-error`;
+
+  const hasDescription = Boolean(description);
+  const hasError = Boolean(error);
+
+  // Only reference parts that are rendered: a dangling id makes the description empty
+  const describedBy =
+    [hasDescription && descriptionId, hasError && errorId]
+      .filter(Boolean)
+      .join(" ") || undefined;
+
+  const classes = createFieldClasses();
+
+  return (
+    <div className={classes.root()}>
+      <div className={classes.header()}>
+        <FieldLabel htmlFor={controlId} required={required} disabled={disabled}>
+          {label}
+        </FieldLabel>
+        {hasDescription && (
+          <FieldDescription id={descriptionId}>{description}</FieldDescription>
+        )}
+      </div>
+      {hasError && <FieldError id={errorId}>{error}</FieldError>}
+      {children({
+        id: controlId,
+        "aria-describedby": describedBy,
+        "aria-invalid": hasError ? true : undefined,
+        required,
+        disabled,
+      })}
+    </div>
+  );
+};
+
+const createFieldClasses = tv({
+  slots: {
+    root: "flex flex-col gap-4",
+    // Label and description sit together with no gap, as in Figma's "Text" frame
+    header: "flex flex-col",
+  },
+});
 
 export type FieldLabelProps = Omit<
   ComponentProps<"label">,
