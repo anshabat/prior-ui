@@ -1,7 +1,8 @@
 # Input
 
-A single-line text control. Renders a native `<input>` and accepts all native
-input props except the ones the design system owns.
+A single-line text control. Renders a native `<input>` inside a positioning
+`<div>` (the same structure with or without icons) and accepts all native input
+props except the ones the design system owns.
 
 ```tsx
 <label htmlFor="email">Email</label>
@@ -18,6 +19,7 @@ don't treat it as a name.
 |---|---|---|
 | `size` | `"medium"` | `"small"` (32px) or `"medium"` (48px), matching Button's heights. Replaces the native `size` attribute (width in characters) |
 | `type` | `"text"` | Any native text-like type: `email`, `password`, `search`, … |
+| `startIcon`, `endIcon` | — | An icon or an icon button inside the input (see Icons) |
 | `className`, `style` | — | Not accepted: the input's look is owned by the design system |
 
 Everything else (`name`, `value`, `required`, `disabled`, `aria-*`, `ref`, …) is
@@ -34,6 +36,41 @@ passed to the `<input>`.
 
 There is no hover or press state: an approved deviation from Figma (white at
 rest, focus ring only), as in shadcn/ui and Stripe.
+
+## Icons
+
+```tsx
+<Input aria-label="Search" name="q" startIcon={<Search />} />
+<Input aria-label="Search" name="q" endIcon={<button type="button" aria-label="Clear" onClick={…}><X /></button>} />
+```
+
+- **Overlay, not a frame.** Icons are absolutely positioned over the input's
+  own padding; the input keeps its border and states. The text padding grows to
+  clear the icon (Figma: medium 16px edge + 24px icon + 8px gap = 48px; small
+  12 + 16 + 4 = 32px).
+- **Clicks.** A plain icon is `pointer-events-none`, so clicking it focuses the
+  input underneath, without JavaScript. A slot that contains a `<button>` takes
+  clicks (`has-[button]:pointer-events-auto`).
+- **Accessibility belongs to the content.** Icons from `@workspace/icons` are
+  `aria-hidden` by default; an icon button needs its own `aria-label`.
+- **Size is forced, color is a default.** The slot's size is layout (the padding
+  is calculated for it), so the icon is made to fill it. The color is inherited:
+  the slot sets `text-icon-neutral` (`text-icon-disabled` when disabled), and
+  icons draw with `currentColor`, so an icon's own color class or `color` prop
+  still wins.
+
+### Why not a frame wrapper
+
+An earlier version moved the border and states to a wrapper `<div>` and made
+the `<input>` bare inside it, so content could sit beside the input within one
+border (an attached button). Without that need, the overlay is simpler:
+
+- The input keeps its own state selectors (`focus-visible:`, `disabled:`, …).
+  A frame has to watch its child with `:has()`, and must target the input
+  specifically (`:has(input:focus-visible)`, not `:focus-within`, which would
+  also light up when a focusable element inside the frame is focused).
+- `ref` and the browser's autofill background apply to the visible box, not to
+  a bare element inside it.
 
 ## Invalid state
 
@@ -81,14 +118,6 @@ is drawn with `box-shadow` and takes no space.
 - **`:focus-visible`** always matches on text inputs (keyboard and mouse both
   show it), so for Input it behaves like `:focus`. It's used for consistency
   with Button, where it only shows for keyboard focus.
-- **The frame's ring follows the input only: `:has(input:focus-visible)`, not
-  `:focus-within`.** `:focus-within` matches any focused element inside the
-  frame, so tabbing to an icon button in `startIcon`/`endIcon` would light up
-  the frame's ring as well as the button's own: two focus indicators for one
-  focused element. It also follows `:focus`, not `:focus-visible`, so a mouse
-  click on that button would show the frame's ring too. Use `:focus-within` only
-  if the whole group should act as one control and inner buttons drop their
-  own ring.
 - **Contrast.** The border needs 3:1 against the background (WCAG 1.4.11).
   Disabled text is exempt from text contrast rules (WCAG 1.4.3), but is kept
   readable on purpose.
@@ -97,8 +126,9 @@ is drawn with `box-shadow` and takes no space.
 
 - **No preflight dependency.** `dist/tailwind.css` (used by non-Tailwind apps)
   is built without Tailwind's reset, so the input resets the browser defaults
-  it relies on itself: `box-border`, `border-solid`, and `placeholder:opacity-100`
-  (Firefox dims placeholders by default).
+  it relies on itself: `box-border`, `border-solid`, `placeholder:opacity-100`
+  (Firefox dims placeholders by default) and `appearance-none` (Safari draws
+  `type="search"` as a native search field otherwise).
 - **Props order.** Native props are spread first and `className` is set last,
   so nothing that bypasses the types (for example a spread from untyped code)
   can override the styles.

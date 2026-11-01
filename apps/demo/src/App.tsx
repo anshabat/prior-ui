@@ -208,6 +208,14 @@ function App() {
               endIcon={<ChevronDown />}
             />
             <Input
+              aria-label="Both icons"
+              name="both-icons"
+              placeholder="Both icons"
+              startIcon={<Search />}
+              endIcon={<X />}
+              size="small"
+            />
+            <Input
               aria-label="Icon button"
               name="icon-button"
               placeholder="Icon button at the end"
