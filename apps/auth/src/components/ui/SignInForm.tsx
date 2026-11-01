@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from "react";
-import { Button, Input } from "@workspace/ui";
+import { Button, Field, Input } from "@workspace/ui";
 
 export interface SignInFormProps {
   title?: string;
@@ -62,39 +62,47 @@ export function SignInForm({
       >
         {!isTwoFactorStep && (
           <>
-            <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              Email
-              <Input
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </label>
+            <Field label="Email" required>
+              {(control) => (
+                <Input
+                  {...control}
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              )}
+            </Field>
 
-            <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              Password
-              <Input
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </label>
+            <Field label="Password" required>
+              {(control) => (
+                <Input
+                  {...control}
+                  type="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+              )}
+            </Field>
           </>
         )}
 
         {isTwoFactorStep && (
-          <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            OTP Code
-            <Input
-              type="text"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              maxLength={6}
-              value={otpCode}
-              onChange={(event) => setOtpCode(event.target.value)}
-              autoFocus
-            />
-          </label>
+          <Field label="OTP Code" required>
+            {(control) => (
+              <Input
+                {...control}
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                maxLength={6}
+                value={otpCode}
+                onChange={(event) => setOtpCode(event.target.value)}
+                autoFocus
+              />
+            )}
+          </Field>
         )}
 
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>

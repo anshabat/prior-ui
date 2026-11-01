@@ -1,4 +1,4 @@
-import { Alert, Button, Checkbox } from "@workspace/ui";
+import { Alert, Button, Checkbox, Field, Input } from "@workspace/ui";
 import { CaretUp } from "@workspace/icons";
 
 export default function Page() {
@@ -139,6 +139,16 @@ export default function Page() {
             </Button>
           </div>
         </div>
+        {/* Server component: Field's render prop runs during the server render, no client JS needed */}
+        <form className="grid gap-16 w-256">
+          <Field label="Email" description="We'll never share your email" required>
+            {(control) => <Input {...control} type="email" name="email" />}
+          </Field>
+          <Field label="Password" error="Password is too short" required>
+            {(control) => <Input {...control} type="password" name="password" />}
+          </Field>
+          <Button type="submit">Sign in</Button>
+        </form>
       </div>
     </div>
   );

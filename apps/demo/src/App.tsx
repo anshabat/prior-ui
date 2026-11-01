@@ -1,4 +1,4 @@
-import { Alert, Button, Checkbox, Input } from "@workspace/ui";
+import { Alert, Button, Checkbox, Field, Input } from "@workspace/ui";
 import { useThemeRef } from "./hooks/usePreferredColorScheme";
 import { CaretUp, Checked } from "@workspace/icons";
 import { Header } from "./components/Header";
@@ -153,11 +153,31 @@ function App() {
               </Button>
             </div>
           </div>
-          <div className="grid gap-6 w-256">
-            <Input aria-label="Medium" placeholder="Medium" />
-            <Input aria-label="Small" placeholder="Small" size="small" />
-            <Input aria-label="Disabled" placeholder="Disabled" disabled />
-            <Input aria-label="Invalid" placeholder="Invalid" aria-invalid />
+          <div className="grid gap-16 w-256">
+            <Field label="Name">
+              {(control) => <Input {...control} placeholder="Jane Doe" />}
+            </Field>
+            <Field label="Small">
+              {(control) => <Input {...control} size="small" />}
+            </Field>
+            <Field
+              label="Email"
+              description="We'll never share your email"
+              required
+            >
+              {(control) => <Input {...control} type="email" />}
+            </Field>
+            <Field
+              label="Password"
+              description="At least 8 characters"
+              error="Password is too short"
+              required
+            >
+              {(control) => <Input {...control} type="password" />}
+            </Field>
+            <Field label="Company" description="Set by your admin" disabled>
+              {(control) => <Input {...control} defaultValue="Acme" />}
+            </Field>
           </div>
         </div>
       </div>
