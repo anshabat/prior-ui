@@ -5,7 +5,7 @@ interface IconProps extends React.SVGProps<SVGSVGElement> {
   color3?: string;
   color4?: string;
 }
-function SvgChecked(allProps: IconProps) {
+function SvgCheckCircle(allProps: IconProps) {
   const { color, color2, color3, color4, style, ...props } = allProps;
   const iconStyle = {
     ...(color && {
@@ -24,24 +24,23 @@ function SvgChecked(allProps: IconProps) {
   };
   return (
     <svg
-      width="1em"
-      height="1em"
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
       fill="none"
-      aria-label="Two-tone badge"
-      data-icon="checked"
+      stroke="var(--color-0, currentColor)"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      aria-hidden="true"
+      data-icon="check-circle"
       viewBox="0 0 24 24"
       style={iconStyle}
       {...props}
     >
-      <circle cx={12} cy={12} r={10} fill="var(--color-0, #2DD4BF)" />
-      <path
-        stroke="var(--color-1, #7C3AED)"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2.2}
-        d="m8 12.5 2.5 2.5L16 9"
-      />
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <path d="M22 4 12 14.01l-3-3" />
     </svg>
   );
 }
-export default SvgChecked;
+export default SvgCheckCircle;

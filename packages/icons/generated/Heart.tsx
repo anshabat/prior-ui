@@ -5,7 +5,7 @@ interface IconProps extends React.SVGProps<SVGSVGElement> {
   color3?: string;
   color4?: string;
 }
-function SvgCaretDown(allProps: IconProps) {
+function SvgHeart(allProps: IconProps) {
   const { color, color2, color3, color4, style, ...props } = allProps;
   const iconStyle = {
     ...(color && {
@@ -24,17 +24,22 @@ function SvgCaretDown(allProps: IconProps) {
   };
   return (
     <svg
-      width="1em"
-      height="1em"
-      fill="var(--color-0, currentColor)"
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      fill="none"
+      stroke="var(--color-0, currentColor)"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
       aria-hidden="true"
-      data-icon="caret-down"
-      viewBox="0 0 1024 1024"
+      data-icon="heart"
+      viewBox="0 0 24 24"
       style={iconStyle}
       {...props}
     >
-      <path d="M840.4 300H183.6c-19.7 0-30.7 20.8-18.5 35l328.4 380.8c9.4 10.9 27.5 10.9 37 0L858.9 335c12.2-14.2 1.2-35-18.5-35" />
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78" />
     </svg>
   );
 }
-export default SvgCaretDown;
+export default SvgHeart;

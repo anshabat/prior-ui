@@ -1,5 +1,5 @@
 import { Alert, Button, Checkbox, Field, Input } from "@workspace/ui";
-import { CaretUp } from "@workspace/icons";
+import { ChevronUp } from "@workspace/icons";
 
 export default function Page() {
   return (
@@ -92,7 +92,7 @@ export default function Page() {
             </Alert>
           </div>
           <div className="grid gap-6 justify-items-center">
-            <CaretUp width="40px" height="40px" />
+            <ChevronUp width="40px" height="40px" />
           </div>
         </div>
         <div className="grid gap-6">

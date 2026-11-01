@@ -1,6 +1,6 @@
 import { Alert, Button, Checkbox, Field, Input } from "@workspace/ui";
 import { useThemeRef } from "./hooks/usePreferredColorScheme";
-import { CaretUp, Checked } from "@workspace/icons";
+import { CheckCircle, ChevronUp } from "@workspace/icons";
 import { Header } from "./components/Header";
 
 function App() {
@@ -105,8 +105,8 @@ function App() {
               </Alert>
             </div>
             <div className="grid gap-6 justify-items-center">
-              <CaretUp width="40px" height="40px" color="blue" />
-              <Checked width="120px" height="120px" color="lime" color2="red" />
+              <ChevronUp width="40px" height="40px" color="blue" />
+              <CheckCircle width="120px" height="120px" color="lime" />
             </div>
           </div>
           <div className="grid gap-6">
