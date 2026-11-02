@@ -1,7 +1,27 @@
-import { Alert, Button, Checkbox, Field, Input } from "@workspace/ui";
+import {
+  Alert,
+  Button,
+  Checkbox,
+  Field,
+  Input,
+  type AlertProps,
+} from "@workspace/ui";
 import { useThemeRef } from "./hooks/usePreferredColorScheme";
-import { CheckCircle, ChevronDown, ChevronUp, Search, X } from "@workspace/icons";
+import {
+  CheckCircle,
+  ChevronDown,
+  ChevronUp,
+  Search,
+  X,
+} from "@workspace/icons";
 import { Header } from "./components/Header";
+
+type Tone = AlertProps["tone"];
+
+const tones: Tone[] = ["error", "warning", "success", "information"];
+
+// The dismiss button renders only when there is a handler; the demo just shows it
+const noop = () => {};
 
 function App() {
   const themeRef = useThemeRef();
@@ -65,46 +85,6 @@ function App() {
               </div>
             </div>
             <div className="grid gap-6 justify-items-center">
-              <Alert title="Solid success" colorScheme="success">
-                This is a description
-              </Alert>
-              <Alert title="Solid error" colorScheme="error">
-                This is a description
-              </Alert>
-              <Alert title="Solid warning" colorScheme="warning">
-                This is a description
-              </Alert>
-              <Alert title="Solid info" colorScheme="info">
-                This is a description
-              </Alert>
-            </div>
-            <div className="grid gap-6 justify-items-center">
-              <Alert
-                title="Outline success"
-                colorScheme="success"
-                variant="outline"
-              >
-                This is a description
-              </Alert>
-              <Alert
-                title="Outline error"
-                colorScheme="error"
-                variant="outline"
-              >
-                This is a description
-              </Alert>
-              <Alert
-                title="Outline warning"
-                colorScheme="warning"
-                variant="outline"
-              >
-                This is a description
-              </Alert>
-              <Alert title="Outline info" colorScheme="info" variant="outline">
-                This is a description
-              </Alert>
-            </div>
-            <div className="grid gap-6 justify-items-center">
               <ChevronUp width="40px" height="40px" color="blue" />
               <CheckCircle width="120px" height="120px" color="lime" />
             </div>
@@ -152,6 +132,39 @@ function App() {
                 Inverse
               </Button>
             </div>
+          </div>
+          <div className="grid gap-16 w-full max-w-2xl">
+            {tones.map((tone) => (
+              <Alert
+                key={tone}
+                tone={tone}
+                title={`${tone} alert`}
+                onDismiss={noop}
+              >
+                Lorem ipsum dolor sit amet, con sec tetur adipiscing elit dolor
+                sit. Lorem ipsum dolor sit amet elit.
+              </Alert>
+            ))}
+            <Alert tone="error" orientation="vertical" title="Vertical">
+              Lorem ipsum dolor sit amet, con sec tetur adipiscing elit dolor
+              sit. Lorem ipsum dolor sit amet elit.
+            </Alert>
+            <Alert tone="warning">Large, without a title</Alert>
+            <Alert tone="success" size="small" title="Small" onDismiss={noop}>
+              Lorem ipsum dolor sit amet, consec tetur adipiscing elit.
+            </Alert>
+            <Alert
+              tone="information"
+              size="small"
+              orientation="vertical"
+              title="Small vertical"
+              onDismiss={noop}
+            >
+              Lorem ipsum dolor sit amet, consec tetur adipiscing elit.
+            </Alert>
+            <Alert tone="error" size="small" role="alert">
+              Small, without a title, announced as a live region
+            </Alert>
           </div>
           <div className="grid gap-16 w-256">
             <Field label="Name">

@@ -56,42 +56,6 @@ export default function Page() {
             </div>
           </div>
           <div className="grid gap-6 justify-items-center">
-            <Alert title="Solid success" colorScheme="success">
-              This is a description
-            </Alert>
-            <Alert title="Solid error" colorScheme="error">
-              This is a description
-            </Alert>
-            <Alert title="Solid warning" colorScheme="warning">
-              This is a description
-            </Alert>
-            <Alert title="Solid info" colorScheme="info">
-              This is a description
-            </Alert>
-          </div>
-          <div className="grid gap-6 justify-items-center">
-            <Alert
-              title="Outline success"
-              colorScheme="success"
-              variant="outline"
-            >
-              This is a description
-            </Alert>
-            <Alert title="Outline error" colorScheme="error" variant="outline">
-              This is a description
-            </Alert>
-            <Alert
-              title="Outline warning"
-              colorScheme="warning"
-              variant="outline"
-            >
-              This is a description
-            </Alert>
-            <Alert title="Outline info" colorScheme="info" variant="outline">
-              This is a description
-            </Alert>
-          </div>
-          <div className="grid gap-6 justify-items-center">
             <ChevronUp width="40px" height="40px" />
           </div>
         </div>
@@ -139,13 +103,34 @@ export default function Page() {
             </Button>
           </div>
         </div>
+        {/* Server component: no onDismiss here, an event handler can't be passed from the server */}
+        <div className="grid gap-16 w-full max-w-2xl">
+          <Alert tone="error" title="Error">
+            Lorem ipsum dolor sit amet, con sec tetur adipiscing elit dolor sit.
+          </Alert>
+          <Alert tone="warning" title="Warning">
+            Lorem ipsum dolor sit amet, con sec tetur adipiscing elit dolor sit.
+          </Alert>
+          <Alert tone="success" title="Success" orientation="vertical">
+            Lorem ipsum dolor sit amet, con sec tetur adipiscing elit dolor sit.
+          </Alert>
+          <Alert tone="information" size="small" title="Information">
+            Lorem ipsum dolor sit amet, consec tetur adipiscing elit.
+          </Alert>
+        </div>
         {/* Server component: Field's render prop runs during the server render, no client JS needed */}
         <form className="grid gap-16 w-256">
-          <Field label="Email" description="We'll never share your email" required>
+          <Field
+            label="Email"
+            description="We'll never share your email"
+            required
+          >
             {(control) => <Input {...control} type="email" name="email" />}
           </Field>
           <Field label="Password" error="Password is too short" required>
-            {(control) => <Input {...control} type="password" name="password" />}
+            {(control) => (
+              <Input {...control} type="password" name="password" />
+            )}
           </Field>
           <Button type="submit">Sign in</Button>
         </form>

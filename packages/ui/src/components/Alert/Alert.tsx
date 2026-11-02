@@ -1,114 +1,151 @@
-import { HTMLAttributes, ReactNode } from "react";
+import { ComponentProps, MouseEventHandler, ReactNode } from "react";
 import { tv } from "tailwind-variants/lite";
+import {
+  AlertTriangle,
+  CheckCircle,
+  Info,
+  X,
+  XOctagon,
+} from "@workspace/icons";
 
-type ColorScheme = "error" | "success" | "warning" | "info";
-type Variant = "solid" | "outline";
+type Tone = "error" | "warning" | "success" | "information";
+type Size = "small" | "large";
+type Orientation = "horizontal" | "vertical";
 
-export type AlertProps = Omit<HTMLAttributes<HTMLDivElement>, "title"> & {
-  title: string;
-  children: ReactNode;
-  colorScheme: ColorScheme;
-  variant?: Variant;
+export type AlertProps = Omit<
+  ComponentProps<"div">,
+  "title" | "className" | "style"
+> & {
+  tone: Tone;
+  size?: Size;
+  orientation?: Orientation;
+  title?: ReactNode;
+  onDismiss?: MouseEventHandler<HTMLButtonElement>;
+  dismissLabel?: string;
 };
+
+const toneIcons: Record<Tone, typeof X> = {
+  error: XOctagon,
+  warning: AlertTriangle,
+  success: CheckCircle,
+  information: Info,
+};
+
 export const Alert = ({
+  tone,
+  size = "large",
+  orientation = "horizontal",
   title,
+  onDismiss,
+  dismissLabel = "Dismiss",
   children,
-  colorScheme,
-  variant = "solid",
-  ...rootProps
+  ...nativeProps
 }: AlertProps) => {
-  const tvClasses = createTvClasses({ variant, colorScheme });
+  const ToneIcon = toneIcons[tone];
+
+  const classes = createClasses({ tone, size, orientation });
 
   return (
-    <div className={tvClasses.root()} {...rootProps}>
-      <div className={tvClasses.title()}>{title}</div>
-      <div className={tvClasses.description()}>{children}</div>
+    <div {...nativeProps} className={classes.root()}>
+      <span aria-hidden="true" className={classes.icon()}>
+        <ToneIcon />
+      </span>
+      {title && <p className={classes.title()}>{title}</p>}
+      {children && <div className={classes.description()}>{children}</div>}
+      {onDismiss && (
+        <div className={classes.dismiss()}>
+          <DismissButton label={dismissLabel} onClick={onDismiss} />
+        </div>
+      )}
     </div>
   );
 };
 
-const createTvClasses = tv({
+const createClasses = tv({
   slots: {
-    root: "rounded border py-3 px-5",
-    title: "font-bold mb-[0.5em] text-base",
-    description: "text-sm",
+    root: [
+      "box-border grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-y-4",
+      "rounded-8 border border-s-4 border-solid",
+      "break-words",
+    ],
+    icon: "col-start-1 row-start-1 flex [&_svg]:size-24",
+    title: "m-0 font-strong text-strong",
+    description: "font-body font-weak text-weak",
+    dismiss: "col-start-3 row-start-1 ms-12 flex",
   },
   variants: {
-    variant: {
-      solid: {
-        root: "text-color-text-inverted",
+    tone: {
+      error: {
+        root: "bg-fill-error-weak border-error-weak border-s-error-strong",
+        icon: "text-icon-error",
       },
-      outline: {
-        root: "bg-color-bg-neutral",
+      warning: {
+        root: "bg-fill-warning-weak border-warning-weak border-s-warning-strong",
+        icon: "text-icon-warning",
+      },
+      success: {
+        root: "bg-fill-success-weak border-success-weak border-s-success-strong",
+        icon: "text-icon-success",
+      },
+      information: {
+        root: "bg-fill-information-weak border-information-weak border-s-information-strong",
+        icon: "text-icon-information",
       },
     },
-    colorScheme: {
-      error: {},
-      success: {},
-      warning: {},
-      info: {},
+    size: {
+      small: {
+        root: "p-16",
+        title: "font-body text-tiny",
+        description: "text-tiny",
+      },
+      large: {
+        root: "p-24",
+        title: "font-heading text-heading-4",
+        description: "text-small",
+      },
+    },
+    orientation: {
+      horizontal: {
+        icon: "me-12",
+        title: "col-start-2",
+        description: "col-start-2",
+      },
+      vertical: {
+        title: "col-span-full",
+        description: "col-span-full",
+      },
     },
   },
   compoundVariants: [
-    {
-      variant: "solid",
-      colorScheme: "error",
-      class: {
-        root: "bg-color-bg-error border-color-border-error",
-      },
-    },
-    {
-      variant: "solid",
-      colorScheme: "success",
-      class: {
-        root: "bg-color-bg-success border-color-border-success",
-      },
-    },
-    {
-      variant: "solid",
-      colorScheme: "warning",
-      class: {
-        root: "bg-color-bg-warning border-color-border-warning",
-      },
-    },
-    {
-      variant: "solid",
-      colorScheme: "info",
-      class: {
-        root: "bg-color-bg-info border-color-border-info",
-      },
-    },
-    {
-      variant: "outline",
-      colorScheme: "error",
-      class: {
-        root: "text-color-text-error border-color-border-error",
-      },
-    },
-    {
-      variant: "outline",
-      colorScheme: "success",
-      class: {
-        root: "text-color-text-success border-color-border-success",
-      },
-    },
-    {
-      variant: "outline",
-      colorScheme: "warning",
-      class: {
-        root: "text-color-text-warning border-color-border-warning",
-      },
-    },
-    {
-      variant: "outline",
-      colorScheme: "info",
-      class: {
-        root: "text-color-text-info border-color-border-info",
-      },
-    },
+    { size: "large", orientation: "vertical", class: { icon: "mb-8" } },
+    { size: "small", orientation: "vertical", class: { icon: "mb-4" } },
   ],
-  defaultVariants: {
-    variant: "solid",
-    colorScheme: "info",
-  },
+});
+
+type DismissButtonProps = {
+  label: string;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+};
+
+// TODO: replace with IconButton component
+const DismissButton = ({ label, onClick }: DismissButtonProps) => {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className={createDismissButtonClasses()}
+    >
+      <X aria-hidden="true" />
+    </button>
+  );
+};
+
+const createDismissButtonClasses = tv({
+  //TODO: after adding size prop to Icon components, remove [&_svg]:size-24
+  base: [
+    "flex m-0 p-0 border-0 bg-transparent appearance-none cursor-pointer",
+    "text-icon-neutral [&_svg]:size-24",
+    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
+  ],
 });
