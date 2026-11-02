@@ -15,7 +15,9 @@
 
 ## Rules
 - Style only with the Tailwind classes the theme generates. No hardcoded or
-  arbitrary values (`bg-[#…]`, `p-[13px]`).
+  arbitrary design values (`bg-[#…]`, `p-[13px]`). Arbitrary layout values that
+  aren't design tokens are allowed, e.g. a grid template
+  (`grid-cols-[auto_minmax(0,1fr)_auto]`).
 - Don't change, rename or add tokens while building components.
 - If no token is a close match for a Figma value, stop and escalate to the
   maintainer with the value and the closest candidates.

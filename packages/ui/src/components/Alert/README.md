@@ -71,16 +71,37 @@ Atlassian and Primer.
 Dismissibility comes from the handler, not a separate `dismissible` boolean: a
 close button that does nothing can't be rendered by mistake.
 
-### Values without a token
+### Layout
 
-Figma uses 2px and 28px for icon alignment, and neither is a spacing token. The
-classes compute them from the tokens they come from instead of hardcoding them:
+The root is a grid with three columns, `icon | text | dismiss`, and the parts are
+its direct children (no wrapper elements):
 
-- Large horizontal: the icon box is `var(--line-height-heading-4)` tall, so the
-  icon centers on the title line.
-- Small horizontal: the text is offset by `(icon 24 − line-height tiny 20) / 2`.
+```
+horizontal                     vertical
+[icon][title      ][X]         [icon][        ][X]
+      [description]            [title    (all columns)]
+                               [description (all)     ]
+```
 
-If the type scale changes, the alignment follows.
+- **Spacing is item margins, not column gaps.** A missing dismiss button leaves
+  an empty `auto` column that is 0px wide. A column gap would still add space
+  before it.
+- **The dismiss button is a grid item, not absolutely positioned.** Its space is
+  part of the layout, so text can never run under it in horizontal alerts.
+- `minmax(0, 1fr)` lets the text column shrink below its content width, so long
+  words wrap instead of widening the alert.
+
+### Differences from Figma
+
+Code quality comes first (see `packages/ui/AGENTS.md`), so the layout uses one
+grid for every size and orientation and accepts these small differences:
+
+- **Text alignment with the icon:** Figma nudges the text 2px down so its first
+  line centers on the icon. Here the icon and text are top-aligned.
+- **Space before the dismiss button:** always 12px. Figma uses 0 on large
+  alerts, where the text can touch the button.
+- **Large vertical:** the text spans under the dismiss button, as in Figma's
+  small vertical. Figma's large vertical reserves the button's width there.
 
 ### Tones not implemented yet
 
