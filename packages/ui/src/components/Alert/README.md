@@ -74,7 +74,7 @@ close button that does nothing can't be rendered by mistake.
 ### Layout
 
 The root is a grid with three columns, `icon | text | dismiss`, and the parts are
-its direct children (no wrapper elements):
+its direct children. The only wrapper is around the dismiss button (see below):
 
 ```
 horizontal                     vertical
@@ -88,6 +88,11 @@ horizontal                     vertical
   before it.
 - **The dismiss button is a grid item, not absolutely positioned.** Its space is
   part of the layout, so text can never run under it in horizontal alerts.
+- **Alert places the dismiss button, `DismissButton` styles it.** Alert wraps
+  the button in a `div` that holds only grid placement and margin. The internal
+  `DismissButton` holds only its own look (reset, icon color, focus ring) and
+  takes no `className`, so the two never mix. The wrapper is `flex` so it has no
+  line box and stays as tall as the button.
 - `minmax(0, 1fr)` lets the text column shrink below its content width, so long
   words wrap instead of widening the alert.
 

@@ -53,14 +53,9 @@ export const Alert = ({
       {title && <p className={classes.title()}>{title}</p>}
       {children && <div className={classes.description()}>{children}</div>}
       {onDismiss && (
-        <button
-          type="button"
-          aria-label={dismissLabel}
-          onClick={onDismiss}
-          className={classes.dismiss()}
-        >
-          <X aria-hidden="true" />
-        </button>
+        <div className={classes.dismiss()}>
+          <DismissButton label={dismissLabel} onClick={onDismiss} />
+        </div>
       )}
     </div>
   );
@@ -74,14 +69,9 @@ const createClasses = tv({
       "break-words",
     ],
     icon: "col-start-1 row-start-1 flex [&_svg]:size-24",
-    title: "m-0 text-strong",
-    description: "text-weak",
-    dismiss: [
-      "col-start-3 row-start-1 my-0 me-0 ms-12 flex",
-      "p-0 border-0 bg-transparent appearance-none cursor-pointer",
-      "text-icon-neutral [&_svg]:size-24",
-      "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
-    ],
+    title: "m-0 font-strong text-strong",
+    description: "font-body font-weak text-weak",
+    dismiss: "col-start-3 row-start-1 ms-12 flex",
   },
   variants: {
     tone: {
@@ -105,13 +95,13 @@ const createClasses = tv({
     size: {
       small: {
         root: "p-16",
-        title: "font-body font-strong text-tiny",
-        description: "font-body font-weak text-tiny",
+        title: "font-body text-tiny",
+        description: "text-tiny",
       },
       large: {
         root: "p-24",
-        title: "font-heading font-strong text-heading-4",
-        description: "font-body font-weak text-small",
+        title: "font-heading text-heading-4",
+        description: "text-small",
       },
     },
     orientation: {
@@ -129,5 +119,33 @@ const createClasses = tv({
   compoundVariants: [
     { size: "large", orientation: "vertical", class: { icon: "mb-8" } },
     { size: "small", orientation: "vertical", class: { icon: "mb-4" } },
+  ],
+});
+
+type DismissButtonProps = {
+  label: string;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+};
+
+// TODO: replace with IconButton component
+const DismissButton = ({ label, onClick }: DismissButtonProps) => {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className={createDismissButtonClasses()}
+    >
+      <X aria-hidden="true" />
+    </button>
+  );
+};
+
+const createDismissButtonClasses = tv({
+  //TODO: after adding size prop to Icon components, remove [&_svg]:size-24
+  base: [
+    "flex m-0 p-0 border-0 bg-transparent appearance-none cursor-pointer",
+    "text-icon-neutral [&_svg]:size-24",
+    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
   ],
 });
