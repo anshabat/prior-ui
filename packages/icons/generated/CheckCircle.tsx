@@ -38,8 +38,8 @@ function SvgCheckCircle(allProps: IconProps) {
       style={iconStyle}
       {...props}
     >
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-      <path d="M22 4 12 14.01l-3-3" />
+      <path d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10" />
+      <path d="m17 9-6.875 7L7 12.818" />
     </svg>
   );
 }

@@ -1,114 +1,174 @@
-import { HTMLAttributes, ReactNode } from "react";
+import { ComponentProps, MouseEventHandler, ReactNode } from "react";
 import { tv } from "tailwind-variants/lite";
+import {
+  AlertTriangle,
+  CheckCircle,
+  Info,
+  X,
+  XOctagon,
+} from "@workspace/icons";
 
-type ColorScheme = "error" | "success" | "warning" | "info";
-type Variant = "solid" | "outline";
+type Tone = "error" | "warning" | "success" | "information";
+type Size = "small" | "large";
+type Orientation = "horizontal" | "vertical";
 
-export type AlertProps = Omit<HTMLAttributes<HTMLDivElement>, "title"> & {
-  title: string;
-  children: ReactNode;
-  colorScheme: ColorScheme;
-  variant?: Variant;
+export type AlertProps = Omit<
+  ComponentProps<"div">,
+  "title" | "className" | "style"
+> & {
+  tone: Tone;
+  size?: Size;
+  orientation?: Orientation;
+  title?: ReactNode;
+  onDismiss?: MouseEventHandler<HTMLButtonElement>;
+  dismissLabel?: string;
 };
+
+const toneIcons: Record<Tone, typeof X> = {
+  error: XOctagon,
+  warning: AlertTriangle,
+  success: CheckCircle,
+  information: Info,
+};
+
 export const Alert = ({
+  tone,
+  size = "large",
+  orientation = "horizontal",
   title,
+  onDismiss,
+  dismissLabel = "Dismiss",
   children,
-  colorScheme,
-  variant = "solid",
-  ...rootProps
+  ...nativeProps
 }: AlertProps) => {
-  const tvClasses = createTvClasses({ variant, colorScheme });
+  const ToneIcon = toneIcons[tone];
+
+  const classes = createClasses({
+    tone,
+    size,
+    orientation,
+    hasTitle: Boolean(title),
+    dismissible: Boolean(onDismiss),
+  });
 
   return (
-    <div className={tvClasses.root()} {...rootProps}>
-      <div className={tvClasses.title()}>{title}</div>
-      <div className={tvClasses.description()}>{children}</div>
+    <div {...nativeProps} className={classes.root()}>
+      <div className={classes.content()}>
+        <span aria-hidden="true" className={classes.icon()}>
+          <ToneIcon />
+        </span>
+        <div className={classes.text()}>
+          {title && <p className={classes.title()}>{title}</p>}
+          {children && <div className={classes.description()}>{children}</div>}
+        </div>
+      </div>
+      {onDismiss && (
+        <button
+          type="button"
+          aria-label={dismissLabel}
+          onClick={onDismiss}
+          className={classes.dismiss()}
+        >
+          <X aria-hidden="true" />
+        </button>
+      )}
     </div>
   );
 };
 
-const createTvClasses = tv({
+const createClasses = tv({
   slots: {
-    root: "rounded border py-3 px-5",
-    title: "font-bold mb-[0.5em] text-base",
-    description: "text-sm",
+    root: [
+      "box-border relative flex",
+      "rounded-8 border border-s-4 border-solid",
+      "break-words",
+    ],
+    content: "flex flex-1 min-w-0 items-start",
+    icon: "flex shrink-0 items-center [&_svg]:size-24",
+    text: "flex flex-col gap-4",
+    title: "m-0 text-strong",
+    description: "text-weak",
+    dismiss: [
+      "absolute flex m-0 p-0 border-0 bg-transparent appearance-none cursor-pointer",
+      "text-icon-neutral [&_svg]:size-24",
+      "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus",
+    ],
   },
   variants: {
-    variant: {
-      solid: {
-        root: "text-color-text-inverted",
+    tone: {
+      error: {
+        root: "bg-fill-error-weak border-error-weak border-s-error-strong",
+        icon: "text-icon-error",
       },
-      outline: {
-        root: "bg-color-bg-neutral",
+      warning: {
+        root: "bg-fill-warning-weak border-warning-weak border-s-warning-strong",
+        icon: "text-icon-warning",
+      },
+      success: {
+        root: "bg-fill-success-weak border-success-weak border-s-success-strong",
+        icon: "text-icon-success",
+      },
+      information: {
+        root: "bg-fill-information-weak border-information-weak border-s-information-strong",
+        icon: "text-icon-information",
       },
     },
-    colorScheme: {
-      error: {},
-      success: {},
-      warning: {},
-      info: {},
+    size: {
+      small: {
+        content: "p-16",
+        title: "font-body font-strong text-tiny",
+        description: "font-body font-weak text-tiny",
+        dismiss: "top-16 end-16",
+      },
+      large: {
+        content: "p-24",
+        title: "font-heading font-strong text-heading-4",
+        description: "font-body font-weak text-small",
+        dismiss: "top-24 end-24",
+      },
     },
+    orientation: {
+      horizontal: {
+        content: "flex-row gap-12",
+        text: "flex-1 min-w-0",
+      },
+      vertical: {
+        content: "flex-col",
+      },
+    },
+    hasTitle: { true: {}, false: {} },
+    dismissible: { true: {}, false: {} },
   },
   compoundVariants: [
+    { size: "small", orientation: "vertical", class: { content: "gap-8" } },
+    { size: "large", orientation: "vertical", class: { content: "gap-12" } },
     {
-      variant: "solid",
-      colorScheme: "error",
+      size: "large",
+      orientation: "horizontal",
+      class: { icon: "h-[var(--line-height-heading-4)]" },
+    },
+    {
+      size: "large",
+      orientation: "horizontal",
+      hasTitle: false,
       class: {
-        root: "bg-color-bg-error border-color-border-error",
+        description:
+          "pt-[calc((var(--line-height-heading-4)_-_var(--line-height-small))_/_2)]",
       },
     },
     {
-      variant: "solid",
-      colorScheme: "success",
+      size: "small",
+      orientation: "horizontal",
       class: {
-        root: "bg-color-bg-success border-color-border-success",
+        text: "pt-[calc((var(--spacing-24)_-_var(--line-height-tiny))_/_2)]",
       },
     },
+    { size: "large", dismissible: true, class: { text: "pe-24" } },
     {
-      variant: "solid",
-      colorScheme: "warning",
-      class: {
-        root: "bg-color-bg-warning border-color-border-warning",
-      },
-    },
-    {
-      variant: "solid",
-      colorScheme: "info",
-      class: {
-        root: "bg-color-bg-info border-color-border-info",
-      },
-    },
-    {
-      variant: "outline",
-      colorScheme: "error",
-      class: {
-        root: "text-color-text-error border-color-border-error",
-      },
-    },
-    {
-      variant: "outline",
-      colorScheme: "success",
-      class: {
-        root: "text-color-text-success border-color-border-success",
-      },
-    },
-    {
-      variant: "outline",
-      colorScheme: "warning",
-      class: {
-        root: "text-color-text-warning border-color-border-warning",
-      },
-    },
-    {
-      variant: "outline",
-      colorScheme: "info",
-      class: {
-        root: "text-color-text-info border-color-border-info",
-      },
+      size: "small",
+      orientation: "horizontal",
+      dismissible: true,
+      class: { text: "pe-[calc(var(--spacing-24)_+_var(--spacing-12))]" },
     },
   ],
-  defaultVariants: {
-    variant: "solid",
-    colorScheme: "info",
-  },
 });
