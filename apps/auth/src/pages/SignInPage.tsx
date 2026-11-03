@@ -15,6 +15,7 @@ export function SignInPage() {
 
   return (
     <div>
+      <title>Sign in</title>
       <h2>{session?.user.name} - {session?.user.provider}</h2>
       {successMessage && (
         <div style={{ marginBottom: 30, color: "green" }}>

@@ -5,6 +5,7 @@ import { ROUTES } from "../constants";
 export function ResetPasswordPage() {
   return (
     <div>
+      <title>Reset password</title>
       <h2>Reset Password</h2>
       <ResetPassword />
       <p style={{ display: "flex", gap: 16, marginTop: 24 }}>

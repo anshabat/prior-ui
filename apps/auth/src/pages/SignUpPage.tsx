@@ -5,6 +5,7 @@ import { ROUTES } from "../constants";
 export function SignUpPage() {
   return (
     <div>
+      <title>Create account</title>
       <h2>Register</h2>
       <SignUp />
       <p style={{ display: "flex", gap: 16, marginTop: 24 }}>
