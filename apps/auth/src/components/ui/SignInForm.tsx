@@ -8,8 +8,6 @@ export interface SignInFormProps {
   onSignIn: (email: string, password: string) => void;
   onVerifyTwoFactor: (email: string, password: string, code: string) => void;
   onCancelTwoFactor: () => void;
-  onGetSession: () => void;
-  onSignOut: () => void;
   providers: {id: string, name: string}[];
   onOAuthSignIn: (providerId: string) => void;
 }
@@ -21,8 +19,6 @@ export function SignInForm({
   onSignIn,
   onVerifyTwoFactor,
   onCancelTwoFactor,
-  onGetSession,
-  onSignOut,
   providers,
   onOAuthSignIn,
 }: SignInFormProps) {
@@ -114,12 +110,6 @@ export function SignInForm({
               Back
             </button>
           )}
-          <button type="button" onClick={onGetSession}>
-            Get session
-          </button>
-          <button type="button" onClick={onSignOut}>
-            Sign out
-          </button>
         </div>
 
         <div

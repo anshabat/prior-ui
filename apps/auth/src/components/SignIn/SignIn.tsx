@@ -3,18 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { signInWithOAuth } from "../../api";
 import { SEARCH_PARAMS } from "../../constants";
 import { SignInForm } from "../ui/SignInForm.tsx";
-import {
-  useLoginMutation,
-  useSignOutMutation,
-} from "../../hooks/useAuthApi.ts";
+import { useLoginMutation } from "../../hooks/useAuthApi.ts";
 import { getErrorMessage, removeSearchParam } from "../../utils";
 import { useFlashQueryParam } from "../../hooks/useFlashQueryParam.ts";
 
-interface SignInProps {
-  refreshSession: () => Promise<unknown>;
-}
-
-export function SignIn({ refreshSession }: SignInProps) {
+export function SignIn() {
   const [isTwoFactorStep, setIsTwoFactorStep] = useState(false);
   const flashError = useFlashQueryParam("error");
   const [error, setError] = useState<string | null>(() => {
@@ -38,15 +31,6 @@ export function SignIn({ refreshSession }: SignInProps) {
     },
   });
 
-  const { mutate: signOut } = useSignOutMutation({
-    onSuccess: () => {
-      clearError();
-    },
-    onError: (error) => {
-      setError(error.message);
-    },
-  });
-
   const handleSignIn = async (email: string, password: string) => {
     clearError();
     signWithCredentials({ email, password });
@@ -59,10 +43,6 @@ export function SignIn({ refreshSession }: SignInProps) {
   ) => {
     clearError();
     signWithCredentials({ email, password, twoFactorCode: code });
-  };
-
-  const handleGetSession = async () => {
-    await refreshSession();
   };
 
   const handleOAuthSignIn = (providerId: string) => {
@@ -80,8 +60,6 @@ export function SignIn({ refreshSession }: SignInProps) {
         setIsTwoFactorStep(false);
         clearError();
       }}
-      onGetSession={handleGetSession}
-      onSignOut={signOut}
       providers={[
         { id: "google", name: "Google" },
         { id: "github", name: "GitHub" },

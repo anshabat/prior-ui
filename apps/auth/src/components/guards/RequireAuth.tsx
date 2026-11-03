@@ -3,15 +3,10 @@ import type { AuthSession } from "@workspace/api-auth";
 import { ROUTES } from "../../constants";
 import { useSessionQuery } from "../../hooks/useAuthApi.ts";
 
-/** Outlet context provided to routes nested under RequireAuth. */
 export interface AuthenticatedOutletContext {
   session: AuthSession;
 }
 
-/**
- * Renders nested routes only for signed-in users.
- * Signed-out users are sent to the sign-in page.
- */
 export function RequireAuth() {
   const { session, isLoading } = useSessionQuery();
 
@@ -23,7 +18,9 @@ export function RequireAuth() {
     return <Navigate to={ROUTES.SIGN_IN} replace />;
   }
 
+  const context: AuthenticatedOutletContext = { session };
+
   return (
-    <Outlet context={{ session } satisfies AuthenticatedOutletContext} />
+    <Outlet context={context} />
   );
 }
