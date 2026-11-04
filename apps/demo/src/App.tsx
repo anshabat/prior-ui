@@ -5,6 +5,7 @@ import {
   Field,
   Heading,
   Input,
+  Logo,
   Text,
   type AlertProps,
 } from "@workspace/ui";
@@ -35,6 +36,7 @@ function App() {
     >
       <Header />
       <div className="p-4">
+        <Logo />
         <Heading as="h1">Hello world!</Heading>
         <Text tone="weak">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi
