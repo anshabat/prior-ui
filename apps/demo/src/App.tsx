@@ -3,6 +3,7 @@ import {
   Button,
   Checkbox,
   Field,
+  Heading,
   Input,
   type AlertProps,
 } from "@workspace/ui";
@@ -33,7 +34,7 @@ function App() {
     >
       <Header />
       <div className="p-4">
-        <h1 className="text-3xl font-bold text-default">Hello world!</h1>
+        <Heading as="h1">Hello world!</Heading>
         <p className="text-muted">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi
           voluptas soluta itaque, velit vel magni iusto, cumque vitae hic
@@ -41,6 +42,20 @@ function App() {
           nihil dolorum maiores.
         </p>
         <div className="flex flex-col items-start gap-16">
+          <div className="grid gap-16">
+            <Heading as="h2" size="display">
+              Display
+            </Heading>
+            <Heading as="h2" size="heading-1">
+              Heading 1
+            </Heading>
+            <Heading as="h2">Heading 2 (h2 default)</Heading>
+            <Heading as="h3">Heading 3 (h3 default)</Heading>
+            <Heading as="h4">Heading 4 (h4 default)</Heading>
+            <Heading as="h3" size="heading-4">
+              h3 that looks like Heading 4
+            </Heading>
+          </div>
           <div className="flex items-center gap-16">
             <div className="grid gap-6 justify-items-center">
               <Checkbox />
