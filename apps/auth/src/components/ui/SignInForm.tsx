@@ -2,7 +2,6 @@ import { type FormEvent, useState } from "react";
 import { Button, Field, Input } from "@workspace/ui";
 
 export interface SignInFormProps {
-  title?: string;
   error: string | null;
   isTwoFactorStep: boolean;
   onSignIn: (email: string, password: string) => void;
@@ -13,7 +12,6 @@ export interface SignInFormProps {
 }
 
 export function SignInForm({
-  title = "Sign In",
   error,
   isTwoFactorStep,
   onSignIn,
@@ -43,7 +41,6 @@ export function SignInForm({
 
   return (
     <div>
-      <h2>{title}</h2>
       {error && (
         <div style={{ color: "red", marginBottom: 12 }}>Error: {error}</div>
       )}
@@ -53,7 +50,6 @@ export function SignInForm({
           display: "flex",
           flexDirection: "column",
           gap: 12,
-          marginTop: 24,
         }}
       >
         {!isTwoFactorStep && (

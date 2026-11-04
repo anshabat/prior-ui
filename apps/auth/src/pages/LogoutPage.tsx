@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Text } from "@workspace/ui";
 import { LogoutButton } from "../components/ui/LogoutButton.tsx";
 import { logout } from "../api";
 import { redirectToOpener } from "../utils";
@@ -32,7 +33,7 @@ export default function LogoutPage() {
   };
 
   if (isSessionLoading) {
-    return <div>Loading session...</div>;
+    return <Text>Loading session...</Text>;
   }
 
   return (

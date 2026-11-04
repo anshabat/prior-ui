@@ -51,7 +51,6 @@ export function SignIn() {
 
   return (
     <SignInForm
-      title="Custom Login"
       error={error}
       isTwoFactorStep={isTwoFactorStep}
       onSignIn={handleSignIn}

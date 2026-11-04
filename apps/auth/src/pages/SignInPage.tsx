@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Heading, Text } from "@workspace/ui";
 import { SignIn } from "../components/SignIn/SignIn.tsx";
 import { useFlashQueryParam } from "../hooks/useFlashQueryParam.ts";
 import { getSuccessMessage } from "../utils";
@@ -11,6 +12,16 @@ export function SignInPage() {
   return (
     <div>
       <title>Sign in</title>
+      <hgroup
+        style={{
+          display: "grid",
+          gap: "var(--spacing-8)",
+          margin: "0 0 var(--spacing-48)",
+        }}
+      >
+        <Heading as="h1">Welcome</Heading>
+        <Text tone="weak">Log in to your account</Text>
+      </hgroup>
       {successMessage && (
         <div style={{ marginBottom: 30, color: "green" }}>
           {successMessage}
