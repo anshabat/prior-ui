@@ -66,9 +66,11 @@ A fully polymorphic `as` fits components that don't care what they render
 
 ## Styles
 
-Always the heading font, strong weight and strong text color. Sizes and line
-heights come from the typography tokens, so `data-typography="mobile"` scales
-Display, Heading 1 and Heading 2 down without any prop.
+Always the heading font, strong weight and strong text color. Size, line
+height and letter spacing come from the typography tokens, so
+`data-typography="mobile"` scales Display, Heading 1 and Heading 2 down without
+any prop. Display (-1px) and Heading 1 (-0.5px) have negative letter spacing,
+the same px value in both modes, as in Figma.
 
 No outer margin: spacing between a heading and its content belongs to the
 parent layout.
