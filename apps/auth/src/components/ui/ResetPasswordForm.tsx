@@ -1,4 +1,5 @@
 import { type FormEvent, useState } from "react";
+import { Field, Input } from "@workspace/ui";
 import { getSearchParams } from "../../utils";
 
 interface ResetPasswordFormProps {
@@ -42,33 +43,37 @@ export function ResetPasswordForm({
           onSubmit={handleUpdatePassword}
           style={{ display: "flex", flexDirection: "column", gap: 12 }}
         >
-          <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            Password
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => {
-                setPassword(event.target.value);
-                onChange?.();
-              }}
-              placeholder="Enter password"
-              disabled={isLoading}
-            />
-          </label>
+          <Field label="Password" required disabled={isLoading}>
+            {(control) => (
+              <Input
+                {...control}
+                type="password"
+                autoComplete="new-password"
+                value={password}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  onChange?.();
+                }}
+                placeholder="Enter password"
+              />
+            )}
+          </Field>
 
-          <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            New Password
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(event) => {
-                setNewPassword(event.target.value);
-                onChange?.();
-              }}
-              placeholder="Enter new password again"
-              disabled={isLoading}
-            />
-          </label>
+          <Field label="New Password" required disabled={isLoading}>
+            {(control) => (
+              <Input
+                {...control}
+                type="password"
+                autoComplete="new-password"
+                value={newPassword}
+                onChange={(event) => {
+                  setNewPassword(event.target.value);
+                  onChange?.();
+                }}
+                placeholder="Enter new password again"
+              />
+            )}
+          </Field>
 
           <div style={{ display: "flex", gap: 8 }}>
             <button type="submit" disabled={isLoading}>
@@ -89,19 +94,21 @@ export function ResetPasswordForm({
         onSubmit={handleResetPassword}
         style={{ display: "flex", flexDirection: "column", gap: 12 }}
       >
-        <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          Email
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => {
-              setEmail(event.target.value);
-              onChange?.();
-            }}
-            placeholder="Enter your email"
-            disabled={isLoading}
-          />
-        </label>
+        <Field label="Email" required disabled={isLoading}>
+          {(control) => (
+            <Input
+              {...control}
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(event) => {
+                setEmail(event.target.value);
+                onChange?.();
+              }}
+              placeholder="Enter your email"
+            />
+          )}
+        </Field>
 
         <div style={{ display: "flex", gap: 8 }}>
           <button type="submit" disabled={isLoading}>

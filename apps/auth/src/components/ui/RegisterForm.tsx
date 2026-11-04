@@ -1,4 +1,5 @@
 import { type FormEvent, useState } from "react";
+import { Field, Input } from "@workspace/ui";
 
 interface RegisterFormProps {
   onSubmit: (email: string, password: string) => void;
@@ -28,25 +29,29 @@ export function RegisterForm({
         onSubmit={handleRegister}
         style={{ display: "flex", flexDirection: "column", gap: 12 }}
       >
-        <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          Email
-          <input
-            type="email"
-            value={registerEmail}
-            onChange={(event) => setRegisterEmail(event.target.value)}
-            disabled={isLoading}
-          />
-        </label>
+        <Field label="Email" required disabled={isLoading}>
+          {(control) => (
+            <Input
+              {...control}
+              type="email"
+              autoComplete="email"
+              value={registerEmail}
+              onChange={(event) => setRegisterEmail(event.target.value)}
+            />
+          )}
+        </Field>
 
-        <label style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          Password
-          <input
-            type="password"
-            value={registerPassword}
-            onChange={(event) => setRegisterPassword(event.target.value)}
-            disabled={isLoading}
-          />
-        </label>
+        <Field label="Password" required disabled={isLoading}>
+          {(control) => (
+            <Input
+              {...control}
+              type="password"
+              autoComplete="new-password"
+              value={registerPassword}
+              onChange={(event) => setRegisterPassword(event.target.value)}
+            />
+          )}
+        </Field>
 
         <div style={{ display: "flex", gap: 8 }}>
           <button type="submit" disabled={isLoading}>
