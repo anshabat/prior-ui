@@ -6,6 +6,7 @@ import {
   Heading,
   Input,
   Logo,
+  Stack,
   Text,
   type AlertProps,
 } from "@workspace/ui";
@@ -78,6 +79,27 @@ function App() {
               inside it.
             </Text>
           </div>
+          <Stack gap="24">
+            <Stack gap="8">
+              <Heading as="h2" size="heading-4">
+                Stack: column, gap 8
+              </Heading>
+              <Text tone="weak">Title and subtitle, like the auth pages</Text>
+            </Stack>
+            <Stack direction="row" gap="8" align="center">
+              <Button size="small">Row</Button>
+              <Button size="medium">gap 8</Button>
+              <Button>align center</Button>
+            </Stack>
+            <Stack direction="row" gap="16" align="baseline">
+              <Text size="large">Baseline</Text>
+              <Text size="tiny">aligned text</Text>
+            </Stack>
+            <Stack direction="row" justify="between">
+              <Text>justify between</Text>
+              <Text>end</Text>
+            </Stack>
+          </Stack>
           <div className="flex items-center gap-16">
             <div className="grid gap-6 justify-items-center">
               <Checkbox />
