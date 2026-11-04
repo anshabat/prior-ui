@@ -98,13 +98,19 @@ export function SignInForm({
         )}
 
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          <Button type="submit">
+          <Button type="submit" size="medium">
             {isTwoFactorStep ? "Verify code" : "Sign in"}
           </Button>
           {isTwoFactorStep && (
-            <button type="button" onClick={handleCancelTwoFactor}>
+            <Button
+              type="button"
+              variant="tertiary"
+              tone="neutral"
+              size="medium"
+              onClick={handleCancelTwoFactor}
+            >
               Back
-            </button>
+            </Button>
           )}
         </div>
 
@@ -119,13 +125,16 @@ export function SignInForm({
           {!isTwoFactorStep &&
             providers.length > 0 &&
             providers.map((provider) => (
-              <button
+              <Button
                 key={provider.id}
                 type="button"
+                variant="secondary"
+                tone="neutral"
+                size="medium"
                 onClick={() => onOAuthSignIn(provider.id)}
               >
                 {provider.name}
-              </button>
+              </Button>
             ))}
         </div>
       </form>

@@ -31,15 +31,18 @@ export const Button = ({
 
 const createClasses = tv({
   base: [
+    "box-border m-0 py-0 cursor-pointer", // Reset (no preflight)
     "inline-flex items-center justify-center",
     "font-strong whitespace-nowrap",
     "disabled:cursor-not-allowed",
   ],
   variants: {
+    // border and background are reset per variant: classes for the same
+    // property can't be in both base and a variant (no class merging)
     variant: {
-      primary: "shadow-raised",
-      secondary: "border shadow-raised",
-      tertiary: "underline",
+      primary: "border-0 shadow-raised",
+      secondary: "border border-solid bg-transparent shadow-raised",
+      tertiary: "border-0 bg-transparent underline",
     },
     tone: {
       brand: "",
