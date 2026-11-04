@@ -5,6 +5,7 @@ import {
   Field,
   Heading,
   Input,
+  Text,
   type AlertProps,
 } from "@workspace/ui";
 import { useThemeRef } from "./hooks/usePreferredColorScheme";
@@ -35,12 +36,12 @@ function App() {
       <Header />
       <div className="p-4">
         <Heading as="h1">Hello world!</Heading>
-        <p className="text-muted">
+        <Text tone="weak">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi
           voluptas soluta itaque, velit vel magni iusto, cumque vitae hic
           quaerat tenetur omnis tempore voluptatem mollitia suscipit. Architecto
           nihil dolorum maiores.
-        </p>
+        </Text>
         <div className="flex flex-col items-start gap-16">
           <div className="grid gap-16">
             <Heading as="h2" size="display">
@@ -55,6 +56,25 @@ function App() {
             <Heading as="h3" size="heading-4">
               h3 that looks like Heading 4
             </Heading>
+          </div>
+          <div className="grid gap-16 max-w-2xl">
+            <Text size="large" tone="weak">
+              Large: a lead paragraph under a page title, in the heading font.
+            </Text>
+            <Text>Small (default): body text, weak weight, strong tone.</Text>
+            <Text weight="strong">Small strong</Text>
+            <Text tone="weak">Small weak tone: secondary text</Text>
+            <Text size="tiny">Tiny</Text>
+            <Text size="tiny" weight="strong" tone="weak">
+              Tiny strong, weak tone
+            </Text>
+            <Text>
+              A paragraph with an inline{" "}
+              <Text as="span" weight="strong">
+                strong span
+              </Text>{" "}
+              inside it.
+            </Text>
           </div>
           <div className="flex items-center gap-16">
             <div className="grid gap-6 justify-items-center">
