@@ -6,7 +6,7 @@ no outer margin.
 
 ```tsx
 <Stack gap="48">
-  <Stack gap="8">
+  <Stack as="hgroup" gap="8">
     <Heading as="h1">Welcome</Heading>
     <Text tone="weak">Log in to your account</Text>
   </Stack>
@@ -23,13 +23,15 @@ no outer margin.
 
 | Prop        | Default     |                                                                                    |
 | ----------- | ----------- | ---------------------------------------------------------------------------------- |
+| `as`        | `"div"`     | Any HTML element or component: `ul`, `hgroup`, `form`, `a`, …                      |
 | `direction` | `"column"`  | `column`, `row`                                                                    |
 | `gap`       | `"0"`       | Spacing token: `0`, `4`, `8`, `12`, `16`, `20`, `24`, `32`, `40`, `48`, `56`, `64` |
 | `align`     | `"stretch"` | Cross axis: `start`, `center`, `end`, `stretch`, `baseline`                        |
 | `justify`   | `"start"`   | Main axis: `start`, `center`, `end`, `between`                                     |
 
-Native `div` props (`id`, `aria-*`, `ref`, …) are passed to the element.
-`className` and `style` are not accepted.
+The props of the `as` element (`href` for `a`, `onSubmit` for `form`, `ref`,
+`aria-*`, …) are typed for that element and passed to it. `className` and
+`style` are not accepted.
 
 ## Why one component with `direction`
 
@@ -51,10 +53,31 @@ Spacing belongs to the parent. A component never pushes its neighbours away;
 the Stack around it sets the distance with `gap`. To put space between two
 blocks, wrap them in a Stack instead of adding a margin.
 
-## Element
+## Element (`as`)
 
-Always a `div` for now. Rendering other elements (`section`, `hgroup`, `ul`,
-…) will come with the polymorphic `as` prop.
+Stack is a layout, not a semantic element, so it can be any of them. It uses
+the polymorphic component pattern (Chakra, Mantine, MUI `component`): the
+type of `as` decides which props and which `ref` type are allowed.
+
+```tsx
+<Stack as="ul" gap="8">
+  <li>…</li>
+</Stack>
+
+<Stack as="form" gap="24" onSubmit={handleSubmit}>…</Stack>
+```
+
+The types come from `PolymorphicProps` in `src/types/polymorphic.ts`, which
+other components can reuse.
+
+When `as` is a component, it must accept `className`: that's how Stack
+applies its layout classes.
+
+### Why not `asChild`
+
+`asChild` (Radix) merges Stack's props into its only child. That suits
+components that wrap one element, like a link inside a button. Stack has any
+number of children, so it renders its own element instead.
 
 ## Not included yet
 

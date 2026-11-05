@@ -80,9 +80,9 @@ function App() {
             </Text>
           </div>
           <Stack gap="24">
-            <Stack gap="8">
+            <Stack as="hgroup" gap="8">
               <Heading as="h2" size="heading-4">
-                Stack: column, gap 8
+                Stack as hgroup: column, gap 8
               </Heading>
               <Text tone="weak">Title and subtitle, like the auth pages</Text>
             </Stack>
@@ -95,9 +95,23 @@ function App() {
               <Text size="large">Baseline</Text>
               <Text size="tiny">aligned text</Text>
             </Stack>
+            <Stack as="ul" direction="row" gap="16">
+              <li>
+                <Text as="span">Stack as ul: first</Text>
+              </li>
+              <li>
+                <Text as="span">second</Text>
+              </li>
+            </Stack>
             <Stack direction="row" justify="between">
               <Text>justify between</Text>
               <Text>end</Text>
+            </Stack>
+            <Stack direction="row" gap="16" align="center">
+              <Button variant="secondary">Regular Button</Button>
+              <Stack as={Button} variant="secondary">
+                Stack as Button
+              </Stack>
             </Stack>
           </Stack>
           <div className="flex items-center gap-16">

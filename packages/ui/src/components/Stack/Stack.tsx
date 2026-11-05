@@ -1,33 +1,43 @@
-import { ComponentProps } from "react";
+import { ElementType, ReactNode } from "react";
 import { tv } from "tailwind-variants/lite";
 import type { GapStep } from "../../theme/spacing";
+import type { PolymorphicProps } from "../../types/polymorphic";
 
 type Direction = "column" | "row";
 type Align = "start" | "center" | "end" | "stretch" | "baseline";
 type Justify = "start" | "center" | "end" | "between";
 
-export type StackProps = Omit<ComponentProps<"div">, "className" | "style"> & {
+type StackOwnProps = {
   direction?: Direction;
   gap?: GapStep;
   align?: Align;
   justify?: Justify;
+  children?: ReactNode;
 };
 
-export const Stack = ({
+export type StackProps<E extends ElementType = "div"> = PolymorphicProps<
+  E,
+  StackOwnProps
+>;
+
+export const Stack = <E extends ElementType = "div">({
+  as,
   direction = "column",
   gap = "0",
   align = "stretch",
   justify = "start",
   children,
   ...nativeProps
-}: StackProps) => {
+}: StackProps<E>) => {
+  const Element: ElementType = as ?? "div";
+
   return (
-    <div
+    <Element
       {...nativeProps}
       className={createClasses({ direction, gap, align, justify })}
     >
       {children}
-    </div>
+    </Element>
   );
 };
 
