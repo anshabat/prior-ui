@@ -107,12 +107,6 @@ function App() {
               <Text>justify between</Text>
               <Text>end</Text>
             </Stack>
-            <Stack direction="row" gap="16" align="center">
-              <Button variant="secondary">Regular Button</Button>
-              <Stack as={Button} variant="secondary">
-                Stack as Button
-              </Stack>
-            </Stack>
           </Stack>
           <div className="flex items-center gap-16">
             <div className="grid gap-6 justify-items-center">

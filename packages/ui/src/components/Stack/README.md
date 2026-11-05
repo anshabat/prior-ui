@@ -23,7 +23,7 @@ no outer margin.
 
 | Prop        | Default     |                                                                                    |
 | ----------- | ----------- | ---------------------------------------------------------------------------------- |
-| `as`        | `"div"`     | Any HTML element or component: `ul`, `hgroup`, `form`, `a`, …                      |
+| `as`        | `"div"`     | Any HTML element: `ul`, `hgroup`, `form`, `a`, …                                   |
 | `direction` | `"column"`  | `column`, `row`                                                                    |
 | `gap`       | `"0"`       | Spacing token: `0`, `4`, `8`, `12`, `16`, `20`, `24`, `32`, `40`, `48`, `56`, `64` |
 | `align`     | `"stretch"` | Cross axis: `start`, `center`, `end`, `stretch`, `baseline`                        |
@@ -56,8 +56,8 @@ blocks, wrap them in a Stack instead of adding a margin.
 ## Element (`as`)
 
 Stack is a layout, not a semantic element, so it can be any of them. It uses
-the polymorphic component pattern (Chakra, Mantine, MUI `component`): the
-type of `as` decides which props and which `ref` type are allowed.
+the polymorphic component pattern with HTML elements only: the type of `as`
+decides which props and which `ref` type are allowed.
 
 ```tsx
 <Stack as="ul" gap="8">
@@ -70,16 +70,30 @@ type of `as` decides which props and which `ref` type are allowed.
 The types come from `PolymorphicProps` in `src/types/polymorphic.ts`, which
 other components can reuse.
 
-When `as` is a component, it must accept `className`: that's how Stack
-applies its layout classes. Stack's classes replace the component's own, so
-use components with no look of their own (a router link). To lay out our `ui`
-components, nest them in a Stack.
+### Why only HTML elements
 
-### Why not `asChild`
+The full pattern also accepts components (`as={Button}`, as Chakra and Mantine
+do). We don't, for two reasons:
 
-`asChild` (Radix) merges Stack's props into its only child. That suits
-components that wrap one element, like a link inside a button. Stack has any
-number of children, so it renders its own element instead.
+- `as` is used twice: `<Stack as={Heading}>` takes the `as` Heading needs, so
+  Heading crashes, and `<Stack as={Text}>` can only ever render a `<p>`.
+- Both components would style one element, so one side loses its classes.
+
+To lay out our components, nest them in a Stack:
+
+```tsx
+<Stack direction="row" gap="8">
+  <Heading as="h2">Title</Heading>
+  <Button>Save</Button>
+</Stack>
+```
+
+### `asChild`
+
+Not supported yet. `asChild` (Radix) merges a component's props into its only
+child, so a component such as `motion.div` can carry Stack's layout without
+an extra element. It is planned together with `Link` (see the `Link` README).
+Until then, nest: put the Stack inside the component.
 
 ## Not included yet
 

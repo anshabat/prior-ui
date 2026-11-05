@@ -39,9 +39,9 @@
   props (see `Field`). `useId` is allowed.
 - **Closed styling API:** no `className` or `style` props: omit them from the
   public type (`Omit<ComponentProps<"button">, "className" | "style">`). Set
-  `className` first, spread native props after it. A wrapper's classes then
-  win, so `<Stack as={Text}>` gets Stack's layout. The types are what keep
-  callers from passing `className`.
+  `className` first, spread native props after it, so a wrapper can pass its
+  classes down (planned `asChild`). The types are what keep callers from
+  passing `className`.
 - **No preflight:** `dist/tailwind.css` is built without it, so components reset
   the browser defaults they rely on (`m-0`, `box-border`, `border-solid`, …).
 - **No class merging** (`tailwind-variants/lite`): classes for the same CSS
