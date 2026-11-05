@@ -26,10 +26,7 @@ export const Text = ({
   ...nativeProps
 }: TextProps) => {
   return (
-    <Element
-      {...nativeProps}
-      className={createClasses({ size, weight, tone })}
-    >
+    <Element className={createClasses({ size, weight, tone })} {...nativeProps}>
       {children}
     </Element>
   );

@@ -25,7 +25,7 @@ export const Heading = ({
   ...nativeProps
 }: HeadingProps) => {
   return (
-    <Element {...nativeProps} className={createClasses({ size })}>
+    <Element className={createClasses({ size })} {...nativeProps}>
       {children}
     </Element>
   );

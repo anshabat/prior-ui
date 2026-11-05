@@ -33,8 +33,8 @@ export const Stack = <E extends ElementType = "div">({
 
   return (
     <Element
-      {...nativeProps}
       className={createClasses({ direction, gap, align, justify })}
+      {...nativeProps}
     >
       {children}
     </Element>

@@ -1,7 +1,10 @@
-import { InputHTMLAttributes } from "react";
+import { ComponentProps } from "react";
 import { tv } from "tailwind-variants/lite";
 
-export type CheckboxProps = InputHTMLAttributes<HTMLInputElement>;
+export type CheckboxProps = Omit<
+  ComponentProps<"input">,
+  "className" | "style"
+>;
 
 export const Checkbox = (props: CheckboxProps) => {
   const classes = tv({

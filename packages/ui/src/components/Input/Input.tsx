@@ -34,10 +34,10 @@ export const Input = ({
         </InputIcon>
       )}
       <input
+        className={classes.control()}
         {...nativeProps}
         type={type}
         disabled={disabled}
-        className={classes.control()}
       />
       {endIcon && (
         <InputIcon side="end" size={size} disabled={disabled}>

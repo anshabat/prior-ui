@@ -71,7 +71,9 @@ The types come from `PolymorphicProps` in `src/types/polymorphic.ts`, which
 other components can reuse.
 
 When `as` is a component, it must accept `className`: that's how Stack
-applies its layout classes.
+applies its layout classes. Stack's classes replace the component's own, so
+use components with no look of their own (a router link). To lay out our `ui`
+components, nest them in a Stack.
 
 ### Why not `asChild`
 

@@ -46,7 +46,7 @@ export const Alert = ({
   const classes = createClasses({ tone, size, orientation });
 
   return (
-    <div {...nativeProps} className={classes.root()}>
+    <div className={classes.root()} {...nativeProps}>
       <span aria-hidden="true" className={classes.icon()}>
         <ToneIcon />
       </span>

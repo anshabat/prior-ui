@@ -17,8 +17,8 @@ export const Logo = (nativeProps: LogoProps) => {
       width="113"
       height="32"
       viewBox="0 0 113 32"
-      {...nativeProps}
       className={classes.root()}
+      {...nativeProps}
     >
       <rect width="32" height="32" rx="8" className={classes.mark()} />
       <g

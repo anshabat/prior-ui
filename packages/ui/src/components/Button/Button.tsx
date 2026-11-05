@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ReactNode } from "react";
+import { ComponentProps, ReactNode } from "react";
 import { tv } from "tailwind-variants/lite";
 //import { twMerge } from "tailwind-merge";
 
@@ -6,7 +6,10 @@ type Variant = "primary" | "secondary" | "tertiary";
 type Tone = "brand" | "neutral" | "destructive" | "inverse";
 type Size = "small" | "medium" | "large";
 
-export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = Omit<
+  ComponentProps<"button">,
+  "className" | "style"
+> & {
   variant?: Variant;
   tone?: Tone;
   size?: Size;
