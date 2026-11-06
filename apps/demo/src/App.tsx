@@ -148,6 +148,9 @@ function App() {
               <Link href="#link" underline={false}>
                 No underline
               </Link>
+              <Link asChild tone="neutral-strong">
+                <a href="#link">asChild</a>
+              </Link>
             </Stack>
             <Text size="tiny" tone="weak">
               Already have an account?{" "}

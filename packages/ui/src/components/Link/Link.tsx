@@ -1,5 +1,6 @@
 import { ComponentProps } from "react";
 import { tv } from "tailwind-variants/lite";
+import { Slot } from "../Slot";
 
 type Tone =
   | "brand"
@@ -11,18 +12,24 @@ type Tone =
 type Size = "large" | "small" | "tiny";
 type Weight = "strong" | "weak";
 
+// A plain link needs `href`. With `asChild` the child owns the destination
+type Destination =
+  | { asChild?: false; href: string }
+  | { asChild: true; href?: never };
+
 export type LinkProps = Omit<
   ComponentProps<"a">,
   "className" | "style" | "href"
-> & {
-  href: string;
-  tone?: Tone;
-  size?: Size;
-  weight?: Weight;
-  underline?: boolean;
-};
+> &
+  Destination & {
+    tone?: Tone;
+    size?: Size;
+    weight?: Weight;
+    underline?: boolean;
+  };
 
 export const Link = ({
+  asChild,
   tone = "brand",
   size = "small",
   weight = "weak",
@@ -30,13 +37,15 @@ export const Link = ({
   children,
   ...nativeProps
 }: LinkProps) => {
+  const Element = asChild ? Slot : "a";
+
   return (
-    <a
+    <Element
       className={createClasses({ tone, size, weight, underline })}
       {...nativeProps}
     >
       {children}
-    </a>
+    </Element>
   );
 };
 
