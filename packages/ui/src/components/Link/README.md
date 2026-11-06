@@ -95,8 +95,7 @@ and ref into it (Radix, shadcn/ui, Chakra v3).
 - ✅ Same API for every router, and the same Slot works for overlay triggers
   (Tooltip, Popover, Menu, Dialog) later.
 - ❌ More code at each call site, and it only works with a single child.
-- ❌ Merging props correctly is subtle: event handlers must be chained,
-  `className` concatenated, refs combined.
+- ❌ Merging props takes care: each kind of prop needs a rule (see the `Slot` README).
 
 ### 3. Link provider
 
