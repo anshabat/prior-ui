@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { Heading, Text } from "@workspace/ui";
+import { Link as RouterLink } from "react-router-dom";
+import { Heading, Link, Text } from "@workspace/ui";
 import { SignIn } from "../components/SignIn/SignIn.tsx";
 import { useFlashQueryParam } from "../hooks/useFlashQueryParam.ts";
 import { getSuccessMessage } from "../utils";
@@ -29,8 +29,12 @@ export function SignInPage() {
       )}
       <SignIn />
       <p style={{ display: "flex", gap: 16, marginTop: 24 }}>
-        <Link to={ROUTES.SIGN_UP}>Create account</Link>
-        <Link to={ROUTES.RESET_PASSWORD}>Forgot password?</Link>
+        <Link asChild size="tiny">
+          <RouterLink to={ROUTES.SIGN_UP}>Create account</RouterLink>
+        </Link>
+        <Link asChild size="tiny">
+          <RouterLink to={ROUTES.RESET_PASSWORD}>Forgot password?</RouterLink>
+        </Link>
       </p>
     </div>
   );

@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { Heading, Text } from "@workspace/ui";
+import { Link as RouterLink } from "react-router-dom";
+import { Heading, Link, Text } from "@workspace/ui";
 import { SignUp } from "../components/SignUp/SignUp.tsx";
 import { ROUTES } from "../constants";
 
@@ -19,8 +19,12 @@ export function SignUpPage() {
       </hgroup>
       <SignUp />
       <p style={{ display: "flex", gap: 16, marginTop: 24 }}>
-        <Link to={ROUTES.SIGN_IN}>Sign in</Link>
-        <Link to={ROUTES.RESET_PASSWORD}>Forgot password?</Link>
+        <Link asChild size="tiny">
+          <RouterLink to={ROUTES.SIGN_IN}>Sign in</RouterLink>
+        </Link>
+        <Link asChild size="tiny">
+          <RouterLink to={ROUTES.RESET_PASSWORD}>Forgot password?</RouterLink>
+        </Link>
       </p>
     </div>
   );
