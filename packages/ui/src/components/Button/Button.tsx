@@ -36,7 +36,7 @@ const createClasses = tv({
   base: [
     "box-border m-0 py-0 cursor-pointer", // Reset (no preflight)
     "inline-flex items-center justify-center",
-    "font-strong whitespace-nowrap",
+    "font-body font-strong whitespace-nowrap",
     "disabled:cursor-not-allowed",
   ],
   variants: {
@@ -57,15 +57,15 @@ const createClasses = tv({
     size: {
       small: [
         "h-32 px-[calc(var(--spacing-12)_+_var(--spacing-4))] rounded-8",
-        "font-body text-tiny",
+        "text-tiny",
       ],
       medium: [
         "h-48 px-[calc(var(--spacing-16)_+_var(--spacing-4))] rounded-8",
-        "font-body text-small",
+        "text-small",
       ],
       large: [
         "h-56 px-[calc(var(--spacing-24)_+_var(--spacing-4))] rounded-12",
-        "font-heading text-heading-4",
+        "text-heading-4",
       ],
     },
   },

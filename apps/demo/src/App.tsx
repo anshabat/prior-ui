@@ -5,6 +5,7 @@ import {
   Field,
   Heading,
   Input,
+  Link,
   Logo,
   Stack,
   Text,
@@ -62,7 +63,7 @@ function App() {
           </div>
           <div className="grid gap-16 max-w-2xl">
             <Text size="large" tone="weak">
-              Large: a lead paragraph under a page title, in the heading font.
+              Large: a lead paragraph under a page title.
             </Text>
             <Text>Small (default): body text, weak weight, strong tone.</Text>
             <Text weight="strong">Small strong</Text>
@@ -107,6 +108,53 @@ function App() {
               <Text>justify between</Text>
               <Text>end</Text>
             </Stack>
+          </Stack>
+          <Stack gap="16">
+            <Stack direction="row" gap="24" align="center">
+              <Link href="#link">Brand</Link>
+              <Link href="#link" tone="neutral-strong">
+                Neutral strong
+              </Link>
+              <Link href="#link" tone="neutral-weak">
+                Neutral weak
+              </Link>
+              <Link href="#link" tone="destructive">
+                Destructive
+              </Link>
+            </Stack>
+            <div className="p-16 rounded-12 bg-fill-strong">
+              <Stack direction="row" gap="24">
+                <Link href="#link" tone="inverse-strong">
+                  Inverse strong
+                </Link>
+                <Link href="#link" tone="inverse-weak">
+                  Inverse weak
+                </Link>
+              </Stack>
+            </div>
+            <Stack direction="row" gap="24" align="baseline">
+              <Link href="#link" size="large">
+                Large
+              </Link>
+              <Link href="#link" weight="strong">
+                Small strong
+              </Link>
+              <Link href="#link" size="tiny">
+                Tiny
+              </Link>
+              <Link href="#link" size="tiny" weight="strong">
+                Tiny strong
+              </Link>
+              <Link href="#link" underline={false}>
+                No underline
+              </Link>
+            </Stack>
+            <Text size="tiny" tone="weak">
+              Already have an account?{" "}
+              <Link href="#link" size="tiny">
+                Log in
+              </Link>
+            </Text>
           </Stack>
           <div className="flex items-center gap-16">
             <div className="grid gap-6 justify-items-center">

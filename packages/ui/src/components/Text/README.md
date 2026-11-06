@@ -28,9 +28,11 @@ Text is never a heading, however large or bold. If it titles a section, use
 
 ## Sizes
 
-`small` is the default body size. `large` is Figma's "Heading 4/Regular": the
-heading font at the Heading 4 size, used for lead paragraphs under a page
-title. It shares Heading 4's tokens, so it scales with them.
+`small` is the default body size. `large` is Figma's "Heading 4/Regular" at
+the Heading 4 size, used for lead paragraphs under a page title. It shares
+Heading 4's size tokens, so it scales with them, but uses the body font: the
+heading font belongs to `Heading`. Figma uses the heading font here. Both
+tokens are Inter today, so there's no visible difference.
 
 ## Uppercase
 

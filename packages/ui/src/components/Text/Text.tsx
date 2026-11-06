@@ -33,13 +33,13 @@ export const Text = ({
 };
 
 const createClasses = tv({
-  base: "m-0 break-words",
+  base: "m-0 font-body break-words",
   variants: {
     // large is Figma's "Heading 4/Regular": a heading size, but body text
     size: {
-      large: "font-heading text-heading-4",
-      small: "font-body text-small",
-      tiny: "font-body text-tiny",
+      large: "text-heading-4",
+      small: "text-small",
+      tiny: "text-tiny",
     },
     weight: {
       strong: "font-strong",
