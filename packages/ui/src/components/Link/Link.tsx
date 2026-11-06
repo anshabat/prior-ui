@@ -63,7 +63,6 @@ const createClasses = tv({
       strong: "font-strong",
       weak: "font-weak",
     },
-    // Hover and press flip the underline in both directions
     underline: {
       true: "underline hover:no-underline active:no-underline",
       false: "no-underline hover:underline active:underline",
