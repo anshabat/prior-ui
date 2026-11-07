@@ -1,5 +1,6 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, type ReactNode, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { Github, GoogleBrand } from "@workspace/icons";
 import {
   Alert,
   Button,
@@ -10,6 +11,11 @@ import {
   Stack,
 } from "@workspace/ui";
 import { ROUTES } from "../../constants";
+
+const providerIcons: Record<string, ReactNode> = {
+  google: <GoogleBrand />,
+  github: <Github />,
+};
 
 export interface SignInFormProps {
   successMessage: string;
@@ -75,6 +81,7 @@ export function SignInForm({
                 variant="secondary"
                 tone="neutral"
                 size="medium"
+                startIcon={providerIcons[provider.id]}
                 onClick={() => onOAuthSignIn(provider.id)}
               >
                 Log in with {provider.name}
