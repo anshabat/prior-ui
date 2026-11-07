@@ -2,6 +2,7 @@ import {
   Alert,
   Button,
   Checkbox,
+  Divider,
   Field,
   Heading,
   Input,
@@ -283,6 +284,12 @@ function App() {
             <Alert tone="error" size="small" role="alert">
               Small, without a title, announced as a live region
             </Alert>
+          </div>
+          <div className="grid gap-16 w-256">
+            <Divider />
+            <Divider tone="strong" />
+            <Divider>OR</Divider>
+            <Divider tone="strong">Labeled strong</Divider>
           </div>
           <div className="grid gap-16 w-256">
             <Field label="Name">
