@@ -1,17 +1,21 @@
 import { type FormEvent, useState } from "react";
-import { Button, Field, Input } from "@workspace/ui";
+import { Link as RouterLink } from "react-router-dom";
+import { Button, Field, Input, Link, Stack } from "@workspace/ui";
+import { ROUTES } from "../../constants";
 
 export interface SignInFormProps {
+  successMessage: string;
   error: string | null;
   isTwoFactorStep: boolean;
   onSignIn: (email: string, password: string) => void;
   onVerifyTwoFactor: (email: string, password: string, code: string) => void;
   onCancelTwoFactor: () => void;
-  providers: {id: string, name: string}[];
+  providers: { id: string; name: string }[];
   onOAuthSignIn: (providerId: string) => void;
 }
 
 export function SignInForm({
+  successMessage,
   error,
   isTwoFactorStep,
   onSignIn,
@@ -40,18 +44,28 @@ export function SignInForm({
   };
 
   return (
-    <div>
-      {error && (
-        <div style={{ color: "red", marginBottom: 12 }}>Error: {error}</div>
+    <Stack gap="16">
+      {successMessage && <div style={{ color: "green" }}>{successMessage}</div>}
+      {error && <div style={{ color: "red" }}>Error: {error}</div>}
+
+      {!isTwoFactorStep && providers.length > 0 && (
+        <Stack gap="8">
+          {providers.map((provider) => (
+            <Button
+              key={provider.id}
+              type="button"
+              variant="secondary"
+              tone="neutral"
+              size="medium"
+              onClick={() => onOAuthSignIn(provider.id)}
+            >
+              Log in with {provider.name}
+            </Button>
+          ))}
+        </Stack>
       )}
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 12,
-        }}
-      >
+
+      <Stack as="form" gap="24" onSubmit={handleSubmit}>
         {!isTwoFactorStep && (
           <>
             <Field label="Email" required>
@@ -66,17 +80,26 @@ export function SignInForm({
               )}
             </Field>
 
-            <Field label="Password" required>
-              {(control) => (
-                <Input
-                  {...control}
-                  type="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                />
-              )}
-            </Field>
+            <Stack gap="8">
+              <Field label="Password" required>
+                {(control) => (
+                  <Input
+                    {...control}
+                    type="password"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                  />
+                )}
+              </Field>
+              <Stack align="start">
+                <Link asChild size="tiny">
+                  <RouterLink to={ROUTES.RESET_PASSWORD}>
+                    Forgot password?
+                  </RouterLink>
+                </Link>
+              </Stack>
+            </Stack>
           </>
         )}
 
@@ -97,9 +120,9 @@ export function SignInForm({
           </Field>
         )}
 
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <Stack gap="8">
           <Button type="submit" size="medium">
-            {isTwoFactorStep ? "Verify code" : "Sign in"}
+            {isTwoFactorStep ? "Verify code" : "Log in"}
           </Button>
           {isTwoFactorStep && (
             <Button
@@ -112,32 +135,8 @@ export function SignInForm({
               Back
             </Button>
           )}
-        </div>
-
-        <div
-          style={{
-            marginTop: 12,
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-          }}
-        >
-          {!isTwoFactorStep &&
-            providers.length > 0 &&
-            providers.map((provider) => (
-              <Button
-                key={provider.id}
-                type="button"
-                variant="secondary"
-                tone="neutral"
-                size="medium"
-                onClick={() => onOAuthSignIn(provider.id)}
-              >
-                {provider.name}
-              </Button>
-            ))}
-        </div>
-      </form>
-    </div>
+        </Stack>
+      </Stack>
+    </Stack>
   );
 }

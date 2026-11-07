@@ -4,11 +4,17 @@ import { signInWithOAuth } from "../../api";
 import { SEARCH_PARAMS } from "../../constants";
 import { SignInForm } from "../ui/SignInForm.tsx";
 import { useLoginMutation } from "../../hooks/useAuthApi.ts";
-import { getErrorMessage, removeSearchParam } from "../../utils";
+import {
+  getErrorMessage,
+  getSuccessMessage,
+  removeSearchParam,
+} from "../../utils";
 import { useFlashQueryParam } from "../../hooks/useFlashQueryParam.ts";
 
 export function SignIn() {
   const [isTwoFactorStep, setIsTwoFactorStep] = useState(false);
+  const flashSuccess = useFlashQueryParam("success");
+  const successMessage = getSuccessMessage(flashSuccess);
   const flashError = useFlashQueryParam("error");
   const [error, setError] = useState<string | null>(() => {
     if (!flashError) return null;
@@ -51,6 +57,7 @@ export function SignIn() {
 
   return (
     <SignInForm
+      successMessage={successMessage}
       error={error}
       isTwoFactorStep={isTwoFactorStep}
       onSignIn={handleSignIn}
