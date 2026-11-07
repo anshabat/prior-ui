@@ -7,7 +7,7 @@
   property (fill, stroke, text, shadow, size, spacing, radius, text style).
   The token decides the actual value, even when it differs from Figma.
   Figma is the look we aim for, not a pixel-perfect spec (see Rules).
-  - Design file: https://www.figma.com/design/vLd7saIPGNhXmCxIBlBTjI/Practical-UI-design-system
+  - Design file: https://www.figma.com/design/sEyUa9IlqNOU1lPVqIJQVt/Practical-UI-design-system
   - Read the component with the Figma MCP server before implementing or changing it.
 - **Industry standards** (WAI-ARIA practices, established design systems) decide
   structure: HTML elements, nesting, component parts, props API, accessibility.

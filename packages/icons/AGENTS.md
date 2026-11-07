@@ -2,7 +2,7 @@
 
 ## Source of truth
 - Figma → Foundations → **Icons** page:
-  https://www.figma.com/design/vLd7saIPGNhXmCxIBlBTjI/Practical-UI-design-system?node-id=3819-28711
+  https://www.figma.com/design/sEyUa9IlqNOU1lPVqIJQVt/Practical-UI-design-system?node-id=3819-28711
 - The base set is **Feather** (feathericons.com, MIT). Figma's "Custom" icons
   extend it in the same style.
 - Only add icons that exist on that page. If one is missing, escalate to the
