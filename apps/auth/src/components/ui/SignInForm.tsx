@@ -1,6 +1,6 @@
 import { type FormEvent, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Button, Field, Input, Link, Stack } from "@workspace/ui";
+import { Alert, Button, Field, Input, Link, Stack } from "@workspace/ui";
 import { ROUTES } from "../../constants";
 
 export interface SignInFormProps {
@@ -45,8 +45,17 @@ export function SignInForm({
 
   return (
     <Stack gap="16">
-      {successMessage && <div style={{ color: "green" }}>{successMessage}</div>}
-      {error && <div style={{ color: "red" }}>Error: {error}</div>}
+      {/* No role: the success message is rendered with the page, not after an action */}
+      {successMessage && (
+        <Alert tone="success" size="small">
+          {successMessage}
+        </Alert>
+      )}
+      {error && (
+        <Alert tone="error" size="small" role="alert">
+          {error}
+        </Alert>
+      )}
 
       {!isTwoFactorStep && providers.length > 0 && (
         <Stack gap="8">

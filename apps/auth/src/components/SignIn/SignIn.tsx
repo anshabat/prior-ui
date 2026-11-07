@@ -14,14 +14,17 @@ import { useFlashQueryParam } from "../../hooks/useFlashQueryParam.ts";
 export function SignIn() {
   const [isTwoFactorStep, setIsTwoFactorStep] = useState(false);
   const flashSuccess = useFlashQueryParam("success");
-  const successMessage = getSuccessMessage(flashSuccess);
+  const [successMessage, setSuccessMessage] = useState(() =>
+    getSuccessMessage(flashSuccess),
+  );
   const flashError = useFlashQueryParam("error");
   const [error, setError] = useState<string | null>(() => {
     if (!flashError) return null;
     return getErrorMessage(flashError, flashError);
   });
 
-  const clearError = () => {
+  const clearMessages = () => {
+    setSuccessMessage("");
     setError(null);
     navigate(removeSearchParam(SEARCH_PARAMS.ERROR), { replace: true });
   };
@@ -38,7 +41,7 @@ export function SignIn() {
   });
 
   const handleSignIn = async (email: string, password: string) => {
-    clearError();
+    clearMessages();
     signWithCredentials({ email, password });
   };
 
@@ -47,7 +50,7 @@ export function SignIn() {
     password: string,
     code: string,
   ) => {
-    clearError();
+    clearMessages();
     signWithCredentials({ email, password, twoFactorCode: code });
   };
 
@@ -64,7 +67,7 @@ export function SignIn() {
       onVerifyTwoFactor={handleVerifyTwoFactor}
       onCancelTwoFactor={() => {
         setIsTwoFactorStep(false);
-        clearError();
+        clearMessages();
       }}
       providers={[
         { id: "google", name: "Google" },
