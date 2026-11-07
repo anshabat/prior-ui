@@ -1,6 +1,14 @@
 import { type FormEvent, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Alert, Button, Field, Input, Link, Stack } from "@workspace/ui";
+import {
+  Alert,
+  Button,
+  Divider,
+  Field,
+  Input,
+  Link,
+  Stack,
+} from "@workspace/ui";
 import { ROUTES } from "../../constants";
 
 export interface SignInFormProps {
@@ -58,19 +66,22 @@ export function SignInForm({
       )}
 
       {!isTwoFactorStep && providers.length > 0 && (
-        <Stack gap="8">
-          {providers.map((provider) => (
-            <Button
-              key={provider.id}
-              type="button"
-              variant="secondary"
-              tone="neutral"
-              size="medium"
-              onClick={() => onOAuthSignIn(provider.id)}
-            >
-              Log in with {provider.name}
-            </Button>
-          ))}
+        <Stack gap="32">
+          <Stack gap="8">
+            {providers.map((provider) => (
+              <Button
+                key={provider.id}
+                type="button"
+                variant="secondary"
+                tone="neutral"
+                size="medium"
+                onClick={() => onOAuthSignIn(provider.id)}
+              >
+                Log in with {provider.name}
+              </Button>
+            ))}
+          </Stack>
+          <Divider>OR</Divider>
         </Stack>
       )}
 

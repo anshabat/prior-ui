@@ -13,7 +13,7 @@ export function AccountPage() {
   return (
     <Page
       title={name ?? email}
-      subtitle={provider && `Signed in with ${provider}`}
+      subtitle={provider && `Logged in with ${provider}`}
       documentTitle="Account"
     >
       <Stack gap="12">
