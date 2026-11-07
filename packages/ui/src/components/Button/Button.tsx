@@ -13,6 +13,8 @@ export type ButtonProps = Omit<
   variant?: Variant;
   tone?: Tone;
   size?: Size;
+  startIcon?: ReactNode;
+  endIcon?: ReactNode;
   children: ReactNode;
 };
 export const Button = ({
@@ -20,6 +22,8 @@ export const Button = ({
   variant = "primary",
   tone = "brand",
   size = "large",
+  startIcon,
+  endIcon,
   ...nativeProps
 }: ButtonProps) => {
   //const classes = twMerge(createClasses({ variant, size }), className);
@@ -27,7 +31,9 @@ export const Button = ({
 
   return (
     <button className={classes} {...nativeProps}>
-      {children}
+      {startIcon && <ButtonIcon size={size}>{startIcon}</ButtonIcon>}
+      <span className="px-4">{children}</span>
+      {endIcon && <ButtonIcon size={size}>{endIcon}</ButtonIcon>}
     </button>
   );
 };
@@ -53,20 +59,11 @@ const createClasses = tv({
       destructive: "",
       inverse: "",
     },
-    // padding x = Figma State padding + Label container padding
+    // Padding x is Figma's State padding, the label adds its own 4px
     size: {
-      small: [
-        "h-32 px-[calc(var(--spacing-12)_+_var(--spacing-4))] rounded-8",
-        "text-tiny",
-      ],
-      medium: [
-        "h-48 px-[calc(var(--spacing-16)_+_var(--spacing-4))] rounded-8",
-        "text-small",
-      ],
-      large: [
-        "h-56 px-[calc(var(--spacing-24)_+_var(--spacing-4))] rounded-12",
-        "text-heading-4",
-      ],
+      small: ["h-32 px-12 rounded-8", "text-tiny"],
+      medium: ["h-48 px-16 gap-4 rounded-8", "text-small"],
+      large: ["h-56 px-24 gap-4 rounded-12", "text-heading-4"],
     },
   },
   compoundVariants: [
@@ -195,5 +192,26 @@ const createClasses = tv({
     variant: "primary",
     tone: "brand",
     size: "large",
+  },
+});
+
+type ButtonIconProps = {
+  size: Size;
+  children: ReactNode;
+};
+
+const ButtonIcon = ({ size, children }: ButtonIconProps) => {
+  return <span className={createIconClasses({ size })}>{children}</span>;
+};
+
+const createIconClasses = tv({
+  // Flex, so an inline svg has no line box that shifts it off center
+  base: "flex shrink-0 [&_svg]:size-full",
+  variants: {
+    size: {
+      small: "size-16",
+      medium: "size-20",
+      large: "size-24",
+    },
   },
 });

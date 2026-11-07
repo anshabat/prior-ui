@@ -172,6 +172,22 @@ function App() {
               <Button size="large">Large</Button>
             </div>
             <div className="grid gap-6 justify-items-center">
+              <Button size="small" startIcon={<Search />}>
+                Start
+              </Button>
+              <Button size="medium" endIcon={<Search />}>
+                End
+              </Button>
+              <Button
+                variant="secondary"
+                tone="neutral"
+                startIcon={<Search />}
+                endIcon={<X />}
+              >
+                Both
+              </Button>
+            </div>
+            <div className="grid gap-6 justify-items-center">
               <Button variant="primary">Primary</Button>
               <Button variant="secondary">Secondary</Button>
               <Button variant="tertiary">Tertiary</Button>
