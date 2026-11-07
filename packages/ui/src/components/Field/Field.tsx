@@ -98,7 +98,7 @@ export const FieldLabel = ({
   const classes = createLabelClasses({ disabled });
 
   return (
-    <label {...nativeProps} className={classes.base()}>
+    <label className={classes.base()} {...nativeProps}>
       {children}
       {/* Native `required` on the control already makes screen readers say "required" */}
       {required && (
@@ -150,7 +150,7 @@ export const FieldDescription = ({
   const classes = createDescriptionClasses({ disabled });
 
   return (
-    <p {...nativeProps} className={classes}>
+    <p className={classes} {...nativeProps}>
       {children}
     </p>
   );
@@ -184,7 +184,7 @@ export const FieldError = ({ children, ...nativeProps }: FieldErrorProps) => {
   // No role="alert": the message is read through aria-describedby when the control is focused,
   // and a live region would announce every error at once on submit
   return (
-    <p {...nativeProps} className={classes.base()}>
+    <p className={classes.base()} {...nativeProps}>
       {/* Decorative: the text carries the meaning, the icon makes the error visible without relying on color */}
       <XOctagon aria-hidden="true" className={classes.icon()} />
       {children}

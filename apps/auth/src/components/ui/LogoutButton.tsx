@@ -1,3 +1,5 @@
+import { Button } from "@workspace/ui";
+
 export function LogoutButton({
   isLoggedIn,
   onLogout,
@@ -13,8 +15,8 @@ export function LogoutButton({
   }
 
   return (
-    <button onClick={onLogout} disabled={isLoading}>
+    <Button type="button" size="medium" onClick={onLogout} disabled={isLoading}>
       Logout
-    </button>
+    </Button>
   );
 }

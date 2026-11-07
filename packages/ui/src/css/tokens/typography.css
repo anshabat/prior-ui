@@ -3,6 +3,8 @@
  * Desktop is the default. Add data-typography="mobile" to use the Mobile mode.
  * Font weight tokens use the numeric weight of the Figma font style:
  * Strong is Semi Bold (600), Weak is Regular (400).
+ * Figma's Uppercase style is intentionally not a token: use the `uppercase`
+ * class with a regular size (e.g. `text-tiny font-strong uppercase`).
  */
 
 :root {
@@ -22,7 +24,6 @@
     --font-size-heading-4: 20px;
     --font-size-small: 16px;
     --font-size-tiny: 14px;
-    --font-size-uppercase: 14px;
 
     /* Line height */
     --line-height-display: 64px;
@@ -32,7 +33,10 @@
     --line-height-heading-4: 28px;
     --line-height-small: 24px;
     --line-height-tiny: 20px;
-    --line-height-uppercase: 20px;
+
+    /* Letter spacing, non-zero */
+    --letter-spacing-display: -1px;
+    --letter-spacing-heading-1: -0.5px;
 }
 
 /* or maybe @media (max-width: 767px) { */

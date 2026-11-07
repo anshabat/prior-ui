@@ -46,7 +46,7 @@ export const Alert = ({
   const classes = createClasses({ tone, size, orientation });
 
   return (
-    <div {...nativeProps} className={classes.root()}>
+    <div className={classes.root()} {...nativeProps}>
       <span aria-hidden="true" className={classes.icon()}>
         <ToneIcon />
       </span>
@@ -69,7 +69,7 @@ const createClasses = tv({
       "break-words",
     ],
     icon: "col-start-1 row-start-1 flex [&_svg]:size-24",
-    title: "m-0 font-strong text-strong",
+    title: "m-0 font-body font-strong text-strong",
     description: "font-body font-weak text-weak",
     dismiss: "col-start-3 row-start-1 ms-12 flex",
   },
@@ -95,12 +95,12 @@ const createClasses = tv({
     size: {
       small: {
         root: "p-16",
-        title: "font-body text-tiny",
+        title: "text-tiny",
         description: "text-tiny",
       },
       large: {
         root: "p-24",
-        title: "font-heading text-heading-4",
+        title: "text-heading-4",
         description: "text-small",
       },
     },

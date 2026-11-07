@@ -136,9 +136,9 @@ is drawn with `box-shadow` and takes no space.
   it relies on itself: `box-border`, `border-solid`, `placeholder:opacity-100`
   (Firefox dims placeholders by default) and `appearance-none` (Safari draws
   `type="search"` as a native search field otherwise).
-- **Props order.** Native props are spread first and `className` is set last,
-  so nothing that bypasses the types (for example a spread from untyped code)
-  can override the styles.
+- **Props order.** `className` is set before the native props spread, as in
+  every `ui` component (see `AGENTS.md`). A `className` that bypasses the types
+  (for example a spread from untyped code) replaces the input's styles.
 - **Autofill.** Browsers paint autofilled inputs with their own background
   using `!important`. That is left as is: it tells the user the browser filled
   the value, and the border and error message still show.

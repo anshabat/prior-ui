@@ -1,7 +1,12 @@
 export { Button, type ButtonProps } from "./components/Button";
 export { Alert, type AlertProps } from "./components/Alert";
 export { Checkbox, type CheckboxProps } from "./components/Checkbox";
+export { Heading, type HeadingProps } from "./components/Heading";
 export { Input, type InputProps } from "./components/Input";
+export { Link, type LinkProps } from "./components/Link";
+export { Logo, type LogoProps } from "./components/Logo";
+export { Stack, type StackProps } from "./components/Stack";
+export { Text, type TextProps } from "./components/Text";
 export {
   Field,
   FieldLabel,

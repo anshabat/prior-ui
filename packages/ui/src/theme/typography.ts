@@ -6,8 +6,9 @@ const sizes = [
   "heading-4",
   "small",
   "tiny",
-  "uppercase",
 ];
+
+const letterSpacingSizes = ["display", "heading-1"];
 
 export const typography = {
   fontFamily: {
@@ -18,10 +19,20 @@ export const typography = {
     strong: "var(--font-weight-strong)",
     weak: "var(--font-weight-weak)",
   },
-  fontSize: Object.fromEntries<[string, string]>(
+  fontSize: Object.fromEntries<
+    [string, { lineHeight: string; letterSpacing?: string }]
+  >(
     sizes.map((size) => [
       size,
-      [`var(--font-size-${size})`, `var(--line-height-${size})`],
+      [
+        `var(--font-size-${size})`,
+        {
+          lineHeight: `var(--line-height-${size})`,
+          ...(letterSpacingSizes.includes(size) && {
+            letterSpacing: `var(--letter-spacing-${size})`,
+          }),
+        },
+      ],
     ]),
   ),
 };

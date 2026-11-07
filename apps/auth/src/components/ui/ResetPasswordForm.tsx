@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from "react";
-import { Field, Input } from "@workspace/ui";
+import { Button, Field, Input } from "@workspace/ui";
 import { getSearchParams } from "../../utils";
 
 interface ResetPasswordFormProps {
@@ -76,9 +76,9 @@ export function ResetPasswordForm({
           </Field>
 
           <div style={{ display: "flex", gap: 8 }}>
-            <button type="submit" disabled={isLoading}>
+            <Button type="submit" size="medium" disabled={isLoading}>
               {isLoading ? "Updating..." : "Update Password"}
-            </button>
+            </Button>
           </div>
         </form>
       </div>
@@ -111,9 +111,9 @@ export function ResetPasswordForm({
         </Field>
 
         <div style={{ display: "flex", gap: 8 }}>
-          <button type="submit" disabled={isLoading}>
+          <Button type="submit" size="medium" disabled={isLoading}>
             {isLoading ? "Resetting..." : "Reset Password"}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
