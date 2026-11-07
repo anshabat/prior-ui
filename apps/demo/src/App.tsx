@@ -17,6 +17,8 @@ import {
   CheckCircle,
   ChevronDown,
   ChevronUp,
+  Github,
+  GoogleBrand,
   Search,
   X,
 } from "@workspace/icons";
@@ -206,6 +208,8 @@ function App() {
             <div className="grid gap-6 justify-items-center">
               <ChevronUp width="40px" height="40px" color="blue" />
               <CheckCircle width="120px" height="120px" color="lime" />
+              <GoogleBrand />
+              <Github />
             </div>
           </div>
           <div className="grid gap-6">

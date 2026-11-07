@@ -2,6 +2,8 @@ export { default as AlertTriangle } from "./AlertTriangle";
 export { default as CheckCircle } from "./CheckCircle";
 export { default as ChevronDown } from "./ChevronDown";
 export { default as ChevronUp } from "./ChevronUp";
+export { default as Github } from "./Github";
+export { default as GoogleBrand } from "./GoogleBrand";
 export { default as Heart } from "./Heart";
 export { default as Info } from "./Info";
 export { default as Search } from "./Search";

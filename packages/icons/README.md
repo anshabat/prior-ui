@@ -44,11 +44,13 @@ component looks like:
 
 ## Coloring an icon
 
-**Single-color icons** (all current icons) have one color, `currentColor`.
+**Single-color icons** (all current icons except `GoogleBrand`) have one color,
+`currentColor`.
 Two ways to set it:
 
 - **Class (preferred in components):** `className="stroke-error"`. CSS beats
-  the SVG attribute, so the token utility wins.
+  the SVG attribute, so the token utility wins. Filled icons like `Github` have
+  no stroke: set their color through the surrounding text color instead.
 - **Prop:** `color="red"` sets `--color-0`, which the generated `stroke`
   attribute reads before falling back to `currentColor`.
 
@@ -60,6 +62,6 @@ each distinct color in the SVG its own variable, in order of appearance:
 can be overridden with `color`, `color2`, `color3`, `color4`:
 
 ```tsx
-<BrandLogo />                              // original colors
-<BrandLogo color="white" color2="black" /> // first two colors overridden
+<GoogleBrand />                              // original colors
+<GoogleBrand color="white" color2="black" /> // first two colors overridden
 ```
