@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from "react";
-import { Button, Field, Input } from "@workspace/ui";
+import { Alert, Button, Field, Input, Stack } from "@workspace/ui";
 
 interface RegisterFormProps {
   onSubmit: (email: string, password: string) => void;
@@ -21,14 +21,13 @@ export function RegisterForm({
   };
 
   return (
-    <div>
+    <Stack gap="16">
       {error && (
-        <div style={{ color: "red", marginBottom: 12 }}>Error: {error}</div>
+        <Alert tone="error" size="small" role="alert">
+          {error}
+        </Alert>
       )}
-      <form
-        onSubmit={handleRegister}
-        style={{ display: "flex", flexDirection: "column", gap: 12 }}
-      >
+      <Stack as="form" gap="24" onSubmit={handleRegister} align="start">
         <Field label="Email" required disabled={isLoading}>
           {(control) => (
             <Input
@@ -53,12 +52,10 @@ export function RegisterForm({
           )}
         </Field>
 
-        <div style={{ display: "flex", gap: 8 }}>
-          <Button type="submit" size="medium" loading={isLoading}>
-            Create account
-          </Button>
-        </div>
-      </form>
-    </div>
+        <Button type="submit" size="medium" loading={isLoading}>
+          Create account
+        </Button>
+      </Stack>
+    </Stack>
   );
 }

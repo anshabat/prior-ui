@@ -72,7 +72,7 @@ export function SignInForm({
       )}
 
       {!isTwoFactorStep && providers.length > 0 && (
-        <Stack gap="32">
+        <Stack gap="16">
           <Stack gap="8">
             {providers.map((provider) => (
               <Button
@@ -154,7 +154,7 @@ export function SignInForm({
           {isTwoFactorStep && (
             <Button
               type="button"
-              variant="tertiary"
+              variant="secondary"
               tone="neutral"
               size="medium"
               onClick={handleCancelTwoFactor}

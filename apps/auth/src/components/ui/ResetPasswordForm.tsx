@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from "react";
-import { Button, Field, Input } from "@workspace/ui";
+import { Alert, Button, Field, Input, Stack } from "@workspace/ui";
 import { getSearchParams } from "../../utils";
 
 interface ResetPasswordFormProps {
@@ -35,14 +35,13 @@ export function ResetPasswordForm({
 
   if (resetPasswordToken) {
     return (
-      <div>
+      <Stack gap="16">
         {error && (
-          <div style={{ color: "red", marginBottom: 12 }}>Error: {error}</div>
+          <Alert tone="error" size="small" role="alert">
+            {error}
+          </Alert>
         )}
-        <form
-          onSubmit={handleUpdatePassword}
-          style={{ display: "flex", flexDirection: "column", gap: 12 }}
-        >
+        <Stack as="form" gap="24" onSubmit={handleUpdatePassword} align="start">
           <Field label="Password" required disabled={isLoading}>
             {(control) => (
               <Input
@@ -75,25 +74,22 @@ export function ResetPasswordForm({
             )}
           </Field>
 
-          <div style={{ display: "flex", gap: 8 }}>
-            <Button type="submit" size="medium" loading={isLoading}>
-              Update Password
-            </Button>
-          </div>
-        </form>
-      </div>
+          <Button type="submit" size="medium" loading={isLoading}>
+            Update Password
+          </Button>
+        </Stack>
+      </Stack>
     );
   }
 
   return (
-    <div>
+    <Stack gap="16">
       {error && (
-        <div style={{ color: "red", marginBottom: 12 }}>Error: {error}</div>
+        <Alert tone="error" size="small" role="alert">
+          {error}
+        </Alert>
       )}
-      <form
-        onSubmit={handleResetPassword}
-        style={{ display: "flex", flexDirection: "column", gap: 12 }}
-      >
+      <Stack as="form" gap="24" onSubmit={handleResetPassword} align="start">
         <Field label="Email" required disabled={isLoading}>
           {(control) => (
             <Input
@@ -110,12 +106,10 @@ export function ResetPasswordForm({
           )}
         </Field>
 
-        <div style={{ display: "flex", gap: 8 }}>
-          <Button type="submit" size="medium" loading={isLoading}>
-            Reset Password
-          </Button>
-        </div>
-      </form>
-    </div>
+        <Button type="submit" size="medium" loading={isLoading}>
+          Reset Password
+        </Button>
+      </Stack>
+    </Stack>
   );
 }
