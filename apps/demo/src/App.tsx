@@ -272,6 +272,57 @@ function App() {
               </Button>
             </div>
           </div>
+          <div className="grid gap-6">
+            <div className="flex items-center gap-6">
+              <Button size="small" loading>
+                Small
+              </Button>
+              <Button size="medium" loading>
+                Medium
+              </Button>
+              <Button loading>Large</Button>
+            </div>
+            <div className="flex gap-6">
+              <Button variant="secondary" loading>
+                Secondary
+              </Button>
+              <Button variant="tertiary" loading>
+                Tertiary
+              </Button>
+              <Button tone="neutral" loading>
+                Neutral
+              </Button>
+              <Button tone="destructive" variant="secondary" loading>
+                Destructive
+              </Button>
+            </div>
+            <div className="flex gap-6 p-16 rounded-12 bg-fill-strong">
+              <Button tone="inverse" loading>
+                Inverse
+              </Button>
+              <Button tone="inverse" variant="secondary" loading>
+                Inverse
+              </Button>
+            </div>
+            {/* Same width loading or not: the content stays, transparent */}
+            <div className="flex gap-6">
+              <Button
+                variant="secondary"
+                tone="neutral"
+                startIcon={<GoogleBrand />}
+              >
+                Log in with Google
+              </Button>
+              <Button
+                variant="secondary"
+                tone="neutral"
+                startIcon={<GoogleBrand />}
+                loading
+              >
+                Log in with Google
+              </Button>
+            </div>
+          </div>
           <div className="grid gap-16 w-full max-w-2xl">
             {tones.map((tone) => (
               <Alert

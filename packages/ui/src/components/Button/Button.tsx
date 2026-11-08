@@ -1,5 +1,6 @@
 import { ComponentProps, ReactNode } from "react";
 import { tv } from "tailwind-variants/lite";
+import { Loader } from "@workspace/icons";
 //import { twMerge } from "tailwind-merge";
 
 type Variant = "primary" | "secondary" | "tertiary";
@@ -15,6 +16,7 @@ export type ButtonProps = Omit<
   size?: Size;
   startIcon?: ReactNode;
   endIcon?: ReactNode;
+  loading?: boolean;
   children: ReactNode;
 };
 export const Button = ({
@@ -24,16 +26,28 @@ export const Button = ({
   size = "large",
   startIcon,
   endIcon,
+  loading = false,
+  disabled,
   ...nativeProps
 }: ButtonProps) => {
   //const classes = twMerge(createClasses({ variant, size }), className);
-  const classes = createClasses({ variant, tone, size });
+  const classes = createClasses({ variant, tone, size, loading });
 
+  // After the spread: loading always disables
   return (
-    <button className={classes.root()} {...nativeProps}>
+    <button
+      className={classes.root()}
+      {...nativeProps}
+      disabled={disabled || loading}
+    >
       {startIcon && <span className={classes.icon()}>{startIcon}</span>}
       <span className={classes.label()}>{children}</span>
       {endIcon && <span className={classes.icon()}>{endIcon}</span>}
+      {loading && (
+        <span className={classes.spinner()}>
+          <Loader className="motion-safe:animate-spin" />
+        </span>
+      )}
     </button>
   );
 };
@@ -42,13 +56,14 @@ const createClasses = tv({
   slots: {
     root: [
       "box-border m-0 py-0 cursor-pointer", // Reset (no preflight)
-      "inline-flex items-center justify-center",
+      "relative inline-flex items-center justify-center", // relative: spinner
       "font-body font-strong whitespace-nowrap",
       "disabled:cursor-not-allowed",
     ],
     // Flex, so an inline svg has no line box that shifts it off center
     icon: "flex shrink-0 [&_svg]:size-full",
     label: "px-4",
+    spinner: "absolute inset-0 flex items-center justify-center",
   },
   variants: {
     // border and background are reset per variant: classes for the same
@@ -64,20 +79,27 @@ const createClasses = tv({
       destructive: {},
       inverse: {},
     },
-    // Padding x is Figma's State padding, the label adds its own 4px
     size: {
       small: {
         root: ["h-32 px-12 rounded-8", "text-tiny"],
         icon: "size-16",
+        spinner: "[&_svg]:size-16",
       },
       medium: {
         root: ["h-48 px-16 gap-4 rounded-8", "text-small"],
         icon: "size-20",
+        spinner: "[&_svg]:size-20",
       },
       large: {
         root: ["h-56 px-24 gap-4 rounded-12", "text-heading-4"],
         icon: "size-24",
+        spinner: "[&_svg]:size-24",
       },
+    },
+    // keeps the width and the accessible name for loading buttons
+    loading: {
+      true: { icon: "opacity-0", label: "opacity-0" },
+      false: {},
     },
   },
   compoundVariants: [
