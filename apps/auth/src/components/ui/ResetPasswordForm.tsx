@@ -76,8 +76,8 @@ export function ResetPasswordForm({
           </Field>
 
           <div style={{ display: "flex", gap: 8 }}>
-            <Button type="submit" size="medium" disabled={isLoading}>
-              {isLoading ? "Updating..." : "Update Password"}
+            <Button type="submit" size="medium" loading={isLoading}>
+              Update Password
             </Button>
           </div>
         </form>
@@ -111,8 +111,8 @@ export function ResetPasswordForm({
         </Field>
 
         <div style={{ display: "flex", gap: 8 }}>
-          <Button type="submit" size="medium" disabled={isLoading}>
-            {isLoading ? "Resetting..." : "Reset Password"}
+          <Button type="submit" size="medium" loading={isLoading}>
+            Reset Password
           </Button>
         </div>
       </form>

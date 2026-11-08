@@ -15,7 +15,7 @@ export function LogoutButton({
   }
 
   return (
-    <Button type="button" size="medium" onClick={onLogout} disabled={isLoading}>
+    <Button type="button" size="medium" onClick={onLogout} loading={isLoading}>
       Logout
     </Button>
   );

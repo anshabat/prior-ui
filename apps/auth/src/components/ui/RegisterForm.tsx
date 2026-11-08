@@ -54,8 +54,8 @@ export function RegisterForm({
         </Field>
 
         <div style={{ display: "flex", gap: 8 }}>
-          <Button type="submit" size="medium" disabled={isLoading}>
-            {isLoading ? "Creating..." : "Create account"}
+          <Button type="submit" size="medium" loading={isLoading}>
+            Create account
           </Button>
         </div>
       </form>
