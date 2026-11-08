@@ -4,18 +4,27 @@ import { signInWithOAuth } from "../../api";
 import { SEARCH_PARAMS } from "../../constants";
 import { SignInForm } from "../ui/SignInForm.tsx";
 import { useLoginMutation } from "../../hooks/useAuthApi.ts";
-import { getErrorMessage, removeSearchParam } from "../../utils";
+import {
+  getErrorMessage,
+  getSuccessMessage,
+  removeSearchParam,
+} from "../../utils";
 import { useFlashQueryParam } from "../../hooks/useFlashQueryParam.ts";
 
 export function SignIn() {
   const [isTwoFactorStep, setIsTwoFactorStep] = useState(false);
+  const flashSuccess = useFlashQueryParam("success");
+  const [successMessage, setSuccessMessage] = useState(() =>
+    getSuccessMessage(flashSuccess),
+  );
   const flashError = useFlashQueryParam("error");
   const [error, setError] = useState<string | null>(() => {
     if (!flashError) return null;
     return getErrorMessage(flashError, flashError);
   });
 
-  const clearError = () => {
+  const clearMessages = () => {
+    setSuccessMessage("");
     setError(null);
     navigate(removeSearchParam(SEARCH_PARAMS.ERROR), { replace: true });
   };
@@ -32,7 +41,7 @@ export function SignIn() {
   });
 
   const handleSignIn = async (email: string, password: string) => {
-    clearError();
+    clearMessages();
     signWithCredentials({ email, password });
   };
 
@@ -41,7 +50,7 @@ export function SignIn() {
     password: string,
     code: string,
   ) => {
-    clearError();
+    clearMessages();
     signWithCredentials({ email, password, twoFactorCode: code });
   };
 
@@ -51,13 +60,14 @@ export function SignIn() {
 
   return (
     <SignInForm
+      successMessage={successMessage}
       error={error}
       isTwoFactorStep={isTwoFactorStep}
       onSignIn={handleSignIn}
       onVerifyTwoFactor={handleVerifyTwoFactor}
       onCancelTwoFactor={() => {
         setIsTwoFactorStep(false);
-        clearError();
+        clearMessages();
       }}
       providers={[
         { id: "google", name: "Google" },

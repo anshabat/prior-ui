@@ -75,7 +75,7 @@ export const Field = ({
 
 const createFieldClasses = tv({
   slots: {
-    root: "flex flex-col gap-4",
+    root: "flex flex-col gap-4 w-full",
     // Label and description sit together with no gap, as in Figma's "Text" frame
     header: "flex flex-col",
   },

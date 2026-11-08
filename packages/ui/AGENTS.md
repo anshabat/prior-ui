@@ -7,7 +7,7 @@
   property (fill, stroke, text, shadow, size, spacing, radius, text style).
   The token decides the actual value, even when it differs from Figma.
   Figma is the look we aim for, not a pixel-perfect spec (see Rules).
-  - Design file: https://www.figma.com/design/vLd7saIPGNhXmCxIBlBTjI/Practical-UI-design-system
+  - Design file: https://www.figma.com/design/sEyUa9IlqNOU1lPVqIJQVt/Practical-UI-design-system
   - Read the component with the Figma MCP server before implementing or changing it.
 - **Industry standards** (WAI-ARIA practices, established design systems) decide
   structure: HTML elements, nesting, component parts, props API, accessibility.
@@ -18,20 +18,18 @@
   arbitrary design values (`bg-[#…]`, `p-[13px]`). Arbitrary layout values that
   aren't design tokens are allowed, e.g. a grid template
   (`grid-cols-[auto_minmax(0,1fr)_auto]`).
-- Don't change, rename or add tokens while building components.
-- If no token is a close match for a Figma value, stop and escalate to the
-  maintainer with the value and the closest candidates.
-- **Code quality first, Figma second.** Don't chase a 100% match. When matching
-  a Figma detail exactly needs complex or hacky code (extra wrappers, magic
-  offsets, one-off special cases, absolute positioning to fake a layout), choose
-  the cleaner solution and accept the small visual difference. No approval
-  needed: note the difference in the component README and in your summary.
-- Don't add visual features Figma doesn't have (extra states, shadows,
-  animations) without approval. Approved so far:
-  - Text inputs (Input, later Textarea and Select): no hover or press states,
-    white at rest, focus ring only.
-  - Field: the description dims to `text-disabled` with the label when the field
-    is disabled (Figma keeps it `text-weak`).
+- **Tokens and theme are the maintainer's.** Don't add, change, rename or remove
+  tokens or theme config (`src/css/tokens`, `src/theme`): the maintainer
+  controls how they grow. If no token is a close match for a Figma value, stop
+  and escalate with the value and the closest candidates. This is the only
+  thing that needs approval.
+- **Follow Figma, but code quality wins.** Aim for Figma's variants, states and
+  look, not a 100% match. When matching it needs complex or hacky code (extra
+  wrappers, magic offsets, one-off special cases, absolute positioning to fake a
+  layout), choose the cleaner solution. The same goes for what Figma lacks: add
+  a state or behaviour a component needs (e.g. Button `loading`) when the clean
+  solution calls for it. Note every difference from Figma in the component
+  README and in your summary.
 
 ## Component conventions
 - **Server-component safe:** no `"use client"`, context, `useState`/`useEffect`
@@ -45,7 +43,18 @@
 - **No preflight:** `dist/tailwind.css` is built without it, so components reset
   the browser defaults they rely on (`m-0`, `box-border`, `border-solid`, …).
 - **No class merging** (`tailwind-variants/lite`): classes for the same CSS
-  property must be either/or variants, never both applied.
+  property must be either/or: in a base slot or in a variant, never both, and
+  never in two variants applied together. The closed styling API is why merging
+  isn't needed. Don't switch to full `tailwind-variants`/`tailwind-merge`
+  without registering the theme with `extendTailwindMerge`: its default config
+  misreads custom tokens and drops them silently
+  (`text-heading-4 text-strong-inverse` → `text-strong-inverse`,
+  `font-body font-strong` → `font-strong`).
+- **Parts are slots by default:** style a component's parts (icon, label, …)
+  with `tv` slots, so each variant is declared once and decides every part
+  (see `Alert`, `Button`). Make a part a separate component only when it has its
+  own markup or behaviour (`DismissButton`) or is a public building block
+  (`FieldLabel`). Repeated markup alone isn't a reason: render the slot twice.
 - **Defaults live in props:** set variant defaults as default parameter values
   (`size = "large"`) and always pass every variant to `tv`. No `defaultVariants`:
   a second copy drifts, and child parts would need their own defaults.

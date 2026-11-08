@@ -2,7 +2,7 @@
 
 ## Source of truth
 - Figma → Foundations → **Icons** page:
-  https://www.figma.com/design/vLd7saIPGNhXmCxIBlBTjI/Practical-UI-design-system?node-id=3819-28711
+  https://www.figma.com/design/sEyUa9IlqNOU1lPVqIJQVt/Practical-UI-design-system?node-id=3819-28711
 - The base set is **Feather** (feathericons.com, MIT). Figma's "Custom" icons
   extend it in the same style.
 - Only add icons that exist on that page. If one is missing, escalate to the
@@ -12,7 +12,8 @@
 - **Grid:** drawn on 24×24, `viewBox="0 0 24 24"`, with Feather's built-in
   padding. Never use a trimmed export (Figma's per-layer assets come out
   e.g. 20×20 with `preserveAspectRatio`): export the 24×24 icon component,
-  or use the canonical Feather path.
+  or use the canonical Feather path. Figma's full-node SVG export is on the right
+  grid but includes the page behind the icon: keep only the icon's own paths.
 - **Style:** UI icons are outline only: `fill="none"`, 2px stroke, round caps
   and joins. No filled or duotone variants of them. (Brand icons follow their
   Figma set, which is filled.)
@@ -23,6 +24,8 @@
   Multi-color icons (e.g. brand icons from Figma's Social media set) keep their
   colors as hex values in the SVG; the pipeline turns each one into an
   overridable `--color-N` variable. Keep that support in the pipeline and template.
+  Single-color brand icons use `fill="currentColor"` on the root `<svg>`, so they
+  follow the theme: a fixed dark hex disappears in dark mode.
 - **Size:** 24px default (`width`/`height` 24). Components use 24 (medium) and
   16 (small) via classes like `size-16`. The stroke scales with the icon (2px at
   24, 1.33px at 16), matching Figma; don't use `vector-effect: non-scaling-stroke`.
