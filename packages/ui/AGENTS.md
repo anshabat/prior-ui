@@ -43,7 +43,13 @@
 - **No preflight:** `dist/tailwind.css` is built without it, so components reset
   the browser defaults they rely on (`m-0`, `box-border`, `border-solid`, …).
 - **No class merging** (`tailwind-variants/lite`): classes for the same CSS
-  property must be either/or variants, never both applied.
+  property must be either/or: in a base slot or in a variant, never both, and
+  never in two variants applied together. The closed styling API is why merging
+  isn't needed. Don't switch to full `tailwind-variants`/`tailwind-merge`
+  without registering the theme with `extendTailwindMerge`: its default config
+  misreads custom tokens and drops them silently
+  (`text-heading-4 text-strong-inverse` → `text-strong-inverse`,
+  `font-body font-strong` → `font-strong`).
 - **Parts are slots by default:** style a component's parts (icon, label, …)
   with `tv` slots, so each variant is declared once and decides every part
   (see `Alert`, `Button`). Make a part a separate component only when it has its
