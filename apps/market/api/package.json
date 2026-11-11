@@ -30,8 +30,8 @@
     "rimraf": "3.0.2",
     "rxjs": "6.6.6",
     "typeorm": "0.2.45",
-    "sqlite3": "^5.0.8",
-    "mysql2": "^2.3.3",
+    "sqlite3": "5.0.8",
+    "mysql2": "2.3.3",
     "@nestjs/typeorm": "7.1.5"
   },
   "devDependencies": {
