@@ -10,6 +10,9 @@
     "sourceMap": true,
     "outDir": "./dist",
     "incremental": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    // Global type packages to load: Node globals (process, Buffer) and Jest globals (describe, it, expect).
+    // Listed explicitly because TS 6 (the VS Code version) no longer auto-loads every @types package like TS 4.2.
+    "types": ["node", "jest"]
   }
 }
