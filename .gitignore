@@ -19,6 +19,7 @@ tsconfig.tsbuildinfo
 
 # Docker
 docker/auth-db/postgresql
+docker/market-db/mysql
 
 # Envs
 .env

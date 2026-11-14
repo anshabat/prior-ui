@@ -6,6 +6,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    // Emit CommonJS interop helpers so `import x from 'cjs-pkg'` works at runtime.
+    // Matches TS 6 (the VS Code version), where this is always on.
+    "esModuleInterop": true,
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
