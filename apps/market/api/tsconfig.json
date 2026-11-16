@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    // Emit CommonJS interop helpers so `import x from 'cjs-pkg'` works at runtime.
+    // Matches TS 6 (the VS Code version), where this is always on.
+    "esModuleInterop": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "incremental": true,
+    "skipLibCheck": true,
+    // Global type packages to load: Node globals (process, Buffer) and Jest globals (describe, it, expect).
+    // Listed explicitly because TS 6 (the VS Code version) no longer auto-loads every @types package like TS 4.2.
+    "types": ["node", "jest"]
+  }
+}

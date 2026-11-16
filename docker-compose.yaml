@@ -9,3 +9,15 @@ services:
       POSTGRES_DB: auth
     ports:
       - "54321:5432"
+
+  market-db:
+    image: mysql:8.0
+    volumes:
+      - ./docker/market-db/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: market
+      MYSQL_USER: market
+      MYSQL_PASSWORD: market
+    ports:
+      - "33061:3306"
