@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    // Type-check only: SWC does the real compilation
+    "noEmit": true,
+    // SWC compiles each file on its own
+    "isolatedModules": true,
+
+    /*
+    The bundler resolves imports
+    Also implies:
+    - moduleResolution "bundler",
+    - esModuleInterop: true
+    - resolveJsonModule: true
+    */
+    "module": "preserve",
+
+    "target": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "react-jsx",
+    "allowJs": false,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+
+    /*
+      tsc save information about the previous type-check to disk and reuse it next time
+      Only files that changed, plus files affected by those changes, get re-checked.
+    */
+    "incremental": true
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}
