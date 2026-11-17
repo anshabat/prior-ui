@@ -6,9 +6,7 @@ export default function HomePage() {
       <Head>
         <title>Market</title>
       </Head>
-      <main>
-        <h1>Market</h1>
-      </main>
+      <h1>Market</h1>
     </>
   );
 }
