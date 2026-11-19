@@ -1,15 +1,22 @@
 import type { ReactNode } from "react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import type { AuthSession } from "@workspace/api-auth";
 import { useAuthHandlers } from "@workspace/apps-lib/auth/react";
+import { config } from "@workspace/config";
 import { Link, Logo, Stack } from "@workspace/ui";
-import { useSession } from "../hooks/useSession";
+
+const { APP_BASE_URL } = config.market;
 
 type LayoutProps = {
+  session: AuthSession | null;
   children: ReactNode;
 };
 
-export function Layout({ children }: LayoutProps) {
-  const { status } = useSession();
+export function Layout({ session, children }: LayoutProps) {
+  const { asPath } = useRouter();
+  const redirectUrl = encodeURIComponent(`${APP_BASE_URL}${asPath}`);
+  const { loginHref, logoutHref, accountHref } = useAuthHandlers(redirectUrl);
 
   return (
     <>
@@ -19,36 +26,19 @@ export function Layout({ children }: LayoutProps) {
             <Logo />
           </NextLink>
         </Link>
-        {/* Nothing while loading: the slot is last in the row, so it appears without shifting the layout */}
-        {status !== "loading" && (
-          <AuthLinks authenticated={status === "authenticated"} />
+        {session ? (
+          <Stack direction="row" gap="16">
+            <Link asChild>
+              <NextLink href="/profile">Profile</NextLink>
+            </Link>
+            <Link href={accountHref}>Account Settings</Link>
+            <Link href={logoutHref}>Logout</Link>
+          </Stack>
+        ) : (
+          <Link href={loginHref}>Login</Link>
         )}
       </header>
       <main>{children}</main>
     </>
-  );
-}
-
-type AuthLinksProps = {
-  authenticated: boolean;
-};
-
-// Rendered only after the session request settles, which happens in the browser, so `window` exists
-function AuthLinks({ authenticated }: AuthLinksProps) {
-  const redirectUrl = encodeURIComponent(window.location.href);
-  const { loginHref, logoutHref, accountHref } = useAuthHandlers(redirectUrl);
-
-  if (!authenticated) {
-    return <Link href={loginHref}>Login</Link>;
-  }
-
-  return (
-    <Stack direction="row" gap="16">
-      <Link asChild>
-        <NextLink href="/profile">Profile</NextLink>
-      </Link>
-      <Link href={accountHref}>Account Settings</Link>
-      <Link href={logoutHref}>Logout</Link>
-    </Stack>
   );
 }

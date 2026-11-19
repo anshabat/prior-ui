@@ -1,27 +1,30 @@
 import Head from "next/head";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import { config } from "@workspace/config";
+import type { AuthSession } from "@workspace/api-auth";
+import { tryCatchAsync } from "@workspace/utils";
+import { getHello, getSession } from "../api";
 
-const { API_BASE_URL } = config.market;
-
-// Mirrors HelloResponse in market-api (legacy, so types can't be shared)
-type HelloResponse = {
-  message: string;
-};
-
-type ProfileProps = {
-  message: string;
-};
-
-export const getServerSideProps = (async () => {
-  const response = await fetch(`${API_BASE_URL}/`);
-  if (!response.ok) {
-    // Thrown errors render Next's 500 page
-    throw new Error(`market-api GET / failed: ${response.status}`);
+export const getServerSideProps: GetServerSideProps<{
+  session: AuthSession | null;
+  message: string | null;
+}> = async ({ req }) => {
+  const [[session, sessionError], [hello, helloError]] = await Promise.all([
+    tryCatchAsync(
+      getSession({ headers: { cookie: req.headers.cookie ?? "" } }),
+    ),
+    tryCatchAsync(getHello()),
+  ]);
+  if (sessionError) {
+    console.error("Session unavailable, rendering logged out:", sessionError);
   }
-  const { message }: HelloResponse = await response.json();
-  return { props: { message } };
-}) satisfies GetServerSideProps<ProfileProps>;
+  if (helloError) {
+    console.error("Hello unavailable:", helloError);
+  }
+
+  return {
+    props: { session: session ?? null, message: hello?.message ?? null },
+  };
+};
 
 export default function ProfilePage({
   message,
@@ -32,7 +35,7 @@ export default function ProfilePage({
         <title>Profile · Market</title>
       </Head>
       <h1>Profile</h1>
-      <p>{message}</p>
+      <p>{message ?? "Couldn't load the message."}</p>
     </>
   );
 }

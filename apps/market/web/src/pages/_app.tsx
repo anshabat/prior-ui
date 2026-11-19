@@ -4,7 +4,9 @@ import { Layout } from "../components/Layout";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <Layout>
+    // Pages return `session` from getServerSideProps.
+    // Pages without it (e.g. 404) count as logged out.
+    <Layout session={pageProps.session ?? null}>
       <Component {...pageProps} />
     </Layout>
   );
