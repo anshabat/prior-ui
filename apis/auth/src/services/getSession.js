@@ -15,7 +15,7 @@ const getSession = (token) => {
   }
 
   const decoded = /** @type {SessionUser & { exp: number; iat: number }} */ (
-    jwt.verify(token, process.env.AUTH_SECRET)
+    jwt.verify(token, process.env.AUTH_SECRET, { algorithms: ["HS256"] })
   );
   const { exp, iat, ...user } = decoded; // eslint-disable-line no-unused-vars
 

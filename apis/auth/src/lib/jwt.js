@@ -19,7 +19,10 @@ const buildToken = (user, provider) => {
     provider,
   };
   // TODO: create service for jwt which receive SessionUser type, so we could remove @type above
-  return jwt.sign(payload, process.env.AUTH_SECRET, { expiresIn: "1d" });
+  return jwt.sign(payload, process.env.AUTH_SECRET, {
+    algorithm: "HS256",
+    expiresIn: "1d",
+  });
 };
 
 /**
