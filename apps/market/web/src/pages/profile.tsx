@@ -1,30 +1,17 @@
 import Head from "next/head";
-import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import type { AuthSession } from "@workspace/api-auth";
+import type { InferGetServerSidePropsType } from "next";
 import { tryCatchAsync } from "@workspace/utils";
-import { getHello, getSession } from "../api";
+import { getHello } from "../api";
+import { withSession } from "../server/withSession";
 
-export const getServerSideProps: GetServerSideProps<{
-  session: AuthSession | null;
-  message: string | null;
-}> = async ({ req }) => {
-  const [[session, sessionError], [hello, helloError]] = await Promise.all([
-    tryCatchAsync(
-      getSession({ headers: { cookie: req.headers.cookie ?? "" } }),
-    ),
-    tryCatchAsync(getHello()),
-  ]);
-  if (sessionError) {
-    console.error("Session unavailable, rendering logged out:", sessionError);
-  }
+export const getServerSideProps = withSession(async () => {
+  const [hello, helloError] = await tryCatchAsync(getHello());
   if (helloError) {
     console.error("Hello unavailable:", helloError);
   }
 
-  return {
-    props: { session: session ?? null, message: hello?.message ?? null },
-  };
-};
+  return { props: { message: hello?.message ?? null } };
+});
 
 export default function ProfilePage({
   message,
