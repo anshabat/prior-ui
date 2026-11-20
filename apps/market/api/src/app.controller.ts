@@ -1,7 +1,6 @@
-import { Controller, Get, Req, UnauthorizedException } from '@nestjs/common';
-import { Request } from 'express';
-import { verify } from 'jsonwebtoken';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
+import { AuthGuard } from './guards/auth.guard';
 
 export interface HelloResponse {
   message: string;
@@ -17,24 +16,8 @@ export class AppController {
   }
 
   @Get('auth-hello')
-  getAuthHello(@Req() req: Request): HelloResponse {
-    const token: unknown = req.cookies?.authToken;
-
-    if (typeof token !== 'string' || token === '') {
-      throw new UnauthorizedException();
-    }
-
-    const secret = process.env.AUTH_SECRET;
-    if (!secret) {
-      throw new Error('AUTH_SECRET is not set');
-    }
-
-    try {
-      verify(token, secret, { algorithms: ['HS256'] });
-    } catch {
-      throw new UnauthorizedException();
-    }
-
+  @UseGuards(AuthGuard)
+  getAuthHello(): HelloResponse {
     return { message: 'hello authenticated' };
   }
 }
