@@ -1,7 +1,13 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { AuthGuard, AuthUser } from './guards/auth.guard';
+import { AuthGuard } from './guards/auth.guard';
+import { AuthUser } from './types/auth-user';
 
 export interface HelloResponse {
   message: string;
@@ -18,7 +24,7 @@ export class AppController {
 
   @Get('auth-hello')
   @UseGuards(AuthGuard)
-  getAuthHello(@CurrentUser() user: AuthUser): HelloResponse {
-    return { message: `hello authenticated, ${user.name ?? user.email}` };
+  getAuthHello(@CurrentUser() user: AuthUser | undefined): HelloResponse {
+    return { message: `hello authenticated, ${user?.name ?? user?.email}` };
   }
 }
