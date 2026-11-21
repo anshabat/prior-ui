@@ -22,6 +22,7 @@ export class AuthMiddleware implements NestMiddleware {
           email: claims.email,
           name: claims.name,
           image: claims.image,
+          role: claims.role,
         };
       } catch {
         // Invalid or expired token: continue as anonymous
