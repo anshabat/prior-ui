@@ -6,6 +6,7 @@ const { APP_BASE_URL } = config.auth;
 export function useAuthHandlers(redirectUrl: string) {
   const loginHref = `${APP_BASE_URL}?redirect=${redirectUrl}`;
   const logoutHref = `${APP_BASE_URL}/logout?redirect=${redirectUrl}`;
+  const accountHref = `${APP_BASE_URL}/account`;
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -21,6 +22,7 @@ export function useAuthHandlers(redirectUrl: string) {
   return {
     loginHref,
     logoutHref,
+    accountHref,
     openLoginPopup: () => {
       window.open(
         loginHref,

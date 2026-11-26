@@ -1,4 +1,7 @@
 import Head from "next/head";
+import { withSession } from "../server/withSession";
+
+export const getServerSideProps = withSession();
 
 export default function HomePage() {
   return (
@@ -6,9 +9,7 @@ export default function HomePage() {
       <Head>
         <title>Market</title>
       </Head>
-      <main>
-        <h1>Market</h1>
-      </main>
+      <h1>Market</h1>
     </>
   );
 }

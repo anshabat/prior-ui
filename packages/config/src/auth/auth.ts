@@ -11,5 +11,9 @@ export const authConfig: AuthConfig = {
   APP_PORT: 3001,
   API_BASE_URL: "http://localhost:4001",
   APP_BASE_URL: "http://localhost:3001",
-  CLIENT_APPS_URLS: ["http://localhost:5173", "http://localhost:3000"],
+  CLIENT_APPS_URLS: [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://localhost:3100",
+  ],
 };

@@ -1,11 +1,13 @@
-const ALLOWED_ORIGINS = ["http://localhost:5173", "http://localhost:3000"];
+import { config } from "@workspace/config";
+
+const { CLIENT_APPS_URLS } = config.auth;
 
 function extractTargetOrigin(redirectUrl: string | null): string | null {
   if (!redirectUrl) return null;
 
   try {
     const targetOrigin = new URL(redirectUrl).origin;
-    if (ALLOWED_ORIGINS.includes(targetOrigin)) {
+    if (CLIENT_APPS_URLS.includes(targetOrigin)) {
       return targetOrigin;
     }
   } catch {
