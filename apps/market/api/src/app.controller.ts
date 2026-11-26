@@ -1,13 +1,8 @@
-import {
-  Controller,
-  Get,
-  UnauthorizedException,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
 import { CurrentUser } from './decorators/current-user.decorator';
-import { AdminGuard } from './guards/admin.guard';
-import { AuthGuard } from './guards/auth.guard';
+import { Roles } from './decorators/roles.decorator';
+import { RolesGuard } from './guards/roles.guard';
 import { AuthUser } from './types/auth-user';
 
 export interface HelloResponse {
@@ -24,13 +19,15 @@ export class AppController {
   }
 
   @Get('auth-hello')
-  @UseGuards(AuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles('USER')
   getAuthHello(@CurrentUser() user: AuthUser | undefined): HelloResponse {
     return { message: `hello authenticated, ${user?.name ?? user?.email}` };
   }
 
   @Get('admin-hello')
-  @UseGuards(AdminGuard)
+  @UseGuards(RolesGuard)
+  @Roles('ADMIN')
   getAdminHello(@CurrentUser() user: AuthUser | undefined): HelloResponse {
     return { message: `hello admin, ${user?.name ?? user?.email}` };
   }
