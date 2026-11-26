@@ -1,24 +1,24 @@
 import {
+  applyDecorators,
   CanActivate,
   ExecutionContext,
   Injectable,
+  SetMetadata,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ROLES_KEY } from '../decorators/roles.decorator';
 import { RequestWithUser, UserRole } from '../types/auth-user';
+
+const ROLES_KEY = 'roles';
 
 const ROLE_HIERARCHY: Record<UserRole, UserRole[]> = {
   ADMIN: ['USER'],
   USER: [],
 };
 
-/**
- * Allows the request when the user has, or inherits, one of the roles
- * from @Roles(). Answers 401 when nobody is signed in, 403 otherwise.
- */
 @Injectable()
-export class RolesGuard implements CanActivate {
+class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
@@ -38,12 +38,15 @@ export class RolesGuard implements CanActivate {
     }
 
     // false makes Nest throw ForbiddenException (403)
-    const userRoles = getReachableRoles(user.role);
+    const userRoles = resolveRoleHierarchy(user.role);
     return requiredRoles.some((role) => userRoles.has(role));
   }
 }
 
-function getReachableRoles(role: UserRole): Set<UserRole> {
+export const Roles = (...roles: UserRole[]) =>
+  applyDecorators(SetMetadata(ROLES_KEY, roles), UseGuards(RolesGuard));
+
+function resolveRoleHierarchy(role: UserRole): Set<UserRole> {
   const reachable = new Set<UserRole>();
   const toVisit = [role];
 
